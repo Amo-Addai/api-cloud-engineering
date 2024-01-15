@@ -11,3 +11,78 @@
     so the future users of your .proto file cannot accidentally reuse the same tag number.
 5. For data type changes (int32 to int64 for example, please refer to the documentation).
 
+
+The need for updating the protocols
+
+• Now, also with time, many applications may read your messages using
+Protocol Buffers and you may not have the time to upgrade them
+• For example, today we're asking for the First Name and Last Name of our
+customer, and that's our vI schema, but tomorrow we may ask for their
+phone number. That would be our v2 of our schema
+• So you need to be able to evolve the source data without
+breaking the other applications reading it
+• Thankfully, Protocol Buffers helps us tremendously with that as we'll see in
+this section
+
+Adding Fields
+
+• If that field is sent to old code, the old code will not know what that
+tag number corresponds to and the field will be ignored (or dropped)
+• Oppositely, if we read old data with the new code, the new field will
+not be found and the default value will be assumed (empty string)
+• Default values should always be interpreted with care
+
+Removing Fields
+
+• If old code doesn't find the field anymore, the default value will be
+used
+• Oppositely, if we read old data with the new code, the deleted field
+will just be dropped
+
+Removing Fields - Making the field OBSOLETE_
+
+• The alternative is that instead of removing a field, you rename it to
+OBSOLETE field name.
+• The downside is that you may have to populate that field while your
+client get upgraded to use the newer field that replaces it (which has
+a new tag)
+
+Removing Fields - Reserved tags
+
+• When removing a field, you should ALWAYS reserve the tag and the name
+• This prevents the tag to be re-used and this prevents the name to be re-used
+• This is necessary to prevent conflicts in the codebase
+
+Renaming Fields
+
+• In this case nothing changes! Field names can be changed freely
+• Only the tag number is important for Protobuf
+
+Reserved Keywords
+
+• You can reserve TAGS and FIELD NAMES
+• You can't mix TAGS and FIELD NAMES in the same reserved statement
+• We reserve TAGS to prevent new fields from re-using tags (which would break old code at runtime)
+• We reserve FIELD NAMES to prevent code bugs
+• Do not ever remove any reserved tags
+
+Default values
+
+• Defaults are great, but they are tricky to deal with
+• Defaults allow us to easily evolve Protobuf files without breaking any existing or new codes
+• They also ensure we know that a field will always have a non-null values
+• But they are dangerous, because...
+• You cannot differentiate from a missing field or if a value equal to the default was set
+• What can we do about it?
+• Make sure the default value doesn't have meaning for your business
+• Deal with default values in your code if needed (with if statements)
+
+Evolving Enumerations
+
+• Enumerations can evolve:
+• You can add
+• You can remove
+• You can reserve
+• If the code doesn't know what the received Enum value corresponds to, the default value will be used
+• Therefore, I recommend you make the first value "UNKNOWN = 0"
+
