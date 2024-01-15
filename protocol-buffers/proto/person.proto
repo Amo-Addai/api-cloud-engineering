@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+import "proto/date.proto";
+
+package person;
+
+message Person {
+    int32 age = 1;
+    string first_name = 2;
+    repeated string middle_names = 3; // for list/array types
+    string last_name = 4;
+    bytes small_picture = 5;
+    bool is_profile_verified = 6;
+    float height = 7;
+    repeated string phone_numbers = 8;
+
+    enum Type {
+        MAN = 1;
+        WOMAN = 2;
+    }
+    enum EyeColour {
+        UNKNOWN_EYE_COLOUR = 0;
+        EYE_GREEN = 1;
+        EYE_BROWN = 2;
+        EYE_BLUE = 3;
+    }
+
+    Type type = 9;
+    EyeColour eye_colour = 10;
+
+    date.Date birthday = 11;
+
+    // nested message
+    message Address {
+        string address_line_1 = 1;
+        string address_line_2 = 2;
+        string zip_code = 3;
+        string city = 4;
+        string country = 5;
+    }
+
+    repeated Address addresses = 12;
+
+}

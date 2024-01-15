@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+message A {
+    int32 id = 1;
+}
+
+message A { // adding a field
+    int32 id = 1;
+    string first_name = 2;
+}
+
+message A { // renaming a field
+    id32 id = 1;
+    string person_first_name = 2;
+}
+
+message A { // removing a field
+    int32 id = 1;
+}
+
+message A { // removing a field, while reserving the tag and the name
+    reserved 2;
+    reserved "first_name";
+    int32 id = 1;
+}
+
+message A { // instead of removing a field, renaming it to OBSOLETE
+    int32 id = 1;
+    string OBSOLETE_first_name = 2;
+}
+
+// Reserving Keywords samples
+
+message B { // you can't mix tags & field names in the same reserved statement
+    reserved 2, 15, 9 to 11;
+    reserved "foo", "bar";
+}
