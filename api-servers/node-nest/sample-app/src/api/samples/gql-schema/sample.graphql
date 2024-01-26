@@ -1,0 +1,24 @@
+type Sample {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateSampleInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateSampleInput {
+  id: Int!
+}
+
+type Query {
+  sample: [Sample]!
+  sample(id: Int!): Sample
+}
+
+type Mutation {
+  createSample(createSampleInput: CreateSampleInput!): Sample!
+  updateSample(updateSampleInput: UpdateSampleInput!): Sample!
+  removeSample(id: Int!): Sample
+}

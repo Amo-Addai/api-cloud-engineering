@@ -1,0 +1,22 @@
+{
+  "name": "sample-node-express-server",
+  "version": "1.0.0",
+  "description": "just a sample",
+  "main": "server.js",
+  "scripts": {
+    "test": "test-node-server",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "A",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.4.8",
+    "body-parser": "^1.18.3",
+    "express-generator": "^4.16.0",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4"
+  }
+}

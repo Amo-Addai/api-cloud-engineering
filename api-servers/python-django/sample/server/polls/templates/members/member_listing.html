@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Member Listing</title>
+  </head>
+  <body>
+    <h1>All Members</h1>
+    <ul>
+    {% for member in members %}
+      <li>
+        <h2><a href="{{ member.get_absolute_url }}">{{ member.name }}</a></h2>
+        {% if member.can_rock %}<p>This member can rock!</p>{% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  </body>
+</html>
