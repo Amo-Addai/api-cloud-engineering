@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"bitbucket.org/itshospitality/chattabot-api/services/utils"
+	"bitbucket.org/itshospitality/chatbot-api/services/utils"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"

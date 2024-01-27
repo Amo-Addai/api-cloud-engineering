@@ -1,8 +1,8 @@
 {
   "service": {
-    "service": "chattabot-api-service",
+    "service": "chatbot-api-service",
     "serviceObject": {
-      "name": "chattabot-api-service"
+      "name": "chatbot-api-service"
     },
     "provider": {
       "stage": "dev",
@@ -93,25 +93,25 @@
           "NewUnderscoremessageLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/chattabot-api-service-dev-new_message"
+              "LogGroupName": "/aws/lambda/chatbot-api-service-dev-new_message"
             }
           },
           "NewUnderscoresmsLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/chattabot-api-service-dev-new_sms"
+              "LogGroupName": "/aws/lambda/chatbot-api-service-dev-new_sms"
             }
           },
           "LoginLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/chattabot-api-service-dev-login"
+              "LogGroupName": "/aws/lambda/chatbot-api-service-dev-login"
             }
           },
           "AuthLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/chattabot-api-service-dev-auth"
+              "LogGroupName": "/aws/lambda/chatbot-api-service-dev-auth"
             }
           },
           "IamRoleLambdaExecution": {
@@ -139,7 +139,7 @@
                     "Fn::Join": [
                       "-",
                       [
-                        "chattabot-api-service",
+                        "chatbot-api-service",
                         "dev",
                         "lambda"
                       ]
@@ -156,7 +156,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/chattabot-api-service-dev*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/chatbot-api-service-dev*:*"
                           }
                         ]
                       },
@@ -167,7 +167,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/chattabot-api-service-dev*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/chatbot-api-service-dev*:*:*"
                           }
                         ]
                       },
@@ -183,7 +183,7 @@
                 "Fn::Join": [
                   "-",
                   [
-                    "chattabot-api-service",
+                    "chatbot-api-service",
                     "dev",
                     {
                       "Ref": "AWS::Region"
@@ -201,9 +201,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/chattabot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chattabot-api-service.zip"
+                "S3Key": "serverless/chatbot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chatbot-api-service.zip"
               },
-              "FunctionName": "chattabot-api-service-dev-new_message",
+              "FunctionName": "chatbot-api-service-dev-new_message",
               "Handler": "bin/new_message",
               "MemorySize": 1024,
               "Role": {
@@ -270,9 +270,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/chattabot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chattabot-api-service.zip"
+                "S3Key": "serverless/chatbot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chatbot-api-service.zip"
               },
-              "FunctionName": "chattabot-api-service-dev-new_sms",
+              "FunctionName": "chatbot-api-service-dev-new_sms",
               "Handler": "bin/new_sms",
               "MemorySize": 1024,
               "Role": {
@@ -339,9 +339,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/chattabot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chattabot-api-service.zip"
+                "S3Key": "serverless/chatbot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chatbot-api-service.zip"
               },
-              "FunctionName": "chattabot-api-service-dev-login",
+              "FunctionName": "chatbot-api-service-dev-login",
               "Handler": "bin/login",
               "MemorySize": 1024,
               "Role": {
@@ -380,9 +380,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/chattabot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chattabot-api-service.zip"
+                "S3Key": "serverless/chatbot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z/chatbot-api-service.zip"
               },
-              "FunctionName": "chattabot-api-service-dev-auth",
+              "FunctionName": "chatbot-api-service-dev-auth",
               "Handler": "bin/auth",
               "MemorySize": 1024,
               "Role": {
@@ -417,7 +417,7 @@
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "dev-chattabot-api-service",
+              "Name": "dev-chatbot-api-service",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -978,7 +978,7 @@
           },
           "REGION": "us-east-1"
         },
-        "name": "chattabot-api-service-dev-new_message",
+        "name": "chatbot-api-service-dev-new_message",
         "package": {},
         "memory": 1024,
         "timeout": 6,
@@ -1009,7 +1009,7 @@
             "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"NewUnderscoresmsLambdaFunction\"][\"Properties\"][\"Environment\"][\"Variables\"][\"TOPIC_URL\"]"
           }
         },
-        "name": "chattabot-api-service-dev-new_sms",
+        "name": "chatbot-api-service-dev-new_sms",
         "package": {},
         "memory": 1024,
         "timeout": 6,
@@ -1028,7 +1028,7 @@
             }
           }
         ],
-        "name": "chattabot-api-service-dev-login",
+        "name": "chatbot-api-service-dev-login",
         "package": {},
         "memory": 1024,
         "timeout": 6,
@@ -1047,7 +1047,7 @@
             }
           }
         ],
-        "name": "chattabot-api-service-dev-auth",
+        "name": "chatbot-api-service-dev-auth",
         "package": {},
         "memory": 1024,
         "timeout": 6,
@@ -1130,10 +1130,10 @@
     "serviceFilename": "serverless.yml",
     "layers": {},
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "/home/jkeam/go/src/bitbucket.org/itshospitality/chattabot-api/services/.serverless/chattabot-api-service.zip"
+    "artifact": "/home/jkeam/go/src/bitbucket.org/itshospitality/chatbot-api/services/.serverless/chatbot-api-service.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/chattabot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z",
-    "artifact": "chattabot-api-service.zip"
+    "artifactDirectoryName": "serverless/chatbot-api-service/dev/1595818292267-2020-07-27T02:51:32.267Z",
+    "artifact": "chatbot-api-service.zip"
   }
 }

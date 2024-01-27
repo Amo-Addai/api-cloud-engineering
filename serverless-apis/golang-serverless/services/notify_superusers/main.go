@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"bitbucket.org/itshospitality/chattabot-api/services/models"
-	"bitbucket.org/itshospitality/chattabot-api/services/notify_superusers/lib"
-	"bitbucket.org/itshospitality/chattabot-api/services/utils"
+	"bitbucket.org/itshospitality/chatbot-api/services/models"
+	"bitbucket.org/itshospitality/chatbot-api/services/notify_superusers/lib"
+	"bitbucket.org/itshospitality/chatbot-api/services/utils"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
@@ -22,7 +22,7 @@ func openDBConn(env *lib.Environment) (dynamo.Table, dynamo.Table) {
 
 func createMessage(env *lib.Environment, phone string, messageBody string, conversation *models.Conversation) string {
 	guestPhone := conversation.PhoneGuest
-	appURL := "https://app.chattabot.ai"
+	appURL := "https://app.chatbot.ai"
 	body := fmt.Sprintf("%s: %s %s", guestPhone, messageBody, appURL)
 	if conversation.GuestName != "" {
 		body = fmt.Sprintf("%s (%s): %s %s", conversation.GuestName, guestPhone, messageBody, appURL)

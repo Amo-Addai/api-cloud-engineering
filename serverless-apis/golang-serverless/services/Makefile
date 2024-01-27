@@ -48,12 +48,12 @@ clean:
 
 .PHONY: deploy
 deploy: clean build
-	sls deploy --verbose --aws-profile chattabot -r us-east-1 --force
+	sls deploy --verbose --aws-profile chatbot -r us-east-1 --force
 
 .PHONY:
 deploy_dev: clean build
-	sls deploy -s dev --verbose --aws-profile chattabot -r us-east-1 --force
+	sls deploy -s dev --verbose --aws-profile chatbot -r us-east-1 --force
 
 .PHONY:
 deploy_prod: clean build
-	sls deploy -s prod --verbose --aws-profile chattabot -r us-east-1 --force
+	sls deploy -s prod --verbose --aws-profile chatbot -r us-east-1 --force

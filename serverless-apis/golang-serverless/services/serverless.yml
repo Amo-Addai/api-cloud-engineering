@@ -1,4 +1,4 @@
-service: chattabot-api-service
+service: chatbot-api-service
 
 frameworkVersion: ">=1.28.0 <=2.21.1"
 useDotenv: true
@@ -16,7 +16,7 @@ custom:
   userPoolClient: "user-pool-client-${self:custom.stage}"
   authorizer: "authorizer-${self:custom.stage}"
   identityPool: "identity-pool-${self:custom.stage}"
-  userPoolDomain: "chattabot-user-pool-domain-${self:custom.stage}"
+  userPoolDomain: "chatbot-user-pool-domain-${self:custom.stage}"
   pusherAppId: ${param:PUSHER_APP_ID, env:PUSHER_APP_ID}
   pusherKey: ${param:PUSHER_KEY, env:PUSHER_KEY}
   pusherSecret: ${param:PUSHER_SECRET, env:PUSHER_SECRET}

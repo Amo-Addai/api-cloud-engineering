@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/url"
 
-	"bitbucket.org/itshospitality/chattabot-api/services/models"
-	"bitbucket.org/itshospitality/chattabot-api/services/new_sms/lib"
-	"bitbucket.org/itshospitality/chattabot-api/services/utils"
+	"bitbucket.org/itshospitality/chatbot-api/services/models"
+	"bitbucket.org/itshospitality/chatbot-api/services/new_sms/lib"
+	"bitbucket.org/itshospitality/chatbot-api/services/utils"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
