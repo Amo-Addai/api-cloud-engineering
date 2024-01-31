@@ -1,0 +1,20 @@
+<%
+  title = '' unless local_assigns.has_key? :title
+  # partial_name is mandatory
+  partial_name = nil unless local_assigns.has_key? :partial_name
+%>
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      <span class="icon"><i class="mdi mdi-ballot"></i></span>
+      <%= title %>
+    </p>
+  </header>
+  <div class="card-content">
+    <% unless partial_name.nil? %>
+      <%= render partial_name %>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </div>
+</div>

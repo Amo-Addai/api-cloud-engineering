@@ -1,0 +1,40 @@
+<%= render 'layouts/title', title: 'Resend unlock instructions' %>
+
+<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :email %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'input is-danger' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="field is-grouped">
+          <div class="control">
+            <%= f.submit "Resend unlock instructions", class: 'button is-primary', data: { turbo: false } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-vertical">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>

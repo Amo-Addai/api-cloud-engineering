@@ -1,0 +1,76 @@
+<%= render 'layouts/title', title: 'Log In' %>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :email %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'input is-danger' %>
+        </div>
+        <p class="help is-danger">
+          This field is required
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :password %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.password_field :password, class: 'input is-danger', autocomplete: "new-password" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <% if devise_mapping.rememberable? %>
+    <div class="field has-check is-horizontal">
+      <div class="field-label">
+        Remember me
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="field is-grouped-multiline is-grouped">
+            <div class="control">
+              <%= f.label :remember_me, class: 'b-checkbox checkbox' do %>
+                <%= f.check_box :remember_me %>
+                <span class="check is-primary"></span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="field is-grouped">
+          <div class="control">
+            <%= f.submit "Log in", class: 'button is-primary', data: { turbo: false } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-vertical">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <%= render "devise/shared/links" %>
+  </div>
+<% end %>
+

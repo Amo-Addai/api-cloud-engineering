@@ -1,0 +1,13 @@
+<%= render 'layouts/title', title: 'New Category' %>
+
+<section class="section is-main-section">
+  <%= render 'components/card', title: 'New Category' do %>
+    <%= render "form", category: @category %>
+  <% end %>
+</section>
+
+<br>
+
+<div>
+  <%= link_to "Back to categories", categories_path %>
+</div>

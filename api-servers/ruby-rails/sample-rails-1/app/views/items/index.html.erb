@@ -1,0 +1,14 @@
+<%= render 'layouts/title', title: 'Items' %>
+
+<section class="section is-main-section">
+  <% @items.each do |item| %>
+    <%= render 'components/card', title: item.name do %>
+      <%= render item %>
+      <p>
+        <%= link_to "Show this item", item %>
+      </p>
+    <% end %>
+  <% end %>
+  <%= link_to "New item", new_item_path %>
+</section>
+

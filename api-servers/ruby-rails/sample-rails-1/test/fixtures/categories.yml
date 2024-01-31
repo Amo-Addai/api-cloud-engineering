@@ -1,0 +1,52 @@
+one:
+  name: Restaurant
+  position: 0
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: restaurant
+
+two:
+  name: Gyms
+  position: 1
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: gyms
+
+three:
+  name: Holidays
+  position: 2
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: holidays
+
+festivus_for_the_restivus:
+  name: Holidays
+  position: 2
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  parent: three
+  slug: holidays-2
+
+sub:
+  name: Seafood
+  parent: one
+  position: 0
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: seafood
+
+sub2:
+  name: Gymbo
+  parent: two
+  position: 4
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: gymbo
+
+hidden_parent:
+  name: This is hidden
+  position: 9
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: hidden-parent
+  hidden: true
+
+hidden_child:
+  name: This is hidden child
+  position: 10
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: hidden-child
+  parent: hidden_parent

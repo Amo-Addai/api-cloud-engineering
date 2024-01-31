@@ -1,0 +1,33 @@
+<aside class="aside is-placed-left is-expanded">
+  <div class="aside-tools">
+    <div class="aside-tools-label">
+      <span><b>AvviCities</b> Admin</span>
+    </div>
+  </div>
+  <div class="menu is-menu-main">
+    <p class="menu-label">General</p>
+    <ul class="menu-list">
+      <li>
+        <%= link_to dashboard_index_path, class: "has-icon #{'is-active' if controller_name == 'dashboard'}" do %>
+          <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+          <span class="menu-item-label">Dashboard</span>
+        <% end %>
+      </li>
+    </ul>
+    <p class="menu-label">Data</p>
+    <ul class="menu-list">
+      <li>
+        <%= link_to categories_path, class: "has-icon #{'is-active' if controller_name == 'categories'}" do %>
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Categories</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to items_path, class: "has-icon #{'is-active' if controller_name == 'items'}" do %>
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Items</span>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</aside>

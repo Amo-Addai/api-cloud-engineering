@@ -1,0 +1,148 @@
+one:
+  name: Sei
+  description: Sei is a restaurant.
+  website_url: http://www.seirestaurant.com
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'sei'
+
+two:
+  name: matchbox
+  description: Wood-fired pizza, New American eats & craft beers in a brick-walled setting with an outdoor patio.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'matchbox'
+
+three:
+  name: Clydes
+  description: Long-running local chain serving classic American dishes & cocktails in a traditional setting.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'clydes'
+
+four:
+  name: Reren Lamen
+  description: A low-key choice for Chinese-style ramen made with fresh noodles, plus dumplings & Asian entrees.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'renren-lamen'
+
+five:
+  name: Eat First Restaurant
+  description: Cantonese dishes & Chinese classics whipped up in an unassuming, subterranean space.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'eat-first-restaurant'
+
+six:
+  name: bookmark six
+  description: nothing
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'bookmark-six'
+
+seven:
+  name: bookmark seven
+  description: nothing
+  custom_dates: ['2030-01-01', '2030-02-01']
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'bookmark-seven'
+
+vida:
+  name: Vida Fitness
+  description: VIDA Verizon is located in the heart of the bustling Chinatown and Penn Quarter neighborhoods and is home to many of DC’s business professionals.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'vida-fitness'
+
+seafood:
+  name: Capt Pell
+  description: This seafood restaurant serves seafood.
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'capt-pell'
+
+gymbo:
+  name: Gymbo's Gym
+  description: Jumbo Gym
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'gymbo-s-gym'
+
+expired:
+  name: Expired
+  description: This is expired
+  end_date: "2010-02-11"
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'expired'
+
+address_searchable_one:
+  name: Searchable Record 1
+  description: Address Searchable 1
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'searchable-record-1'
+
+address_searchable_two:
+  name: Searchable Record 2
+  description: Address Searchable 2
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'searchable-record-2'
+
+address_searchable_three:
+  name: Searchable Record 3
+  description: Address Searchable 3
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'searchable-record-3'
+
+elasticsearch_tagged:
+  name: Inga's Paperclip Shop
+  description: We sell paperclips
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'inga-s-paperclip-shop'
+
+elasticsearch_not_tagged:
+  name: Alexandria, Virginia
+  description:  Mediocre location with a high cost of living
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'alexandria-virginia'
+
+dated_bookmark:
+  name: Weekend
+  description: We prepare food and sell it to people who eat it
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  start_date: "2005-10-14"
+  end_date: "2005-10-14"
+  slug: 'weekend'
+
+friday_bookmark:
+  name: Friday
+  description: We prepare food and sell it to people who eat it
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  start_date: "2005-10-14"
+  end_date: "2005-10-14"
+  slug: 'friday'
+
+saturday_bookmark:
+  name: Saturday
+  description: We prepare food and sell it to people who eat it
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  start_date: "2005-10-15"
+  end_date: "2005-10-15"
+  slug: 'saturday'
+
+sunday_bookmark:
+  name: Sunday
+  description: We prepare food and sell it to people who eat it
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  start_date: "2005-10-16"
+  end_date: "2005-10-16"
+  slug: 'sunday'
+
+hidden_from_near_me:
+  name: Hidden from near me
+  description: This should be hidden from near me
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'hidden-from-near-me'
+
+not_hidden_from_near_me:
+  name: This should not be hidden from near me
+  description: This should not be hidden from near me
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'this-should-not-be-hidden-from-near-me'
+
+hidden:
+  name: Hidden
+  description: This is completely hidden bc of parent
+  image_url: https://s3.us-east-2.amazonaws.com/ihcities-image-cache/870x400/bookmark_9da58b3c-ac9b-4bb9-85b6-d79c598cbbb4.png
+  slug: 'bookmark-hidden'

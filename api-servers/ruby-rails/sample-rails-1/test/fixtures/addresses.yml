@@ -1,0 +1,13 @@
+one:
+  street1: 4100 Fairfax Drive
+  city: Arlington
+  state: VA
+  zip: '22203'
+  item: one
+
+two:
+  street1: 601 F St NW
+  city: Washington
+  state: DC
+  zip: '20004'
+  item: two

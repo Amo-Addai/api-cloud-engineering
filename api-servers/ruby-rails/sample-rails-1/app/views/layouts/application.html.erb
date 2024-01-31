@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" class="<%= 'has-aside-left' if user_signed_in? %> has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded">
+  <head>
+    <title>Avvi Backend</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+
+  <body>
+    <div id="app">
+      <% if user_signed_in? %>
+        <%= render 'layouts/nav' %>
+        <%= render 'layouts/sidebar' %>
+      <% end %>
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+      <%= yield %>
+    </div>
+    <%= render 'layouts/footer' %>
+  </body>
+</html>

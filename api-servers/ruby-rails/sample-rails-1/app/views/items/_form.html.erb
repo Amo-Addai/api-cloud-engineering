@@ -1,0 +1,227 @@
+<%= form_with(model: item) do |form| %>
+  <% if item.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+        <% item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :name %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :name, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :description %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_area :description, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :image_url %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :image_url, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :website_url %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :website_url, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :reservation_url %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :reservation_url, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :book_url %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :book_url, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :menu_url %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :menu_url, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :phone %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :phone, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :venue_name %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :venue_name, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :start_date %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.date_field :start_date, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :end_date %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.date_field :end_date, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :special_notes %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :special_notes, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :custom_dates, style: "display: block" %>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :slug %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.text_field :slug, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :price_quartile %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.number_field :price_quartile, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= form.label :cuisine %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= form.number_field :cuisine, class: 'input' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="field is-grouped">
+          <div class="control">
+            <%= form.submit "Save", class: 'button is-primary', data: { turbo: false } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

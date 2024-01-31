@@ -1,0 +1,51 @@
+<nav id="navbar-main" class="navbar is-fixed-top">
+  <div class="navbar-brand">
+    <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">
+      <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
+    </a>
+  </div>
+  <div class="navbar-brand is-right">
+    <a class="navbar-item is-hidden-desktop jb-navbar-menu-toggle" data-target="navbar-menu">
+      <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
+    </a>
+  </div>
+  <div class="navbar-menu fadeIn animated faster" id="navbar-menu">
+    <div class="navbar-end">
+      <div class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
+        <a class="navbar-link is-arrowless">
+          <div class="is-user-name">
+            <span>
+              <%= current_user.fullname %>
+            </span>
+          </div>
+          <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
+        </a>
+        <div class="navbar-dropdown">
+          <%= link_to edit_user_registration_path, class: 'navbar-item' do %>
+            <span class="icon"><i class="mdi mdi-account"></i></span>
+            <span>Profile</span>
+          <% end %>
+          <!--
+          <a class="navbar-item">
+            <span class="icon"><i class="mdi mdi-settings"></i></span>
+            <span>Settings</span>
+          </a>
+          <a class="navbar-item">
+            <span class="icon"><i class="mdi mdi-email"></i></span>
+            <span>Messages</span>
+          </a>
+          -->
+          <hr class="navbar-divider">
+          <%= link_to destroy_user_session_path, method: :delete, class: 'navbar-item', data: { turbo_method: :delete } do %>
+            <span class="icon"><i class="mdi mdi-logout"></i></span>
+            <span>Log Out</span>
+          <% end %>
+        </div>
+      </div>
+      <%= link_to destroy_user_session_path, class: 'navbar-item is-desktop-icon-only', data: { turbo_method: :delete } do %>
+        <span class="icon"><i class="mdi mdi-logout"></i></span>
+        <span>Log Out</span>
+      <% end %>
+    </div>
+  </div>
+</nav>

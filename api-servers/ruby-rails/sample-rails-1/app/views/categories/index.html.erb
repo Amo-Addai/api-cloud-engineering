@@ -1,0 +1,10 @@
+<%= render 'layouts/title', title: "#{@parent.nil? ? 'Categories' : 'Subcategories for ' + @parent.name}" %>
+
+<section class="section is-main-section">
+  <%= render 'components/table',
+      header: ['Title', 'Description'],
+      rows: @categories.map {|c| [c.name, c.description]},
+      links: @categories.map {|c, i| [@parent.nil? ? categories_path(parent_id: c.id) : items_path(category_id: c.id), nil] }
+  %>
+  <%= link_to "New category", new_category_path %>
+</section>

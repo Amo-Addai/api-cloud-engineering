@@ -1,0 +1,4 @@
+admin:
+  email: admin@gmail.com
+  roles: admin
+  encrypted_password: $2a$12$NMe01YMO/S.N8xwppW8jGOmA57UNNNE0HsXfmTiyV58ySomAz.wEy
