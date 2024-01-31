@@ -1,0 +1,12 @@
+[
+    {
+        "text": "Comment 1",
+        "likes": 0,
+        "userId": "user123"
+    },
+    {
+        "text": "Comment 2",
+        "likes": 0,
+        "userId": "user456"
+    }
+]
