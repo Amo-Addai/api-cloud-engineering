@@ -177,8 +177,9 @@ def form_tree_from_list(arr) -> Tree.TreeNode:
     return tree, [].copy()
 
 
-# TODO: 
-def parse_priority_queue_to_tree(pq): pass
+def parse_priority_queue_to_tree(pq): 
+    # TODO: parse priority queue into a regular tree
+    pass
 
 
 def parse_priority_queue_to_huffman_tree(pq): # todo: O(?) t | O(?) s
