@@ -1,8 +1,8 @@
 import sys
-
 from queue import PriorityQueue
 from collections import defaultdict
 
+# TODO: Test all cases
 
 class Tree:
 
@@ -10,61 +10,93 @@ class Tree:
 
     class BaseNode:
 
+        count: int
+
         def __init__(self, v):
-            self.value = v
+            self.count = v
         
         @property
-        def value(self): return self.value
+        def count(self): return self.count
 
-        @value.setter
-        def value(self, v): self.value = v
+        @count.setter
+        def count(self, v): self.count = v
     
     class LeafNode(BaseNode):
 
+        count: int
+        label: str
+        parent: TreeNode # TODO: 
+
         def __init__(self, v, c): # v = count | c = char
-            self.value = v
+            self.count = v
             self.label = c
+            self.parent = None
         
         @property
-        def value(self): return self.value
+        def count(self): return self.count
 
-        @value.setter
-        def value(self, v): self.value = v
+        @count.setter
+        def count(self, v): self.count = v
         
         @property
         def label(self): return self.label
 
         @label.setter
         def label(self, c): self.label = c
+        
+        @property
+        def parent(self): return self.parent
+
+        @parent.setter
+        def parent(self, p: TreeNode): self.parent = p
 
         def is_leaf(self): return True
 
     class TreeNode(BaseNode):
+
+        count: int
+        parent: TreeNode # TODO: 
+        left_child: BaseNode
+        right_child: BaseNode
+        left_code: int = 0
+        right_code: int = 1
         
-        def __init__(self, v, l=None, r=None): # todo: l: TreeNode | LeafNode, r: TreeNode | LeafNode):
-            self.value = v
+        def __init__(self, v, l: BaseNode = None, r: BaseNode = None):
+            self.count = v
+            self.parent = None
             self.left_child = l
             self.right_child = r
         
         @property
-        def value(self): return self.value
+        def count(self): return self.count
 
-        @value.setter
-        def value(self, v): self.value = v
+        @count.setter
+        def count(self, v): self.count = v
+        
+        @property
+        def parent(self): return self.parent
+
+        @parent.setter
+        def parent(self, p: TreeNode): self.parent = p
         
         @property
         def left_child(self): return self.left_child
 
         @left_child.setter
-        def left_child(self, l): self.left_child = l
+        def left_child(self, l: BaseNode): self.left_child = l
         
         @property
         def right_child(self): return self.right_child
 
         @right_child.setter
-        def right_child(self, r): self.right_child = r
+        def right_child(self, r: BaseNode): self.right_child = r
 
         def is_leaf(self): return False
+        
+        # @property # todo: not required, because you only want a getter in this case
+        def left_code(self): return self.left_code
+        
+        def right_code(self): return self.right_code
 
 
 def parse_string_to_dict(s): # O(n) t | O(n) s
@@ -98,28 +130,33 @@ def form_node(node) -> Tree.LeafNode: # 1 tuple to 1 leaf node
 
 
 def form_tree(node, next) -> Tree.TreeNode: # 2 tuples (leaf nodes) to 1 tree node
-    l_node = form_node(node)
-    r_node = form_node(next)
-    tree = Tree.TreeNode(l_node.value + r_node.value, l_node, r_node) # todo: l_node.value() ?
+    l_node = form_node(node); r_node = form_node(next)
+    tree = Tree.TreeNode(l_node.count + r_node.count) # todo: l_node.count() ?
+    l_node.parent(tree); r_node.parent(tree)
+    tree.left_child(l_node); tree.right_child(r_node)
     return tree
 
 
 def grow_tree(tree: Tree.TreeNode, node) -> Tree.TreeNode: # 1 (tuple) leaf node to 1 tree's root node
     node = form_node(node)
     l_node = None; r_node = None
-    if node.value <= tree.value:
+    if node.count <= tree.count:
         l_node = node; r_node = tree
     else: l_node = tree; r_node = node
-    new_tree = Tree.TreeNode(node.value + tree.value, l_node, r_node)
+    new_tree = Tree.TreeNode(node.count + tree.count)
+    l_node.parent(tree); r_node.parent(tree)
+    tree.left_child(l_node); tree.right_child(r_node)
     return new_tree
 
 
 def merge_trees(tree: Tree.TreeNode, next: Tree.TreeNode) -> Tree.TreeNode: # 2 trees to 1 tree
     l_node = None; r_node = None
-    if tree.value <= next.value:
+    if tree.count <= next.count:
         l_node = tree; r_node = next
     else: l_node = next; r_node = tree
-    new_tree = Tree.TreeNode(tree.value + next.value, l_node, r_node)
+    new_tree = Tree.TreeNode(tree.count + next.count)
+    l_node.parent(new_tree); r_node.parent(new_tree)
+    new_tree.left_child(l_node); new_tree.right_child(r_node)
     return new_tree
 
 
@@ -128,33 +165,34 @@ def form_tree_from_list(arr) -> Tree.TreeNode:
     node = arr[0]; next = arr[1]
     if len(node or []) != 2 or len(next or []) != 2: return None, None
     tree: Tree.TreeNode = None
-    if type(node[1]) is Tree.TreeNode and type(next[1]) is Tree.TreeNode:
-        tree = merge_trees(node[1], next[1])
+    if type(node[1]) is str and type(next[1]) is str:
+        tree = form_tree(node, next) # 2 LeafNodes wil be formed from node & next (tuples)
     elif type(node[1]) is Tree.TreeNode and type(next[1]) is str:
         tree = grow_tree(node[1], next) # a LeafNode will be formed from next (tuple)
     elif type(node[1]) is str and type(next[1]) is Tree.TreeNode:
         tree = grow_tree(next[1], node) # a LeafNode will be formed from node (tuple)
-    elif type(node[1]) is str and type(next[1]) is str:
-        tree = form_tree(node, next) # 2 LeafNodes wil be formed from node & next (tuples)
+    elif type(node[1]) is Tree.TreeNode and type(next[1]) is Tree.TreeNode:
+        tree = merge_trees(node[1], next[1])
 
     return tree, [].copy()
 
 
+# TODO: 
 def parse_priority_queue_to_tree(pq): pass
 
 
 def parse_priority_queue_to_huffman_tree(pq): # todo: O(?) t | O(?) s
 
-    def get_count_value(next):
+    def get_count(next):
         if type(next) is tuple and len(next) == 2:
             if type(next[1]) is str: return next[0]
-            elif type(next[1]) is Tree.BaseNode: return next[1].value
+            elif type(next[1]) is Tree.BaseNode: return next[1].count
         return None
 
     if pq is None or type(pq) is not PriorityQueue or (type(pq) is PriorityQueue and pq.empty()): return None
     node = pq.get(); next = pq.get()
     tree: Tree.TreeNode = form_tree(node, next)
-    pq.put((tree.value, tree))
+    pq.put((tree.count, tree))
     arr = []
     while not pq.empty():
         if tree is None or arr is None:
@@ -166,11 +204,23 @@ def parse_priority_queue_to_huffman_tree(pq): # todo: O(?) t | O(?) s
         if len(arr) < 2: arr.append(next)
         else:
             tree, arr = form_tree_from_list(arr)
-            pq.put((tree.value, tree))
+            pq.put((tree.count, tree))
     return None
 
 
-def encode_string_to_huffman_tree(s): pass
+def encode_string_to_huffman_tree(s): 
+    # d = parse_string_to_dict(s)
+    d = parse_string_to_defaultdict(s)
+    pq = parse_dict_to_priority_queue(d)
+    # t = parse_priority_queue_to_tree(pq)
+    ht = parse_priority_queue_to_huffman_tree(pq)
+    return ht # todo: t
+
+
+def dfs(tree: Tree.TreeNode): pass
+
+
+def bfs(tree: Tree.TreeNode): pass
 
 
 def parse_huffman_tree_to_prefix_table(tree): pass
