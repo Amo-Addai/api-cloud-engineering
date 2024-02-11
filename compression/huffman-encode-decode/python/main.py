@@ -122,43 +122,41 @@ def parse_dict_to_priority_queue(d): # O(n) t | O(n) s
     if len(d or {}) == 0: return None
     pq = PriorityQueue(len(d))
     for k, v in d.items(): # k = char | v = count
-        # node = form_node((v, k)) # also try converting all tuples into LeafNodes, before adding to queue
-        pq.put((v, k)) # count -> char
+        node = form_node((v, k)) # count -> char
+        pq.put((node.count, node))
     return pq
 
 
-def form_node(node) -> Tree.LeafNode: # 1 tuple to 1 leaf node
-    return Tree.LeafNode(node[0], node[1])
+def form_node(tuple_ode) -> Tree.LeafNode: # 1 tuple to 1 leaf node
+    return Tree.LeafNode(tuple_ode[0], tuple_ode[1])
 
 
-def form_tree(node, next) -> Tree.TreeNode: # 2 tuples (leaf nodes) to 1 tree node
-    l_node = form_node(node); r_node = form_node(next)
-    tree = Tree.TreeNode(l_node.count + r_node.count) # todo: l_node.count() ?
-    l_node.parent(tree); r_node.parent(tree)
-    tree.left_child(l_node); tree.right_child(r_node)
+def form_tree(node: Tree.LeafNode, next: Tree.LeafNode) -> Tree.TreeNode: # 2 tuples (leaf nodes) to 1 tree node
+    tree = Tree.TreeNode(node.count + next.count) # todo: node.count() ?
+    node.parent(tree); next.parent(tree)
+    tree.left_child(node); tree.right_child(next)
     return tree
 
 
-def grow_tree(tree: Tree.TreeNode, node) -> Tree.TreeNode: # 1 (tuple) leaf node to 1 tree's root node
-    node = form_node(node)
-    l_node = None; r_node = None
+def grow_tree(tree: Tree.TreeNode, node: Tree.LeafNode) -> Tree.TreeNode: # 1 (tuple) leaf node to 1 tree's root node
+    new_node = None; next_node = None
     if node.count <= tree.count:
-        l_node = node; r_node = tree
-    else: l_node = tree; r_node = node
+        new_node = node; next_node = tree
+    else: new_node = tree; next_node = node
     new_tree = Tree.TreeNode(node.count + tree.count)
-    l_node.parent(tree); r_node.parent(tree)
-    tree.left_child(l_node); tree.right_child(r_node)
+    new_node.parent(new_tree); next_node.parent(new_tree)
+    tree.left_child(new_node); tree.right_child(next_node)
     return new_tree
 
 
 def merge_trees(tree: Tree.TreeNode, next: Tree.TreeNode) -> Tree.TreeNode: # 2 trees to 1 tree
-    l_node = None; r_node = None
+    new_node = None; next_node = None
     if tree.count <= next.count:
-        l_node = tree; r_node = next
-    else: l_node = next; r_node = tree
+        new_node = tree; next_node = next
+    else: new_node = next; next_node = tree
     new_tree = Tree.TreeNode(tree.count + next.count)
-    l_node.parent(new_tree); r_node.parent(new_tree)
-    new_tree.left_child(l_node); new_tree.right_child(r_node)
+    new_node.parent(new_tree); next_node.parent(new_tree)
+    new_tree.left_child(new_node); new_tree.right_child(next_node)
     return new_tree
 
 
@@ -166,15 +164,17 @@ def form_tree_from_list(arr) -> Tree.TreeNode:
     if len(arr or []) != 2: return None, None
     node = arr[0]; next = arr[1]
     if len(node or []) != 2 or len(next or []) != 2: return None, None
-    tree: Tree.TreeNode = None
-    if type(node[1]) is str and type(next[1]) is str:
-        tree = form_tree(node, next) # 2 LeafNodes wil be formed from node & next (tuples)
-    elif type(node[1]) is Tree.TreeNode and type(next[1]) is str:
-        tree = grow_tree(node[1], next) # a LeafNode will be formed from next (tuple)
-    elif type(node[1]) is str and type(next[1]) is Tree.TreeNode:
-        tree = grow_tree(next[1], node) # a LeafNode will be formed from node (tuple)
-    elif type(node[1]) is Tree.TreeNode and type(next[1]) is Tree.TreeNode:
-        tree = merge_trees(node[1], next[1])
+    if type(node[1]) is not Tree.BaseNode or type(next[1]) is not Tree.BaseNode: return None, None
+    node: Tree.BaseNode = node[1]; next: Tree.BaseNode = next[1]; tree: Tree.TreeNode = None
+    
+    if node.is_leaf() and next.is_leaf(): 
+        tree = form_tree(node, next) # 2 LeafNodes to form 1 TreeNode
+    elif not node.is_leaf() and next.is_leaf():
+        tree = grow_tree(node, next) # 1 TreeNode (node) growing with 1 LeafNode (next)
+    elif node.is_leaf() and not next.is_leaf():
+        tree = grow_tree(next, node) # 1 TreeNode (next) growing with 1 LeafNode (node)
+    elif not node.is_leaf() and not next.is_leaf():
+        tree = merge_trees(node, next) # 2 TreeNodes merged into 1 TreeNode
 
     return tree, [].copy()
 
@@ -186,10 +186,10 @@ def parse_priority_queue_to_tree(pq):
 
 def parse_priority_queue_to_huffman_tree(pq): # todo: O(?) t | O(?) s
 
-    def get_count(next):
-        if type(next) is tuple and len(next) == 2:
-            if type(next[1]) is str: return next[0]
-            elif type(next[1]) is Tree.BaseNode: return next[1].count
+    def get_count(node):
+        if type(node) is tuple and len(node) == 2:
+            if type(node[1]) is str: return node[0]
+            elif type(node[1]) is Tree.BaseNode: return node[1].count
         return None
 
     if pq is None or type(pq) is not PriorityQueue or (type(pq) is PriorityQueue and pq.empty()): return None
@@ -276,7 +276,7 @@ def rebuild_prefix_tree_from_output_headers(file):
 
 
 def decode_binary_code_from_file(file):
-    # TODO: read remaider (encoded bit string or binary code), using either huffman tree or prefix table
+    # TODO: read remainder (encoded bit string or binary code), using either huffman tree or prefix table
     pass
 
 
