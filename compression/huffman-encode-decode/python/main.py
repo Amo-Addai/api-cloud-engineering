@@ -1,6 +1,7 @@
 import sys
-from queue import PriorityQueue
 from collections import defaultdict
+from queue import PriorityQueue
+from tabulate import tabulate
 
 # TODO: Test all cases
 
@@ -218,10 +219,14 @@ def encode_string_to_huffman_tree(s):
     return ht # todo: t
 
 
-def dfs(tree: Tree.TreeNode): pass
+def dfs(tree: Tree.TreeNode): 
+    # TODO: traverse tree with Depth-first Search
+    pass
 
 
-def bfs(tree: Tree.TreeNode): pass
+def bfs(tree: Tree.TreeNode): 
+    # TODO: traverse tree with Breadth-first Search
+    pass
 
 
 def parse_huffman_tree_to_prefix_table(tree): 
