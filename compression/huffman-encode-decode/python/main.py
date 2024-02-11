@@ -127,8 +127,8 @@ def parse_dict_to_priority_queue(d): # O(n) t | O(n) s
     return pq
 
 
-def form_node(tuple_ode) -> Tree.LeafNode: # 1 tuple to 1 leaf node
-    return Tree.LeafNode(tuple_ode[0], tuple_ode[1])
+def form_node(tuple_node) -> Tree.LeafNode: # 1 tuple to 1 leaf node
+    return Tree.LeafNode(tuple_node[0], tuple_node[1])
 
 
 def form_tree(node: Tree.LeafNode, next: Tree.LeafNode) -> Tree.TreeNode: # 2 tuples (leaf nodes) to 1 tree node
