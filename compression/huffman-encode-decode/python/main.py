@@ -243,6 +243,51 @@ def encode_string_to_binary_code_with_prefix_table(s, pt):
     pass
 
 
+def compress_binary_code_to_byte_data(s):
+    # TODO: pack binary code / bit strings into bytes to achieve the compression
+    pass
+
+
+def output_headers_to_file(file, ht, pt):
+    # TODO: write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
+    pass
+
+
+def output_binary_code_to_file(file, s):
+    # TODO: write output binary code string to file (use delimiter first, to separate from headers)
+    pass
+
+
+def rebuild_huffman_tree_from_output_headers(file):
+    # TODO: read huffman tree header information from encoded output file, then rebuild huffman tree, ready to decode the compressed text or byte data
+    pass
+
+
+def rebuild_prefix_tree_from_output_headers(file):
+    # TODO: read prefix tree header information from encoded output file, then rebuild prefix tree, ready to decode the compressed text or byte data
+    pass
+
+
+def decode_binary_code_from_file(file):
+    # TODO: read remaider (encoded bit string or binary code), using either huffman tree or prefix table
+    pass
+
+
+def output_decoded_text_to_file(file, s):
+    # TODO: write output decoded text to a new output file
+    pass
+
+
+def compare_text(s1, s2):
+    # TODO: compare lengths of (raw | encoded | decoded) text
+    pass
+
+
+def compare_files(f1, f2):
+    # TODO: compare file sizes of input & output files containing (raw | encoded | decoded) text
+    pass
+
+
 
 
 def huffman_encode_decode(func, in_file, out_file): pass
