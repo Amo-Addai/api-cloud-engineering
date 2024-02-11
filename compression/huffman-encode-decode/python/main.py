@@ -122,6 +122,7 @@ def parse_dict_to_priority_queue(d): # O(n) t | O(n) s
     if len(d or {}) == 0: return None
     pq = PriorityQueue(len(d))
     for k, v in d.items(): # k = char | v = count
+        # node = form_node((v, k)) # also try converting all tuples into LeafNodes, before adding to queue
         pq.put((v, k)) # count -> char
     return pq
 
