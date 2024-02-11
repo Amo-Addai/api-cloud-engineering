@@ -223,10 +223,26 @@ def dfs(tree: Tree.TreeNode): pass
 def bfs(tree: Tree.TreeNode): pass
 
 
-def parse_huffman_tree_to_prefix_table(tree): pass
+def parse_huffman_tree_to_prefix_table(tree): 
+    # TODO: parse huffman tree to prefix table, for each letter in each LeafNode
+    pass
 
 
-def decode_huffman_tree_with_prefix_table(tree): pass
+def decode_huffman_tree_with_prefix_table(tree): 
+    # TODO: decode huffman tree using already built prefix table, for each letter in each LeafNode
+    pass
+
+
+def encode_string_to_binary_code_with_huffman_tree(s, tree): 
+    # TODO: for each char in string, find binary code from huffman tree (with dfs), then append to output string (& file)
+    pass
+
+
+def encode_string_to_binary_code_with_prefix_table(s, pt): 
+    # TODO: for each char in string, find binary code from prefix table, then append to output string (& file)
+    pass
+
+
 
 
 def huffman_encode_decode(func, in_file, out_file): pass
