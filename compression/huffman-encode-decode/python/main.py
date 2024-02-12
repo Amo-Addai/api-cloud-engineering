@@ -1,5 +1,5 @@
 import sys
-from collections import defaultdict
+from collections import defaultdict, deque
 from queue import PriorityQueue
 from tabulate import tabulate
 
@@ -220,24 +220,69 @@ def encode_string_to_huffman_tree(s):
     return ht # todo: t
 
 
-def dfs(tree: Tree.TreeNode, item=None, parse=True): 
-    if tree is None: return
+def dfs(node: Tree.BaseNode, cb=None, item=None, parse=True): # todo: leverage item & parse args
+    if node is None: return
+
     # DFS pre-order
 
-    print(tree.value)
+    print(node.count)
 
-    dfs(tree.left_child)
-    dfs(tree.right_child)
+    if node.is_leaf():
+        print(f"Leaf Node: {node.label}")
+        if cb is not None: cb(node)
+    else:
+        dfs(node.left_child)
+        dfs(node.right_child)
 
 
-def bfs(tree: Tree.TreeNode):
-    # TODO: Breadth-first Search Traversal through Huffman Tree (think through necessity first)
-    pass
+def bfs(tree: Tree.BaseNode, cb=None):
+    if tree is None: return
+
+    queue = deque()
+    queue.append(tree)
+
+    while queue:
+        node = queue.popleft()
+        print(node.count)
+
+        if node.is_leaf():
+            print(f"Leaf Node: {node.label}")
+            if cb is not None: cb(node)
+        else:
+            queue.append(node.left_child)
+            queue.append(node.right_child)
 
 
 def parse_huffman_tree_to_prefix_table(tree): 
-    # TODO: parse huffman tree to prefix table, for each letter in each LeafNode
-    pass
+    # parse huffman tree to prefix table, for each letter in each LeafNode
+    pt = []; cols = ["Character", "Frequency", "Code", "Bits"]
+
+    def cb(node): 
+        arr = []; code = ''; i = 0
+        arr.append(node.label or '')
+        arr.append(node.count or '')
+        while node.parent is not None:
+            '''
+            # todo: wrong way, as both children could have the same count value
+            if node.count == node.parent.left_child.count: code += f"{0}"
+            elif node.count == node.parent.right_child.count: code += f"{1}"
+            '''
+            # compare the Tree subclass objects by both object itself & identifier specifically
+            if node is node.parent.left_child and id(node) == id(node.parent.left_child): 
+                code += f"{0}"
+            elif node is node.parent.right_child and id(node) == id(node.parent.right_child): 
+                code += f"{1}"
+            i += 1
+        arr.append(code[::-1])
+        arr.append(i)
+        pt.append(arr)
+
+    # todo: test both dfs & bfs
+    dfs(tree, cb)
+    # bfs(tree, cb)
+
+    table = tabulate(pt, headers=cols, tablefmt="fancy_grid")
+    return table
 
 
 def decode_huffman_tree_with_prefix_table(tree): 
