@@ -254,9 +254,9 @@ def bfs(tree: Tree.BaseNode, cb=None):
             queue.append(node.right_child)
 
 
-def traverse_tree(tree: Tree.BaseNode, method='dfs', cb=None):
-    if method == 'dfs': dfs(cb)
-    elif method == 'bfs': bfs(cb)
+def traverse_tree(tree: Tree.TreeNode, method='dfs', cb=None):
+    if method == 'dfs': dfs(tree, cb)
+    elif method == 'bfs': bfs(tree, cb)
 
 
 def check_tree_node_row_in_prefix_table(node, cb=None):
@@ -297,6 +297,20 @@ def parse_huffman_tree_to_prefix_table(tree):
     return pt
 
 
+def search_huffman_tree(tree, char):
+    found_node = None
+
+    def cb(node): 
+        if node.label == char:
+            found_node = node
+            return # todo: break traversal in traverse_tree() runtime, not in this callback
+
+    traverse_tree(tree, 'dfs', cb)
+
+    print(f"Found Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
+    return found_node
+
+
 def search_prefix_table(pt, char):
     # row = pt.loc[char] # todo: test finding specific row with Character as the primary key index
     row = pt.loc[pt['Character'] == char].iloc[0].values
@@ -308,6 +322,9 @@ def decode_huffman_tree_with_prefix_table(tree):
     pt = parse_huffman_tree_to_prefix_table(tree)
 
     def cb(node): 
+        found_node = search_huffman_tree(tree, node.label)
+        print(f"Cross-checking Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
+        print()
         node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
         pt_row = search_prefix_table(pt, node.label)
         # now, check node, to compare with both node_row and the found row in the prefix table, pt
