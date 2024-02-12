@@ -2,6 +2,7 @@ import sys
 from collections import defaultdict, deque
 from queue import PriorityQueue
 from tabulate import tabulate
+import pandas as pd
 
 # TODO: Test all cases
 
@@ -253,40 +254,87 @@ def bfs(tree: Tree.BaseNode, cb=None):
             queue.append(node.right_child)
 
 
+def traverse_tree(tree: Tree.BaseNode, method='dfs', cb=None):
+    if method == 'dfs': dfs(cb)
+    elif method == 'bfs': bfs(cb)
+
+
+def check_tree_node_row_in_prefix_table(node, cb=None):
+    arr = []; code = ''; i = 0
+    arr.append(node.label or '')
+    arr.append(node.count or '')
+    while node.parent is not None:
+        '''
+        # todo: wrong way, as both children could have the same count value
+        if node.count == node.parent.left_child.count: code += f"{0}"
+        elif node.count == node.parent.right_child.count: code += f"{1}"
+        '''
+        # compare the Tree subclass objects by both object itself & identifier specifically
+        if node is node.parent.left_child and id(node) == id(node.parent.left_child): 
+            code += f"{0}"
+        elif node is node.parent.right_child and id(node) == id(node.parent.right_child): 
+            code += f"{1}"
+        i += 1
+    arr.append(code[::-1])
+    arr.append(i)
+    if cb is not None: cb(arr)
+
+
 def parse_huffman_tree_to_prefix_table(tree): 
     # parse huffman tree to prefix table, for each letter in each LeafNode
-    pt = []; cols = ["Character", "Frequency", "Code", "Bits"]
+    cols = ["Character", "Frequency", "Code", "Bits"]
+    pt = pd.DataFrame({ col: [] for col in cols })
+    # pt.set_index("Character", inplace=True) # todo: test finding specific row with Character as the primary key index
 
     def cb(node): 
-        arr = []; code = ''; i = 0
-        arr.append(node.label or '')
-        arr.append(node.count or '')
-        while node.parent is not None:
-            '''
-            # todo: wrong way, as both children could have the same count value
-            if node.count == node.parent.left_child.count: code += f"{0}"
-            elif node.count == node.parent.right_child.count: code += f"{1}"
-            '''
-            # compare the Tree subclass objects by both object itself & identifier specifically
-            if node is node.parent.left_child and id(node) == id(node.parent.left_child): 
-                code += f"{0}"
-            elif node is node.parent.right_child and id(node) == id(node.parent.right_child): 
-                code += f"{1}"
-            i += 1
-        arr.append(code[::-1])
-        arr.append(i)
-        pt.append(arr)
+        node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
+        pt.loc[len(pt.index)] = node_row # append new row to dataframe
 
     # todo: test both dfs & bfs
-    dfs(tree, cb)
-    # bfs(tree, cb)
+    traverse_tree(tree, 'dfs', cb)
+    # traverse_tree(tree, 'bfs', cb)
 
-    table = tabulate(pt, headers=cols, tablefmt="fancy_grid")
-    return table
+    return pt
+
+
+def search_prefix_table(pt, char):
+    # row = pt.loc[char] # todo: test finding specific row with Character as the primary key index
+    row = pt.loc[pt['Character'] == char].iloc[0].values
+    return row
 
 
 def decode_huffman_tree_with_prefix_table(tree): 
     # TODO: decode huffman tree using already built prefix table, for each letter in each LeafNode
+    pt = parse_huffman_tree_to_prefix_table(tree)
+
+    def cb(node): 
+        node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
+        pt_row = search_prefix_table(pt, node.label)
+        # now, check node, to compare with both node_row and the found row in the prefix table, pt
+        cols = ["Character", "Frequency", "Code", "Bits"]
+        for i, col in enumerate(cols):
+            val = ''
+            print()
+            if col is 'Character': 
+                val = node.label
+                print(f"Node Character Label: {val}")
+            elif col is 'Frequency': 
+                val = node.count
+                print(f"Node Frequency/Count: {val}")
+            print(f"Node in Tree for Property `{col}`: {node_row[i]}")
+            print(f"Row in Prefix Table for column `{col}`: {pt_row[i]}")
+            print()
+            print(f"Validation Check (Actual Node Property = Tree Node Property = Prefix Table Column ?) - { \
+                val == node_row[i] == pt_row[i] if col in ["Character", "Frequency"] else \
+                node_row[i] == pt_row[i] \
+            }")
+            print()
+
+    traverse_tree(tree, 'dfs', cb)
+
+
+def output_headers_to_file(file, ht, pt):
+    # TODO: write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
     pass
 
 
@@ -302,11 +350,6 @@ def encode_string_to_binary_code_with_prefix_table(s, pt):
 
 def compress_binary_code_to_byte_data(s):
     # TODO: pack binary code / bit strings into bytes to achieve the compression
-    pass
-
-
-def output_headers_to_file(file, ht, pt):
-    # TODO: write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
     pass
 
 
