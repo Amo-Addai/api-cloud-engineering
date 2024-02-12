@@ -220,13 +220,18 @@ def encode_string_to_huffman_tree(s):
     return ht # todo: t
 
 
-def dfs(tree: Tree.TreeNode): 
-    # TODO: traverse tree with Depth-first Search
-    pass
+def dfs(tree: Tree.TreeNode, item=None, parse=True): 
+    if tree is None: return
+    # DFS pre-order
+
+    print(tree.value)
+
+    dfs(tree.left_child)
+    dfs(tree.right_child)
 
 
-def bfs(tree: Tree.TreeNode): 
-    # TODO: traverse tree with Breadth-first Search
+def bfs(tree: Tree.TreeNode):
+    # TODO: Breadth-first Search Traversal through Huffman Tree (think through necessity first)
     pass
 
 
