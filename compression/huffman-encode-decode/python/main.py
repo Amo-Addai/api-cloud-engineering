@@ -4,11 +4,11 @@ from queue import PriorityQueue
 from tabulate import tabulate
 import pandas as pd
 
+from data.preproc import *
+
 # TODO: Test all cases
 
 class Tree:
-
-    def __init__(self): pass
 
     class BaseNode:
 
@@ -99,6 +99,27 @@ class Tree:
         def left_code(self): return self.left_code
         
         def right_code(self): return self.right_code
+
+
+    def __init__(self): pass
+    
+    @classmethod
+    def print_tree(tree: BaseNode, indent='', last=True):
+        print(indent, end='')
+        if last:
+            print('└── ', end='')
+            indent += '    '
+        else:
+            print('├── ', end='')
+            indent += '│   '
+
+        print(tree.count)
+
+        # Recursively print each child with appropriate indentation
+        tree_children = [] if tree.is_leaf() else [tree.left_child, tree.right_child]
+        child_count = len(tree_children)
+        for i, child in enumerate(tree_children):
+            Tree.print_tree(child, indent, i == child_count - 1)
 
 
 def parse_string_to_dict(s): # O(n) t | O(n) s
@@ -285,14 +306,20 @@ def parse_huffman_tree_to_prefix_table(tree):
     cols = ["Character", "Frequency", "Code", "Bits"]
     pt = pd.DataFrame({ col: [] for col in cols })
     # pt.set_index("Character", inplace=True) # todo: test finding specific row with Character as the primary key index
+    table = []
 
     def cb(node): 
         node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
+        table.append(node_row) # append new row to table, for tabulate() initial test
         pt.loc[len(pt.index)] = node_row # append new row to dataframe
 
     # todo: test both dfs & bfs
     traverse_tree(tree, 'dfs', cb)
     # traverse_tree(tree, 'bfs', cb)
+
+    table = tabulate(table, headers=cols, tablefmt="grid")
+    # table = tabulate(pt, headers="keys", tablefmt="html") # todo: also try tabulating dataframe
+    print(table)
 
     return pt
 
@@ -352,7 +379,10 @@ def decode_huffman_tree_with_prefix_table(tree):
 
 def output_headers_to_file(file, ht, pt):
     # TODO: write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
-    pass
+    write_output(Tree.print_tree(ht))
+    write_output('----------' * 10)
+    write_output(pt.to_string())
+    write_output(f"{'----------' * 10}\n\n")
 
 
 def encode_string_to_binary_code_with_huffman_tree(s, tree): 
