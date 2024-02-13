@@ -33,6 +33,10 @@ class Tree:
             self.count = v
             self.label = c
             self.parent = None
+            # todo: these extra properties can only be set when huffman tree is being decoded
+            self.binary_code = ''
+            self.bits = 0
+
         
         @property
         def count(self): return self.count
@@ -53,6 +57,20 @@ class Tree:
         def parent(self, p: TreeNode): self.parent = p
 
         def is_leaf(self): return True
+
+        # todo: these extra properties can only be set when huffman tree is being decoded
+        
+        @property
+        def binary_code(self): return self.binary_code
+
+        @binary_code.setter
+        def binary_code(self, c): self.binary_code = c
+        
+        @property
+        def bits(self): return self.bits
+
+        @bits.setter
+        def bits(self, b): self.bits = b
 
     class TreeNode(BaseNode):
 
@@ -280,7 +298,7 @@ def traverse_tree(tree: Tree.TreeNode, method='dfs', cb=None):
     elif method == 'bfs': bfs(tree, cb)
 
 
-def check_tree_node_row_in_prefix_table(node, cb=None):
+def find_tree_leaf_node_info(node):
     arr = []; code = ''; i = 0
     arr.append(node.label or '')
     arr.append(node.count or '')
@@ -296,9 +314,11 @@ def check_tree_node_row_in_prefix_table(node, cb=None):
         elif node is node.parent.right_child and id(node) == id(node.parent.right_child): 
             code += f"{1}"
         i += 1
+    node.binary_code(code[::-1])
+    node.bits(i)
     arr.append(code[::-1])
     arr.append(i)
-    if cb is not None: cb(arr)
+    return arr, node
 
 
 def parse_huffman_tree_to_prefix_table(tree): 
@@ -309,9 +329,9 @@ def parse_huffman_tree_to_prefix_table(tree):
     table = []
 
     def cb(node): 
-        node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
-        table.append(node_row) # append new row to table, for tabulate() initial test
-        pt.loc[len(pt.index)] = node_row # append new row to dataframe
+        node_info, _ = find_tree_leaf_node_info(node) 
+        table.append(node_info) # append new node_info to table, for tabulate() initial test
+        pt.loc[len(pt.index)] = node_info # append new node_info to dataframe
 
     # todo: test both dfs & bfs
     traverse_tree(tree, 'dfs', cb)
@@ -324,12 +344,13 @@ def parse_huffman_tree_to_prefix_table(tree):
     return pt
 
 
-def search_huffman_tree(tree, char):
+def search_huffman_tree(tree, char, cb=None):
     found_node = None
 
     def cb(node): 
         if node.label == char:
             found_node = node
+            if cb is not None: cb(found_node)
             return # todo: break traversal in traverse_tree() runtime, not in this callback
 
     traverse_tree(tree, 'dfs', cb)
@@ -352,9 +373,9 @@ def decode_huffman_tree_with_prefix_table(tree):
         found_node = search_huffman_tree(tree, node.label)
         print(f"Cross-checking Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
         print()
-        node_row = check_tree_node_row_in_prefix_table(node, cb=lambda row: row) 
+        node_info, updated_node = find_tree_leaf_node_info(node) 
         pt_row = search_prefix_table(pt, node.label)
-        # now, check node, to compare with both node_row and the found row in the prefix table, pt
+        # now, check node, to compare with both node_info and the found row in the prefix table, pt
         cols = ["Character", "Frequency", "Code", "Bits"]
         for i, col in enumerate(cols):
             val = ''
@@ -365,29 +386,48 @@ def decode_huffman_tree_with_prefix_table(tree):
             elif col is 'Frequency': 
                 val = node.count
                 print(f"Node Frequency/Count: {val}")
-            print(f"Node in Tree for Property `{col}`: {node_row[i]}")
+            elif col is 'Code': 
+                val = updated_node.binary_code or '-'
+                print(f"Updated Node Code Label: {val}")
+            elif col is 'Bits': 
+                val = updated_node.bits or '-'
+                print(f"Updated Node Bits: {val}")
+            print(f"Node in Tree for Property `{col}`: {node_info[i]}")
             print(f"Row in Prefix Table for column `{col}`: {pt_row[i]}")
             print()
             print(f"Validation Check (Actual Node Property = Tree Node Property = Prefix Table Column ?) - { \
-                val == node_row[i] == pt_row[i] if col in ["Character", "Frequency"] else \
-                node_row[i] == pt_row[i] \
+                val == node_info[i] == pt_row[i] if col in ["Character", "Frequency"] else \
+                node_info[i] == pt_row[i] \
             }")
             print()
 
     traverse_tree(tree, 'dfs', cb)
 
 
-def output_headers_to_file(file, ht, pt):
+def output_headers_to_file(ht, pt, file_path=None):
     # TODO: write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
-    write_output(Tree.print_tree(ht))
-    write_output('----------' * 10)
-    write_output(pt.to_string())
-    write_output(f"{'----------' * 10}\n\n")
+    write_output(f"\n{Tree.print_tree(ht)}\n", file_path)
+    write_output(f"\n{'----------' * 10}\n", file_path)
+    write_output(f"\n{pt.to_string()}\n", file_path)
+    write_output(f"\n{'----------' * 10}\n\n", file_path)
 
 
 def encode_string_to_binary_code_with_huffman_tree(s, tree): 
     # TODO: for each char in string, find binary code from huffman tree (with dfs), then append to output string (& file)
-    pass
+    found_node = None; encoded_string = ''
+
+    def cb(found_node): 
+        print(f"Found Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
+        node_info, updated_node = find_tree_leaf_node_info(found_node) 
+        # todo: Binary code is the 3rd item in the node_info array, or the updated_node.binary_code | .bits newly set properties
+        if updated_node.binary_code or '-' == node_info[2]: 
+            print('Updated Node & Node info array match')
+        else: print('Updated Node & Node info array DO NOT match')
+        encoded_string += f"{updated_node.binary_code or node_info[2] or '-'}"
+
+    for c in s.split(): search_huffman_tree(tree, c, cb)
+
+    return encoded_string
 
 
 def encode_string_to_binary_code_with_prefix_table(s, pt): 
@@ -400,27 +440,27 @@ def compress_binary_code_to_byte_data(s):
     pass
 
 
-def output_binary_code_to_file(file, s):
+def output_binary_code_to_file(s, file_path=None):
     # TODO: write output binary code string to file (use delimiter first, to separate from headers)
     pass
 
 
-def rebuild_huffman_tree_from_output_headers(file):
+def rebuild_huffman_tree_from_output_headers(file_path=None):
     # TODO: read huffman tree header information from encoded output file, then rebuild huffman tree, ready to decode the compressed text or byte data
     pass
 
 
-def rebuild_prefix_tree_from_output_headers(file):
+def rebuild_prefix_tree_from_output_headers(file_path=None):
     # TODO: read prefix tree header information from encoded output file, then rebuild prefix tree, ready to decode the compressed text or byte data
     pass
 
 
-def decode_binary_code_from_file(file):
+def decode_binary_code_from_file(file_path=None):
     # TODO: read remainder (encoded bit string or binary code), using either huffman tree or prefix table
     pass
 
 
-def output_decoded_text_to_file(file, s):
+def output_decoded_text_to_file(s, file_path=None):
     # TODO: write output decoded text to a new output file
     pass
 
