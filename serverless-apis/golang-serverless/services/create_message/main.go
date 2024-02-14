@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"bitbucket.org/itshospitality/chatbot-api/services/create_message/lib"
-	"bitbucket.org/itshospitality/chatbot-api/services/models"
-	"bitbucket.org/itshospitality/chatbot-api/services/utils"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/create_message/lib"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/models"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/utils"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"

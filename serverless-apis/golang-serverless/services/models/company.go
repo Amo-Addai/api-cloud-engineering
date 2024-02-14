@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"bitbucket.org/itshospitality/chatbot-api/services/utils"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/utils"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
