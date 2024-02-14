@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"bitbucket.org/itshospitality/chatbot-api/services/models"
-	"bitbucket.org/itshospitality/chatbot-api/services/new_message_out/lib"
-	"bitbucket.org/itshospitality/chatbot-api/services/utils"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/models"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/new_message_out/lib"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/utils"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )

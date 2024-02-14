@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"regexp"
 
-	"bitbucket.org/itshospitality/chatbot-api/services/models"
-	"bitbucket.org/itshospitality/chatbot-api/services/websocket_auth/lib"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/models"
+	"github.com/Amo-Addai/api-feature-development/serverless-apis/golang-serverless/services/websocket_auth/lib"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
