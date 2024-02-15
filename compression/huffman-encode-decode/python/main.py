@@ -172,9 +172,9 @@ def form_node(tuple_node) -> Tree.LeafNode: # 1 tuple to 1 leaf node
 
 
 def form_tree(node: Tree.LeafNode, next: Tree.LeafNode) -> Tree.TreeNode: # 2 tuples (leaf nodes) to 1 tree node
-    tree = Tree.TreeNode(node.count + next.count) # todo: node.count() ?
-    node.parent(tree); next.parent(tree)
-    tree.left_child(node); tree.right_child(next)
+    tree = Tree.TreeNode(node.count + next.count)
+    node.parent = tree; next.parent = tree
+    tree.left_child = node; tree.right_child = next
     return tree
 
 
@@ -184,8 +184,8 @@ def grow_tree(tree: Tree.TreeNode, node: Tree.LeafNode) -> Tree.TreeNode: # 1 (t
         new_node = node; next_node = tree
     else: new_node = tree; next_node = node
     new_tree = Tree.TreeNode(node.count + tree.count)
-    new_node.parent(new_tree); next_node.parent(new_tree)
-    tree.left_child(new_node); tree.right_child(next_node)
+    new_node.parent = new_tree; next_node.parent = new_tree
+    tree.left_child = new_node; tree.right_child = next_node
     return new_tree
 
 
@@ -195,8 +195,8 @@ def merge_trees(tree: Tree.TreeNode, next: Tree.TreeNode) -> Tree.TreeNode: # 2 
         new_node = tree; next_node = next
     else: new_node = next; next_node = tree
     new_tree = Tree.TreeNode(tree.count + next.count)
-    new_node.parent(new_tree); next_node.parent(new_tree)
-    new_tree.left_child(new_node); new_tree.right_child(next_node)
+    new_node.parent = new_tree; next_node.parent = new_tree
+    new_tree.left_child = new_node; new_tree.right_child = next_node
     return new_tree
 
 
@@ -318,8 +318,8 @@ def find_tree_leaf_node_info(node):
         elif node is node.parent.right_child and id(node) == id(node.parent.right_child): 
             code += f"{1}"
         i += 1
-    node.binary_code(code[::-1])
-    node.bits(i)
+    node.binary_code = code[::-1]
+    node.bits = i
     arr.append(code[::-1])
     arr.append(i)
     return arr, node
