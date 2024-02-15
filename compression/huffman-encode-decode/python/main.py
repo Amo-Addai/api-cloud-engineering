@@ -260,25 +260,52 @@ def encode_string_to_huffman_tree(s):
     return ht # todo: t
 
 
-def dfs(node: Tree.BaseNode, item=None, cb=None):
+def cfs(node: Tree.BaseNode, code=None, cb=None): # todo: 'Code-First Search': just traversing tree by following binary code patterns of nodes & children nodes
+    if code is None:
+        print('No binary code')
+        return None
+    elif node is not None and node.is_leaf(): 
+        if cb is not None: cb(node, code)
+        return node
+    elif len(code or '') > 0:
+        # todo: return the found node, and remaining code, if any
+        c = code.pop(0)
+        if c == '0': cfs(node.left_child, code)
+        elif c == '1': cfs(node.right_child, code)
+    else: 
+        print('Check for error')
+        return node
+
+
+def dfs(node: Tree.BaseNode, type=None, value=None, cb=None):
     if node is None: return
 
-    # DFS pre-order
+    if type or '' == 'Code' and len(value or '') > 0:
+        return cfs(node, code=value)
 
-    print(node.count)
+    # DFS pre-order
 
     if node.is_leaf():
         print(f"Leaf Node: {node.label}")
         if cb is not None: cb(node)
-        if item is not None and item == node.label:
-            return node
+        if type is not None and value is not None:
+            if type == 'Character':
+                if value == node.label:
+                    return node
+            elif type == 'Code':
+                _, updated_node = find_tree_leaf_node_info(node)
+                if updated_node is not None and value == updated_node.binary_code or '':
+                    return updated_node
     else:
         dfs(node.left_child)
         dfs(node.right_child)
 
 
-def bfs(node: Tree.BaseNode, item=None, cb=None):
+def bfs(node: Tree.BaseNode, type=None, value=None, cb=None):
     if node is None: return
+
+    if type or '' == 'Code' and len(value or '') > 0:
+        return cfs(node, code=value)
 
     queue = deque()
     queue.append(node)
@@ -290,16 +317,23 @@ def bfs(node: Tree.BaseNode, item=None, cb=None):
         if node.is_leaf():
             print(f"Leaf Node: {node.label}")
             if cb is not None: cb(node)
-            if item is not None and item == node.label:
-                return node
+            if type is not None and value is not None:
+                if type == 'Character':
+                    if value == node.label:
+                        return node
+                elif type == 'Code':
+                    _, updated_node = find_tree_leaf_node_info(node)
+                    if updated_node is not None and value == updated_node.binary_code or '':
+                        return updated_node
         else:
             queue.append(node.left_child)
             queue.append(node.right_child)
 
 
-def traverse_tree(tree: Tree.TreeNode, method='dfs', item=None, cb=None):
-    if method == 'dfs': dfs(tree, item=item, cb=cb)
-    elif method == 'bfs': bfs(tree, item=item, cb=cb)
+def traverse_tree(tree: Tree.TreeNode, method='dfs', type=None, value=None, cb=None):
+    if method == 'dfs': dfs(tree, type=type, value=value, cb=cb)
+    elif method == 'bfs': bfs(tree, type=type, value=value, cb=cb)
+    elif method == 'cfs': cfs(tree, code=value, cb=cb) # Code-first search
 
 
 def find_tree_leaf_node_info(node):
@@ -338,8 +372,8 @@ def parse_huffman_tree_to_prefix_table(tree):
         pt.loc[len(pt.index)] = node_info # append new node_info to dataframe
 
     # todo: test both dfs & bfs
-    traverse_tree(tree, 'dfs', cb=cb)
-    # traverse_tree(tree, 'bfs', cb=cb)
+    traverse_tree(tree, method='dfs', cb=cb)
+    # traverse_tree(tree, method='bfs', cb=cb)
 
     table = tabulate(table, headers=cols, tablefmt="grid")
     # table = tabulate(pt, headers="keys", tablefmt="html") # todo: also try tabulating dataframe
@@ -348,8 +382,14 @@ def parse_huffman_tree_to_prefix_table(tree):
     return pt
 
 
-def search_huffman_tree(tree, char, cb=None):
-    found_node = traverse_tree(tree, 'dfs', item=char)
+def search_huffman_tree(tree, char=None, code=None, cb=None):
+    meth = None; type = None; val = None
+    if char is not None: meth = 'dfs'; type = 'Character'; val = char
+    elif code is not None: meth = 'cfs'; type = 'Code'; val = code
+    if meth is None or type is None or val is None:
+        print('Error searching huffman tree')
+        return
+    found_node = traverse_tree(tree, method=meth, type=type, value=val, cb=cb)
     if found_node is not None:
         print(f"Found Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
         if cb is not None: cb(found_node)
@@ -357,10 +397,20 @@ def search_huffman_tree(tree, char, cb=None):
     return found_node
 
 
-def search_prefix_table(pt, char):
-    # row = pt.loc[char] # todo: test finding specific row with Character as the primary key index
-    row = pt.loc[pt['Character'] == char].iloc[0].values
-    return row
+def search_prefix_table(pt, char=None, code=None):
+    col = None; val = None
+    if char is not None: col = 'Character'; val = char
+    elif code is not None: col = 'Code'; val = code
+    if col is None or val is None:
+        print('Error searching prefix table')
+        return
+    
+    # TODO: 1st, check if row exists based on pt[col] == val before returning it, else return None
+    
+    row = pt.loc[pt[col] == val].iloc[0] # or None
+    # row = pt.loc[val] # todo: test finding specific row with Character as the primary key index
+    if row is not None: return row.values
+    else: return None
 
 
 def decode_huffman_tree_with_prefix_table(tree): 
@@ -368,7 +418,7 @@ def decode_huffman_tree_with_prefix_table(tree):
     pt = parse_huffman_tree_to_prefix_table(tree)
 
     def cb(node): 
-        found_node = search_huffman_tree(tree, node.label)
+        found_node = search_huffman_tree(tree, char=node.label)
         print(f"Cross-checking Node: {found_node.label or 'Not Found'}\nFrequency: {found_node.count or '-'}")
         print()
         node_info, updated_node = find_tree_leaf_node_info(node) 
@@ -398,7 +448,7 @@ def decode_huffman_tree_with_prefix_table(tree):
             }")
             print()
 
-    traverse_tree(tree, 'dfs', cb=cb)
+    traverse_tree(tree, method='dfs', cb=cb)
 
 
 def output_headers_to_file(ht, pt, file_path=None):
@@ -431,7 +481,7 @@ def encode_string_to_binary_code_with_huffman_tree(s, tree):
         else: print('Updated Node & Node info array DO NOT match')
         encoded_string += f"{updated_node.binary_code or node_info[2] or ''}"
 
-    for c in s.split(): search_huffman_tree(tree, c, cb)
+    for c in s.split(): search_huffman_tree(tree, char=c, cb=cb)
 
     return encoded_string
 
@@ -475,9 +525,38 @@ def rebuild_prefix_tree_from_output_headers(file_path=None):
     pass
 
 
-def decode_byte_data_from_output_text_to_binary_code(file_path=None):
+def decompress_byte_data_from_output_text_to_binary_code(file_path=None):
     # TODO: read remainder (encoded bit string or binary code), using either huffman tree or prefix table
     pass
+
+
+def decode_binary_code_with_huffman_tree(ht, code):
+    text = ''
+
+    # todo: in this case, 'Code-first Search' is used by default (these are the args)
+    def cb(node: Tree.LeafNode=None, code=None):
+        if node is not None and node.is_leaf():
+            text += node.label
+        if len(code or '') > 0:
+            search_huffman_tree(ht, code=code, cb=cb)
+    # todo: return value (found_node) not required, due to callback (in this case only)
+    _ = search_huffman_tree(ht, code=code, cb=cb)
+    
+    print(f"Decoded Text: `{text}`")
+    return text
+
+
+def decode_binary_code_with_prefix_table(pt, code):
+    text = ''; c = ''
+
+    while len(code or '') > 0:
+        c += code.pop(0)
+        pt_row = search_prefix_table(pt, code=c)
+        if pt_row is not None:
+            text += pt_row[0] # take out 1st 'Character' column
+    
+    print(f"Decoded Text: `{text}`")
+    return text
 
 
 def decode_binary_code_from_output_text_to_string(file_path=None):
