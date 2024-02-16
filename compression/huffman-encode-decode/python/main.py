@@ -405,12 +405,11 @@ def search_prefix_table(pt, char=None, code=None):
         print('Error searching prefix table')
         return
     
-    # TODO: 1st, check if row exists based on pt[col] == val before returning it, else return None
-    
-    row = pt.loc[pt[col] == val].iloc[0] # or None
-    # row = pt.loc[val] # todo: test finding specific row with Character as the primary key index
-    if row is not None: return row.values
-    else: return None
+    i = pt[pt[col] == val].get_valid_index()
+    row = pt.loc[i].values if i is not None else None # todo: fastest option so far
+    # Option 2 - row = pt.loc[pt[col] == val].iloc[0].values if not pt.loc[pt[col] == val].empty else None
+    # Option 3 - row = pt.loc[val] # todo: test finding specific row with Character as the primary key index
+    return row
 
 
 def decode_huffman_tree_with_prefix_table(tree): 
