@@ -451,7 +451,7 @@ def decode_huffman_tree_with_prefix_table(tree):
 
 
 def output_headers_to_file(ht, pt, file_path=None):
-    # write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix tree headers)
+    # write output headers (both huffman tree and prefix table) to file (use delimiter to separate both huffman tree and prefix table headers)
     write_output(f"\n{'----------' * 10}\n", file_path)
     append_output(f"\nHEADER INFO - HUFFMAN TREE\n", file_path)
     append_output(f"\n{'----------' * 10}\n", file_path)
@@ -519,8 +519,8 @@ def rebuild_huffman_tree_from_output_headers(file_path=None):
     pass
 
 
-def rebuild_prefix_tree_from_output_headers(file_path=None):
-    # TODO: read prefix tree header information from encoded output file, then rebuild prefix tree, ready to decode the compressed text or byte data
+def rebuild_prefix_table_from_output_headers(file_path=None):
+    # TODO: read prefix table header information from encoded output file, then rebuild prefix table, ready to decode the compressed text or byte data
     pass
 
 
@@ -538,6 +538,7 @@ def decode_binary_code_with_huffman_tree(ht, code):
             text += node.label
         if len(code or '') > 0:
             search_huffman_tree(ht, code=code, cb=cb)
+    
     # todo: return value (found_node) not required, due to callback (in this case only)
     _ = search_huffman_tree(ht, code=code, cb=cb)
     
@@ -569,14 +570,29 @@ def output_decoded_text_to_file(s, file_path='./data/new_output.txt'):
     append_output(f"\n{'----------' * 10}\n", file_path)
 
 
+def read_input_text_from_file(file_path):
+    text = read_input(file_path)
+    return text
+
+
 def compare_text(s1, s2):
     # TODO: compare lengths of (raw | encoded | decoded) text
-    pass
+    print(f"\nText 1 - {len(s1)} Characters\n")
+    print(f"\n{s1}\n")
+    print(f"\n{'----------' * 10}\n")
+    print(f"\nText 2 - {len(s2)} Characters\n")
+    print(f"\n{s2}\n")
+    print(f"\n{'----------' * 10}\n")
 
 
 def compare_files(f1, f2):
     # TODO: compare file sizes of input & output files containing (raw | encoded | decoded) text
-    pass
+    f1_text = read_input(f1)
+    f2_text = read_input(f2)
+    # todo: compare f1 & f2 files (sizes, ..)
+
+    # compare f1_text & f2_text
+    _ = compare_text(f1_text, f2_text)
 
 
 
