@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ST7lpX+TEmn3zmjVKHmNxPbPoD4fMjFZYp/ZmHe3e3k=",
+  "Source": "ChatGPTBackend",
+  "BasePath": "_content/ChatGPTBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
