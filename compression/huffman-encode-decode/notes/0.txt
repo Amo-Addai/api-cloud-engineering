@@ -1,0 +1,9 @@
+In theory, Huffman coding is an optimal coding method whenever the true frequencies are known, and the frequency of a letter is independent of the context of that letter in the message. 
+In practice, the frequencies of letters in an English text document do change depending on context. 
+For example, while E is the most commonly used letter of the alphabet in English documents, T is more common as the first letter of a word. 
+This is why most commercial compression utilities do not use Huffman coding as their primary coding method, but instead use techniques that take advantage of the context for the letters.
+
+Another factor that affects the compression efficiency of Huffman coding is the relative frequencies of the letters. 
+Some frequency patterns will save no space as compared to fixed-length codes; others can result in great compression. 
+In general, Huffman coding does better when there is large variation in the frequencies of letters.
+

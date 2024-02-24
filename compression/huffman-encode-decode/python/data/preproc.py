@@ -1,5 +1,4 @@
 import os
-import json
 
 
 input_file_path = './input.txt'
@@ -13,6 +12,14 @@ def read_input(file_path=input_file_path):
 
 
 def write_output(data, file_path=output_file_path):
-    with open(file_path, 'a') as file:
-        file.write(data)
+    with open(file_path, 'r+') as file:
+        text = file.read()
+        file.seek(0, os.SEEK_SET)
+        file.write(data + text)
 
+
+def append_output(data, file_path=output_file_path):
+    with open(file_path, 'a') as file: file.write(data)
+
+
+# write_output("data\n", file_path=output_file_path)
