@@ -1,3 +1,3 @@
-module git-client
+module to-go
 
 go 1.20
