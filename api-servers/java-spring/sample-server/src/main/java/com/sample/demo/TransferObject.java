@@ -1,4 +1,4 @@
-package com.mallon.demo;
+package com.sample.demo;
 
 public class TransferObject {
 

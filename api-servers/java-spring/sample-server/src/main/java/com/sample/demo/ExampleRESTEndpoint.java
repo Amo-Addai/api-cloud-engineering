@@ -1,4 +1,4 @@
-package com.mallon.demo;
+package com.sample.demo;
 
 import java.util.ArrayList;
 import java.util.List;
