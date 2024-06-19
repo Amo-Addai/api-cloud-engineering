@@ -154,7 +154,8 @@ def parse_string_to_defaultdict(s): # O(n) t | O(n) s
     # defaultdict simplifies code and avoids the need for explicit initialization of counts for each character
     char_counts = defaultdict(int)
     for char in s: # char_counts[char] is initialized by 0 by default
-        char_counts[char] += 1 # in case char to be accessed by defaultdict wasn't found, 0 would be returned, and not KeyError
+        char_counts[char] += 1 # before being incremented
+        # in case char to be accessed by defaultdict wasn't found, 0 would be returned, and not KeyError
     return char_counts
 
 
