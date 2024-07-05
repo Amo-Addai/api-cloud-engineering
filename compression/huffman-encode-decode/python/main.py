@@ -10,6 +10,10 @@ from data.preproc import *
 
 class Tree:
 
+
+    def __init__(self): pass
+
+
     class BaseNode:
 
         count: int
@@ -23,11 +27,59 @@ class Tree:
         @count.setter
         def count(self, v): self.count = v
     
+
+    class TreeNode(BaseNode):
+
+        count: int
+        parent: object # Tree.TreeNode # TODO: 
+        left_child: object # Tree.BaseNode
+        right_child: object # Tree.BaseNode
+        left_code: int = 0
+        right_code: int = 1
+        
+        def __init__(self, v, l: 'Tree.BaseNode' = None, r: 'Tree.BaseNode' = None):
+            self.count = v
+            self.parent = None
+            self.left_child = l
+            self.right_child = r
+        
+        @property
+        def count(self): return self.count
+
+        @count.setter
+        def count(self, v): self.count = v
+        
+        @property
+        def parent(self): return self.parent
+
+        @parent.setter
+        def parent(self, p: 'Tree.TreeNode'): self.parent = p
+        
+        @property
+        def left_child(self): return self.left_child
+
+        @left_child.setter
+        def left_child(self, l: 'Tree.BaseNode'): self.left_child = l
+        
+        @property
+        def right_child(self): return self.right_child
+
+        @right_child.setter
+        def right_child(self, r: 'Tree.BaseNode'): self.right_child = r
+
+        def is_leaf(self): return False
+        
+        # @property # todo: not required, because you only want a getter in this case
+        def left_code(self): return self.left_code
+        
+        def right_code(self): return self.right_code
+
+
     class LeafNode(BaseNode):
 
         count: int
         label: str
-        parent: TreeNode # TODO: 
+        parent: object # Tree.TreeNode # TODO: 
 
         def __init__(self, v, c): # v = count | c = char
             self.count = v
@@ -37,7 +89,6 @@ class Tree:
             self.binary_code = ''
             self.bits = 0
 
-        
         @property
         def count(self): return self.count
 
@@ -54,7 +105,7 @@ class Tree:
         def parent(self): return self.parent
 
         @parent.setter
-        def parent(self, p: TreeNode): self.parent = p
+        def parent(self, p: 'Tree.TreeNode'): self.parent = p
 
         def is_leaf(self): return True
 
@@ -72,55 +123,7 @@ class Tree:
         @bits.setter
         def bits(self, b): self.bits = b
 
-    class TreeNode(BaseNode):
 
-        count: int
-        parent: TreeNode # TODO: 
-        left_child: BaseNode
-        right_child: BaseNode
-        left_code: int = 0
-        right_code: int = 1
-        
-        def __init__(self, v, l: BaseNode = None, r: BaseNode = None):
-            self.count = v
-            self.parent = None
-            self.left_child = l
-            self.right_child = r
-        
-        @property
-        def count(self): return self.count
-
-        @count.setter
-        def count(self, v): self.count = v
-        
-        @property
-        def parent(self): return self.parent
-
-        @parent.setter
-        def parent(self, p: TreeNode): self.parent = p
-        
-        @property
-        def left_child(self): return self.left_child
-
-        @left_child.setter
-        def left_child(self, l: BaseNode): self.left_child = l
-        
-        @property
-        def right_child(self): return self.right_child
-
-        @right_child.setter
-        def right_child(self, r: BaseNode): self.right_child = r
-
-        def is_leaf(self): return False
-        
-        # @property # todo: not required, because you only want a getter in this case
-        def left_code(self): return self.left_code
-        
-        def right_code(self): return self.right_code
-
-
-    def __init__(self): pass
-    
     @classmethod
     def print_tree(tree: BaseNode, indent='', last=True):
         print(indent, end='')
