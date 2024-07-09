@@ -1,0 +1,28 @@
+
+Serverless Site Model - Monitoring Project
+
+- Go to AWS Lambda
+- create lambda func for website: 'website-monitor'
+    - python3.9, x86_64, default role, tag: {Project: site-monitor}
+- set general config timeout: 10s
+- set env vars: {site_check: 'sample,Amazon,eBay', sites: 'sample-website,aws-website,ebay-website', sns_arn: 'SNS_TOPIC_ARN_VALUE'}
+- add code in-console & deploy (or use aws cdk)
+- create test event
+    - sample_name, default private, default template/none
+- test lambda
+
+- Go to AWS EventBridge
+- create rule: 'website-monitor-scheduled-call'
+    - optional desc, default event bus, set rule type: schedule
+    - continue to create rule (not 'EventBridge Scheduler')
+    - set regular rate schedule: every 1 min
+    - next: set target to aws service and target type: aws lambda
+    - choose target 'website-monitor' lambda function
+    - additional settings:
+        - default target input (Matched events), retry policy, max age, dead-letter queue (none)
+        - retry attempts: 5
+    - next: add tag: {Project: 'site-monitor'}
+    - next: review and create rule
+
+- event rule triggers 'website-monitor' lambda every 1 min
+- check lambda's monitoring metrics for invocations and others
