@@ -5,9 +5,6 @@
 Explore my GitHub Mono-Repo Hub of innovation with diverse Apis & Back-End development and cloud engineering mini-projects with tools like Node.js, Python, Java, Golang, etc. 
 
 
-<!-- Here are a few snapshots of UI/UX styles built within the project: -->
-
-
 <br />
 
 

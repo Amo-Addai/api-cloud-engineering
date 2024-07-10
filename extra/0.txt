@@ -1,3 +1,0 @@
-
-
-- Auto-Auditing - AWS EventBridge, GCP Eventarc, Azure Event Grid, Confluent Kafka,  ...

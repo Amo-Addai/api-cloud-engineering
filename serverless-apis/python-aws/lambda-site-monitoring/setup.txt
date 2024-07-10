@@ -1,17 +1,52 @@
 
+
 Serverless Site Model - Monitoring Project
 
-- Go to AWS Lambda
-- create lambda func for website: 'website-monitor'
-    - python3.9, x86_64, default role, tag: {Project: site-monitor}
+
+Steps Outline
+
+1. Start Lab
+2. Login
+3. Build the Site Monitor Lambda function
+Add the code to the Lambda function.
+4. EventBridge build and configure
+5. Setup the SNS Topic and update the the website monitor Lambda 
+6. Create and configure a static website in Amazon S3
+7. Build the page writing Lambda function
+8. Build, configure, & test an SQS queue
+Update permissions for website-monitor-writer function's execution role 
+Remediate access policy and message retention time for the SQS queue 
+Adding a subscription for the new SQS queue
+8. Building and configuring the API Gateway 
+Building the HTTP API Gateway 
+Building the REST API Gateway 
+Configure the REST API to serve HTML
+9. Cleanup
+
+
+Setup - Cron-rule -> website-monitor lambda -> sns topic -> sqs queue -> website-writer lambda -> s3 bucket with static website <- api gateway <- www
+
+Steps
+
+
+* - Always ensure there no region conflicts or discrepancies
+* - Project name: 'website-monitor' | Tag 'site-monitor'
+
+- Go to AWS Lambda (new tab - will revisit)
+- Create function
+- set name: 'website-monitor'
+    - python3.9, default x86_64 arch & execution role
+    - Advanced Settings: Enable tags and add: {Project: site-monitor}
 - set general config timeout: 10s
 - set env vars: {site_check: 'sample,Amazon,eBay', sites: 'sample-website,aws-website,ebay-website', sns_arn: 'SNS_TOPIC_ARN_VALUE'}
-- add code in-console & deploy (or use aws cdk)
+- Go to lambda's Code tab
+- add code in 'website-monitor-lambda.py' to console & deploy (or use aws cdk)
 - create test event
     - sample_name, default private, default template/none
 - test lambda
+* NB: this lambda should be triggered by events from some 'cron-rule', web requests, or the sites being monitored
 
-- Go to AWS EventBridge
+- Go to EventBridge
 - create rule: 'website-monitor-scheduled-call'
     - optional desc, default event bus, set rule type: schedule
     - continue to create rule (not 'EventBridge Scheduler')
@@ -26,3 +61,121 @@ Serverless Site Model - Monitoring Project
 
 - event rule triggers 'website-monitor' lambda every 1 min
 - check lambda's monitoring metrics for invocations and others
+
+* - disable rule while rest of app is being built
+
+- Go to SNS (new tab)
+- Side-navigate to Topics and create topic
+- set standard type (not fifo)
+- set name: 'SiteMonitorAlert' and optional display name
+- go to access policy section
+    - 'everyone' can publish topic
+    - 'only requesters' can subscribe to this topic - eg. '@example.com' or 'http://www.example.com'
+- go to tags: add: {Project: 'site-monitor'}
+- create topic
+- copy its ARN (Amazon Resource Name)
+
+- Side-navigate to Subscriptions and create subscription
+- set Topic ARN: {'SiteMonitorAlert' sns topic's ARN}
+- set protocol: Email & endpoint: your receiving email
+- create subscription and wait for Confirmed status
+
+- Go back to 'website-monitor' lambda (old tab)
+- set 'SiteMonitorAlert' sns topic's ARN to lambda's env var: 'sns_arn'
+
+- Go to S3 (new tab)
+- create bucket to host website: 'website-monitor' (can add extra UUID info to name for uniqueness)
+- ensure right & consistent region, default object ownership, 
+* NB: NEVER un'Block all public access' (unless public access is required for specific and verified use cases such as static website hosting)
+- but it's required in this case, so unblock it, & acknowledge warning notice
+* - anytime a public bucket is required, put it in its own 'public' organization (have multiple-org accounts if needed)
+- default disabled bucket versioning and default encryption
+- add tag: {Project: 'site-monitor'}
+- create bucket; now check on its website-hosting capability & enable
+
+- find new 'website-monitor' bucket, go to its details->Properties
+- scroll to bottom to Static website hosting
+- Edit and Enable - more config pops out
+- default hosting type (static website)
+- set Index document: eg. 'index.html' & Error document: eg. 'error.html'
+* NB: Index document can be accessed from bucket url directly, or through Api Gateway
+- Save changes
+
+- now, go to its details->Permissions
+* NB: even if bucket is public, a 'Bucket policy' is required for it to be accessible
+- scroll down to Bucket policy and Edit
+- add sample 's3-bucket-policy.json' from 'config/', and edit it with bucket name 'website-monitor'
+- in 's3-bucket-policy.json', ensure not to also replace the ending '/*' with bucket name (will cause an error when saving)
+- Save changes
+
+- go back to its details->Properties
+- scroll to bottom again to view bucket's public url
+- url returns a 404 now (no index.html); setup another lambda to write up the website's index
+
+- Go to Lambda (another new tab)
+- Side-navigate to Functions and Create function
+- set Function name: 'website-writer'
+    - python3.9, default x86_64 arch & execution role
+    - Advanced Settings: Enable tags and add: {Project: site-monitor}
+- Create function
+- set env vars: {BUCKET_NAME: 'S3_BUCKET_NAME'} - 'website-monitor' in this case (bucket name, not ARN)
+- Go to lambda's Code tab
+- add code in 'website-writer-lambda.py' to console & deploy
+- copy lambda's ARN (will need it when config'ing aws sns)
+
+* - now, we need sns to fan-out messages on sqs, to trigger the 'website-writer' lambda to create a dynamic website for visualizing monitoring data
+
+- Go to SQS (new tab)
+- Create queue
+- set name: 'website-monitor-queue'; standard queue (at-least-once delivery) by default (not FIFO delivery)
+- for configuration:
+    - remember AWS EventBridge config - regular rate schedule set: every 1 min
+    - so change queue config message retention period to 3mins (from default 4 days, or else too many messages blogged up)
+    - leave all other config with default values
+    - but add tag: {Project: site-monitor}
+- Create queue
+- scroll down to the Lambda triggers tab & Configure it
+    - select 'website-writer' by ARN & Save
+- will get an error message: "provided execution role does not have permissions to call ReceiveMessage on SQS"
+* NB: this means the selected lambda has no permission to receive messages from SQS
+
+- Go back to Lambda 'website-writer' tab
+- Scroll down & side-navigate to Permissions to view its IAM execution role
+- open role's link on a new AWS IAM tab to add the 'ReceiveMessage on SQS' permission to it
+- "Add permissions & Attach policies", search "sqs" for either "AmazonSWSFullAccess" or "AmazonSQSReadOnlyAccess"
+- check either of them (full access might be better, to avoid any other sqs role errors with the lambda's IAM role)
+- this lambda might also need access to s3 since it writes dynamic .html files to it
+- so also clear "sqs" search filter, then search for "s3", and also check "AmazonS3FullAccess"
+- now, Attach policies, then confirm the attached policies in role's Permissions tab
+
+- Now, Go back to SQS 'website-monitor-queue' tab
+- then Save; ensure success this time with no errors
+
+* - now, we want to remediate the message retention access policy in sqs, for 'website-monitor-queue'
+NB: message retention period which was reduced from 4 days to 3mins (queue still requires an access role)
+
+- while still in queue tab, scroll down to Access policy tab to view it (json)
+- in policy json: 'Principal to Allow' is only set on the root IAM role 
+- needs to be changed to queue being accessible by both the 'SiteMonitorAlert' SNS topic & 'website-writer' lambda
+- so Edit, scroll down to the policy json's edit input
+    - change: Statement -> Principal -> "AWS": from "arn:aws:iam::852632846366:root" to "*"
+    - this changes its 'Principal to Allow' to be accessible by everyone ('*')
+    - but better to use ARNs of 'SiteMonitorAlert' & 'website-writer' only (explore)
+- Save
+
+* NB: 'website-monitor-queue' hasn't yet subscribed to 'SiteMonitorAlert' topic also
+remember, 'everyone' can publish topic, and 'only requesters' can subscribe to it
+and we just made the queue accessible by the topic by changing its 'Principal to Allow' to be accessible by everyone ('*')
+
+- Go back to SNS 'SiteMonitorAlert' topic tab
+- or on SNS, side-navigate to Topics, go to 'SiteMonitorAlert' topic, & scroll down to subscriptions tab
+- Create subscription
+    - select Protocol: Amazon SQS, 
+    - Endpoint: 'website-monitor-queue' queue's ARN
+    (* NB: if 2 auto-gen'd versions of same queue - or any other AWS resource - but in different regions, choose the exact region's queue being worked with)
+    - leave all other config with default values
+- now, Create subscription
+
+* - now, API Gateway is required, to connect to 'website-writer' lambda from the internet
+
+- 
