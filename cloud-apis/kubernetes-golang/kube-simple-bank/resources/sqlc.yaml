@@ -1,0 +1,12 @@
+version: "1"
+packages: # [] # can gen multiple go packages
+  - name: "db" # working with only 1 package for now
+    path: "./db/sqlc" # path to sqlc folder to store gen'd sqlc .go files
+    queries: "./db/queries/" # path to sql query files
+    schema: "./db/migration/" # path to migration schema files
+    engine: "postgresql" # or mysql
+    emit_json_tags: true # add sql tags to gen'd structs
+    emit_prepared_queries: false # gen code that works with already-prepared statements
+    emit_interface: false # gen Querier UI for this gen'd package
+    emit_exact_table_names: true # if false, table names would be 'singularized' eg. 'accounts' table -> 'Account' struct
+
