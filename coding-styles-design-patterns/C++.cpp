@@ -33,6 +33,9 @@ MemMan, ..
 
 // * Behavioral
 
+// * Others
+
+
 
 ////////////////////////////////////////
 //  OTHER PATTERNS

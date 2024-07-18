@@ -57,23 +57,6 @@ class OOP:
     print(user.get_details())  # Alice, Age: 25
 
 
-class Module:
-
-    class UserModule:
-        _users = []
-
-        @staticmethod
-        def add_user(user):
-            UserModule._users.append(user)
-
-        @staticmethod
-        def get_user(user_id):
-            return next((user for user in UserModule._users if user['id'] == user_id), None)
-
-    UserModule.add_user({'id': 1, 'name': 'Alice', 'age': 25})
-    print(UserModule.get_user(1))  # {'id': 1, 'name': 'Alice', 'age': 25}
-
-
 class AsyncAwait:
 
     async def fetch_user_data(user_id):
@@ -85,34 +68,6 @@ class AsyncAwait:
         print(user)
 
     asyncio.run(display_user(1))  # {'id': 1, 'name': 'Alice', 'age': 25}
-
-
-class Middleware:
-
-    class Middleware:
-        def __init__(self):
-            self._middlewares = []
-
-        def use(self, middleware):
-            self._middlewares.append(middleware)
-
-        async def execute(self, context):
-            for middleware in self._middlewares:
-                await middleware(context)
-
-    async def logger(context, next_middleware):
-        print(f"Logging: {context['request']}")
-        await next_middleware(context)
-
-    async def handler(context):
-        print(f"Handling: {context['request']}")
-
-    middleware = Middleware()
-    middleware.use(logger)
-    middleware.use(handler)
-
-    context = {'request': 'GET /home'}
-    asyncio.run(middleware.execute(context))
 
 
 class Callback:
@@ -173,9 +128,58 @@ class Prototype:
     user_clone = user.clone()
     print(user_clone.get_details())  # Alice, Age: 25
 
+
 # * Structural
 
+
 # * Behavioral
+
+
+# * Others
+
+class Module:
+
+    class UserModule:
+        _users = []
+
+        @staticmethod
+        def add_user(user):
+            UserModule._users.append(user)
+
+        @staticmethod
+        def get_user(user_id):
+            return next((user for user in UserModule._users if user['id'] == user_id), None)
+
+    UserModule.add_user({'id': 1, 'name': 'Alice', 'age': 25})
+    print(UserModule.get_user(1))  # {'id': 1, 'name': 'Alice', 'age': 25}
+
+
+class Middleware:
+
+    class Middleware:
+        def __init__(self):
+            self._middlewares = []
+
+        def use(self, middleware):
+            self._middlewares.append(middleware)
+
+        async def execute(self, context):
+            for middleware in self._middlewares:
+                await middleware(context)
+
+    async def logger(context, next_middleware):
+        print(f"Logging: {context['request']}")
+        await next_middleware(context)
+
+    async def handler(context):
+        print(f"Handling: {context['request']}")
+
+    middleware = Middleware()
+    middleware.use(logger)
+    middleware.use(handler)
+
+    context = {'request': 'GET /home'}
+    asyncio.run(middleware.execute(context))
 
 
 ########################################

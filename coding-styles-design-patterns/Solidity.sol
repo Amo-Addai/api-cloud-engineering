@@ -25,6 +25,9 @@ Generics
 
 // * Behavioral
 
+// * Others
+
+
 
 ////////////////////////////////////////
 //  OTHER PATTERNS
