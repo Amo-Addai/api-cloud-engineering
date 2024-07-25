@@ -1,4 +1,6 @@
 node_modules/
+.metals/
+.scala-build/
 .history/
 .vscode/
 .editorconfig
@@ -18,6 +20,8 @@ node_modules/
 .env
 .config/
 
+.metals/
+.scala-build/
 .history/
 .vscode/
 node_modules/
@@ -203,6 +207,8 @@ geckodriver.log
 
 *.pyc
 
+.metals/
+.scala-build/
 .history
 .vscode
 node_modules
