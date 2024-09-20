@@ -1,0 +1,8 @@
+{
+    "name": "",
+    "scripts": {
+        "start": "node index.js"
+    }
+}
+
+// npm install bullmq ioredis winston nodemailer
