@@ -51,7 +51,8 @@ const worker =
             'Job completed successfully'
         ),
         {
-            concurrency: 5, // concurrency control
+            concurrency: 5, // concurrency control - allow up to 5 jobs to run simultaneously
+            // attempts: 3, // * can also set retries with worker (3 retries already set by default in batchQueue - job queue)
             connection: redisConnection
         }
     )
@@ -147,7 +148,7 @@ worker.on(
         console.error(
             `Job ${job?.id || '-'} failed after ${job?.attemptsMade || '-'} attempts: ${error}`
         ),
-        // send an alert (eg. email) when a job fails compleletely
+        // send an alert (eg. email) when a job fails completely
         await sendFailureAlert(job, err)
     )
 )
