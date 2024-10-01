@@ -6,6 +6,7 @@ node_modules/
 .editorconfig
 .hintrc
 .DS_STORE
+.DS_Store
 .eslintrc.js
 .prettierrc
 .env.*
@@ -203,7 +204,8 @@ geckodriver.log
 *.exe
 
 # Mac
-**/.DS_Store
+**/.DS_STORE
+.DS_Store
 
 *.pyc
 
