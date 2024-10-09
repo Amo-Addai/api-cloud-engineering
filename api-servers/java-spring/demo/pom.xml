@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>samples</artifactId>
+	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>samples</name>
+	<name>demo</name>
 	<description>Sample projects for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -42,6 +42,7 @@
 			<version>5.2.6.RELEASE</version>
 		</dependency>
 
+		<!-- newer version spring-web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
