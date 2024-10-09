@@ -1,4 +1,4 @@
-package payroll;
+package com.sample.payroll;
 
 import java.util.List;
 

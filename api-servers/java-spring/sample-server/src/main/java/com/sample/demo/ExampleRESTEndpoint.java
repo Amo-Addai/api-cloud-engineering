@@ -25,7 +25,7 @@ public class ExampleRESTEndpoint {
 		System.out.println("POST /example received with object: " + sentIn);
 		this.repository.add(sentIn);
 		
-		return repository;
+		return this.repository;
 	}
 	
 	@CrossOrigin

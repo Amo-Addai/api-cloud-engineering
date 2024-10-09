@@ -1,4 +1,4 @@
-package payroll;
+package com.sample.payroll;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 

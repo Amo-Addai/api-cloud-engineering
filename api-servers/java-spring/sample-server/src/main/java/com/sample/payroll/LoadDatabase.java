@@ -1,4 +1,4 @@
-package payroll;
+package com.sample.payroll;
 
 import lombok.extern.slf4j.Slf4j;
 
