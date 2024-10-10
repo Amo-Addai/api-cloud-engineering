@@ -13,3 +13,31 @@ spring.datasource.validationQuery=SELECT 1
 spring.datasource.max-active=15
 spring.datasource.max-idle=10
 spring.datasource.max-wait=8000
+
+
+TODO: Multiple DataSource
+
+
+spring.dbProductService.driverClassName=com.mysql.jdbc.Driver
+spring.dbProductService.url=jdbc:mysql://localhost:3306/PRODUCTSERVICE?autoreconnect=true
+spring.dbProductService.username=root
+spring.dbProductService.password=root
+spring.dbProductService.testOnBorrow=true
+spring.dbProductService.testWhileIdle=true
+spring.dbProductService.timeBetweenEvictionRunsMillis=60000
+spring.dbProductService.minEvictableIdleTimeMillis=30000
+spring.dbProductService.validationQuery=SELECT 1
+spring.dbProductService.max-active=15
+spring.dbProductService.max-idle=10 spring.dbProductService.max-wait=8000
+spring.dbUserService.driverClassName=com.mysql.jdbc.Driver
+spring.dbUserService.url=jdbc:mysql://localhost:3306/USERSERVICE?autoreconnect= true
+spring.dbUserService.username=root
+spring.dbUserService.password=root
+spring.dbUserService.testOnBorrow=true
+spring.dbUserService.testWhileIdle=true
+spring.dbUserService.timeBetweenEvictionRunsMillis=60000
+spring.dbUserService.minEvictableIdleTimeMillis=30000
+spring.dbUserService.validationQuery=SELECT 1
+spring.dbUserService.max-active=15
+spring.dbUserService.max-idle=10
+spring.dbUserService.max-wait=8000

@@ -50,4 +50,19 @@ public class Configurations {
 
     // ..
 
+    // * Redis Template
+
+    @Autowired
+    RedisTemplate<String, Object> redis = new RedisTemplate<>();
+
+    Map<Object, Object> dataList =
+            redis.opsForHash().entries("Redis_code_index_key");
+
+    // JDBC Template
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    Collection<Map<String, Object>> rows = jdbc.queryForList("SELECT QUERY");
+
 }
