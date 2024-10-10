@@ -22,11 +22,33 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'junit:junit:4.13.1'
+	testImplementation 'junit:junit:4.13.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// other dependencies
+
 	// compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// compile('org.springframework.boot:spring-boot-starter-jdbc')
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+	// compile('mysql:mysql-connector-java')
+//	implementation 'mysql:mysql-connector-java' // TODO: uncomment when dependency-download ready
+
+	// compile('org.springframework.boot:spring-boot-starter-data-redis')
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// h2 db
+	// compile('com.h2database:h2')
+	implementation 'com.h2database:h2'
+
+	// compile group: 'org.mockito', name: 'mockito-core', version: '2.13.0'
+
+	// testCompile('org.springframework.boot:spring-boot-starter-test')
+	// implementation 'org.springframework.boot:spring-boot-starter-test' // TODO: testImplementation already exists
+
 }
 
 tasks.named('test') {
