@@ -25,9 +25,11 @@ public class SimpleController {
     // GET Requests
 
     @RequestMapping(
-            path="/hi", method=RequestMethod.GET,
+            value="/hi", // path="/hi",
+            method=RequestMethod.GET,
             consumes="application/json", produces="application/json"
     )
+    @CrossOrigin(origins="http://localhost:8080") // todo: env-var
     public String hi() {
         return "Hello, from server";
     }

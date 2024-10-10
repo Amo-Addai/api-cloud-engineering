@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+// TODO: error: cannot find symbol
+// import com.example.demo.exceptions.ProductNotFoundException;
 import com.example.demo.functions.ProductFunctions;
 
 import com.example.demo.models.Products.Product;
@@ -75,6 +77,7 @@ public class ProductService implements ProductFunctions {
     @Override
     public Product replaceProduct(Integer id, Product product) {
         if (!productRepo.containsKey(id)) return null; // todo: fix response
+//            throw new ProductNotFoundException(); // todo: fix response
 
         productRepo.remove(id); // remove by id (as key) in hashmap
         product.setId(id); // ensure new updated-product has same .id (if required)
@@ -113,6 +116,7 @@ public class ProductService implements ProductFunctions {
     @Override
     public Boolean deleteProduct(Integer id) {
         if (!productRepo.containsKey(id)) return null; // todo: fix response
+//            throw new ProductNotFoundException(); // todo: fix response
 
         productRepo.remove(id);
         return !productRepo.containsKey(id);
