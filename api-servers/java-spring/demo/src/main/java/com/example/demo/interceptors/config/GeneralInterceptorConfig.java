@@ -1,6 +1,6 @@
 package com.example.demo.interceptors.config;
 
-import com.example.demo.config.Configurations;
+import com.example.demo.configurations.Configurations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
