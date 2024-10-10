@@ -2,7 +2,7 @@ import javax.sql.DataSource;
 
 
 @Configuration
-public class DatabaseConfig {
+public class DatabaseConfiguration {
 
     @Qualifier("jdbcProductService")
     @Autowired
