@@ -37,4 +37,13 @@ public class User {
         this.age = age;
     }
 
+    public String toString() {
+        return "id: "
+                + this.id
+                + "; name: "
+                + this.name
+                + "; age: "
+                + this.age;
+    }
+
 }

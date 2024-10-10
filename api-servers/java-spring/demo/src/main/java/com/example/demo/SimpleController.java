@@ -9,6 +9,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.service.annotation.PutExchange;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,10 +65,27 @@ public class SimpleController {
         return db.createUser(user);
     }
 
-    @PostMapping(path="/users/add", produces=MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path="/users/add", consumes=MediaType.APPLICATION_JSON_VALUE) // can't produce app/json if handler returns bool
     @ResponseStatus(HttpStatus.CREATED) // POST 201 Created
     public boolean addUser(@RequestBody User user) {
         return db.addUser(user);
+    }
+
+    // PUT Requests
+
+    @PutMapping("/users/{id}")
+    // TODO: Causing Internal Server Error
+    @ResponseStatus(HttpStatus.OK) // POST 201 Created
+    public User replaceUser(@PathVariable int id, @RequestBody User user) {
+        return db.replaceUser(id, user);
+    }
+
+    // PATCH Requests
+
+    @PatchMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public User updateUser(@PathVariable int id, @RequestBody User user) {
+        return db.updateUser(id, user);
     }
 
     // DELETE Requests
@@ -77,7 +95,26 @@ public class SimpleController {
         return db.deleteUser(id);
     }
 
-    // ALT Requests
+    // Extra Request Samples
+
+    @PostMapping("/samples")
+    public boolean sample(@RequestBody User u) throws Exception {
+        if (u == null) throw new Exception("Error");
+        return db.addUser(u);
+    }
+
+    @GetMapping("/samples/{id}")
+    public ResponseEntity<User> getSampleUser(@PathVariable int id) {
+        User user = db.getUser(id);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.put("header-key", Collections.singletonList("header-value"));
+
+        return new ResponseEntity<User>( // return http-response with additional custom headers & status
+                user, headers, HttpStatus.ACCEPTED
+        );
+    }
+
+    // ALT Requests // TODO: Test
 
     // File Uploads
     @RequestMapping(
@@ -90,7 +127,7 @@ public class SimpleController {
     ) throws IOException {
         File convertFile = new File(
                 "/var/tmp/"
-                + file.getOriginalFilename()
+                        + file.getOriginalFilename()
         );
         convertFile.createNewFile(); // returns new File value
         // todo: confirm new file also created in-place of convertFile
@@ -120,7 +157,7 @@ public class SimpleController {
             headers.add(
                     "Content-Disposition",
                     String.format("attachment;filename=\"%s\"",
-                    file.getName())
+                            file.getName())
             );
             headers.add(
                     "Cache-Control",
@@ -132,36 +169,17 @@ public class SimpleController {
             // then, ResponseEntity
             ResponseEntity<Object> response =
                     ResponseEntity.ok()
-                                  .headers(headers)
-                                  .contentLength(file.length())
-                                  .contentType(
-                                          MediaType.parseMediaType(
-                                                  "application/txt"
-                                          )
-                                  )
-                                  .body(resource);
+                            .headers(headers)
+                            .contentLength(file.length())
+                            .contentType(
+                                    MediaType.parseMediaType(
+                                            "application/txt"
+                                    )
+                            )
+                            .body(resource);
             return response;
         }
         return null;
-    }
-
-    // Extra Request Samples
-
-    @PostMapping("/samples")
-    public boolean sample(@RequestBody User u) throws Exception {
-        if (u == null) throw new Exception("Error");
-        return db.addUser(u);
-    }
-
-    @GetMapping("/samples/{id}")
-    public ResponseEntity<User> getSampleUser(@PathVariable int id) {
-        User user = db.getUser(id);
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.put("header-key", Collections.singletonList("header-value"));
-
-        return new ResponseEntity<User>( // return http-response with additional custom headers & status
-                user, headers, HttpStatus.ACCEPTED
-        );
     }
 
 }

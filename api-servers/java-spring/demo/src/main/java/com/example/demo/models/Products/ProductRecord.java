@@ -3,7 +3,7 @@ package com.example.demo.models.Products;
 import java.util.Date;
 
 public record ProductRecord(
-        String id,
+        Integer id,
         String name,
         Date createdAt
 ) { // canonical-constructor auto-gen'd with its own definition above

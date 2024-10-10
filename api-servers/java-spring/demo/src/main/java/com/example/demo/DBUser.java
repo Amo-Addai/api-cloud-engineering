@@ -3,18 +3,22 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DBUser {
 
+    private int currentId = 0;
     private List<User> userTable = new ArrayList<User>();
     // Arrays.asList(new User(..), new User(..), ..);
 
     public DBUser() {
-        userTable.add(new User(0, "A", 0));
-        userTable.add(new User(1, "Auto", 30));
+        currentId++;
+        userTable.add(new User(currentId, "A", 0));
+        currentId++;
+        userTable.add(new User(currentId, "Auto", 30));
     }
 
     public List<User> getAllUsers() {
@@ -51,13 +55,50 @@ public class DBUser {
     }
 
     public User createUser(User user) {
+        currentId++;
+        user.setId(currentId);
         userTable.add(user);
         return user;
     }
 
     public boolean addUser(User user) {
+        currentId++;
+        user.setId(currentId);
         userTable.add(user);
         return true;
+    }
+
+    public User replaceUser(int id, User user) {
+        AtomicBoolean set = new AtomicBoolean(false);
+        userTable.forEach(u -> {
+            if (u.getId() == id) {
+                System.out.println(u.toString());
+                user.setId(id);
+                userTable.remove(u);
+                userTable.add(user);
+                System.out.println(user.toString());
+                set.set(true);
+            }
+        });
+        return set.get() ? user : null;
+    }
+
+    public User updateUser(int id, User user) {
+        AtomicBoolean set = new AtomicBoolean(false);
+        userTable // .stream() // only required for . map/reduce/extra
+                .forEach(u -> {
+                    if (u.getId() == id) {
+                        System.out.println(u.toString());
+                        user.setId(u.getId()); // * not required; id already exists
+                        userTable.set(
+                                userTable.indexOf(u),
+                                user
+                        );
+                        System.out.println(user.toString());
+                        set.set(true);
+                    }
+                });
+        return set.get() ? user : null;
     }
 
     public boolean deleteUser(int id) {

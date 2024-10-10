@@ -5,10 +5,11 @@ import com.example.demo.models.Products.Product;
 import java.util.Collection;
 
 public interface ProductFunctions {
-
-    public abstract Collection<Product> getProducts();
-    public abstract void createProduct(Product product);
-    public abstract void updateProduct(String id, Product product);
-    public abstract void deleteProduct(String id);
+    // * interface methods don't require explicit 'abstract' definition
+    public Collection<Product> getProducts();
+    public Product createProduct(Product product);
+    public Product replaceProduct(Integer id, Product product);
+    public Product updateProduct(Integer id, Product product);
+    public Boolean deleteProduct(Integer id);
 
 }

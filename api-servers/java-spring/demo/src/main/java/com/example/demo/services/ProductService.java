@@ -15,15 +15,18 @@ import java.util.Map;
 @Service
 public class ProductService implements ProductFunctions {
 
-    private static Map<String, Product> productRepo =
+    private static Integer currentId = 0;
+
+    private static Map<Integer, Product> productRepo =
             ProductRepository.productRepo();
 
-    private static Map<String, ProductRecord> productRecords =
+    private static Map<Integer, ProductRecord> productRecords =
             ProductRepository.productRecords();
 
     static {
+        currentId++;
         Product honey = new Product();
-        honey.setId("1");
+        honey.setId(currentId);
         honey.setName("Honey");
         productRepo.put(honey.getId(), honey);
 
@@ -34,8 +37,9 @@ public class ProductService implements ProductFunctions {
         );
         productRecords.put(honeyRecord.id(), honeyRecord);
 
+        currentId++;
         Product almond = new Product();
-        almond.setId("2");
+        almond.setId(currentId);
         almond.setName("Almond");
         productRepo.put(almond.getId(), almond);
 
@@ -53,7 +57,8 @@ public class ProductService implements ProductFunctions {
     }
 
     @Override
-    public void createProduct(Product product) {
+    public Product createProduct(Product product) {
+        currentId++; product.setId(currentId);
         ProductRecord record = new ProductRecord(
                 product.getId(),
                 product.getName(),
@@ -61,10 +66,16 @@ public class ProductService implements ProductFunctions {
         );
         productRepo.put(product.getId(), product);
         productRecords.put(record.id(), record);
+        System.out.println("---------------------------------------------------------------------------------------------------------");
+        System.out.println(productRecords);
+        System.out.println("---------------------------------------------------------------------------------------------------------");
+        return product;
     }
 
     @Override
-    public void updateProduct(String id, Product product) {
+    public Product replaceProduct(Integer id, Product product) {
+        if (!productRepo.containsKey(id)) return null; // todo: fix response
+
         productRepo.remove(id); // remove by id (as key) in hashmap
         product.setId(id); // ensure new updated-product has same .id (if required)
         productRepo.put(id, product);
@@ -89,11 +100,22 @@ public class ProductService implements ProductFunctions {
         );
         newRecord.updatedAt(Date.from(Instant.now()));
         productRecords.put(id, newRecord);
+
+        return product;
     }
 
     @Override
-    public void deleteProduct(String id) {
+    public Product updateProduct(Integer id, Product product) {
+        // TODO: update product in-place of productRepo & productRecords
+        return product;
+    }
+
+    @Override
+    public Boolean deleteProduct(Integer id) {
+        if (!productRepo.containsKey(id)) return null; // todo: fix response
+
         productRepo.remove(id);
+        return !productRepo.containsKey(id);
     }
 
 }

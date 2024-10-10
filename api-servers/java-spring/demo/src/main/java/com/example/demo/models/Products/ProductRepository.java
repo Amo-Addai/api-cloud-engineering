@@ -4,17 +4,17 @@ import java.util.HashMap;
 
 public class ProductRepository {
 
-    private static HashMap<String, Product> productRepo = new HashMap<>();
-    private HashMap<String, ProductRecord> productRecords = new HashMap<>();
+    private static HashMap<Integer, Product> productRepo = new HashMap<>();
+    private HashMap<Integer, ProductRecord> productRecords = new HashMap<>();
 
     // test static singleton-prop to retrieve non-static productRecords
     private static ProductRepository _this = new ProductRepository();
 
-    public static HashMap<String, Product> productRepo() {
+    public static HashMap<Integer, Product> productRepo() {
         return productRepo;
     }
 
-    public static HashMap<String, ProductRecord> productRecords() {
+    public static HashMap<Integer, ProductRecord> productRecords() {
         return _this.productRecords;
     }
 

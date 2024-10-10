@@ -57,6 +57,11 @@
 		<!-- other dependencies -->
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>msql-connector-java</artifactId>
 			<version>8.0.20</version>
