@@ -26,15 +26,17 @@ public class DatabaseConfiguration {
     @Lazy  // Lazy-load this dependency to break the circular reference
     JdbcTemplate jdbcUserTemplate;
 
-    @Bean(name="dbProductService")
-//    @ConfigurationProperties(prefix="spring.dbProductService")
+    // * Beans' Qualifiers should be 'Canonically'-named
+    // 'Canonical names' should be kebab-case ('-' separated), lowercase alpha-numeric characters and must start with a letter
+    @Bean(name="dbproductservice")
+    @ConfigurationProperties(prefix="spring.dbproductservice")
     @Primary
     public DataSource createProductServiceDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name="dbUserService")
-//    @ConfigurationProperties(prefix="spring.dbUserService")
+    @Bean(name="dbuserservice")
+    @ConfigurationProperties(prefix="spring.dbuserservice")
     public DataSource createUserServiceDataSource() {
         return DataSourceBuilder.create().build();
     }
@@ -42,7 +44,7 @@ public class DatabaseConfiguration {
     @Bean(name="jdbcProductService")
     @Autowired
     public JdbcTemplate createJdbcTemplate_ProductService(
-            @Qualifier("dbProductService") DataSource productServiceDS
+            @Qualifier("dbproductservice") DataSource productServiceDS
     ) {
         return new JdbcTemplate(productServiceDS);
     }
@@ -50,7 +52,7 @@ public class DatabaseConfiguration {
     @Bean(name="jdbcUserService")
     @Autowired
     public JdbcTemplate createJdbcTemplate_UserService(
-            @Qualifier("dbUserService") DataSource userServiceDS
+            @Qualifier("dbuserservice") DataSource userServiceDS
     ) {
         return new JdbcTemplate(userServiceDS);
     }

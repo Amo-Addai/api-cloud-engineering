@@ -13,14 +13,14 @@ import java.util.Collection;
 @RestController
 public class ProductController {
 
-    @Autowired
+    @Autowired // * dependency-injected ?
     ProductService productService;
 
     @RequestMapping(path="/products")
     public ResponseEntity<Collection<Product>> getProducts() {
         return new ResponseEntity<>(
                 productService.getProducts(),
-                HttpStatus.OK
+                HttpStatus.OK // or HttpStatusCode.valueOf(201)
         );
     }
 

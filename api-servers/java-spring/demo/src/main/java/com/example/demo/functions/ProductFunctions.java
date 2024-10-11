@@ -7,10 +7,10 @@ import java.util.Collection;
 public interface ProductFunctions {
 
     // * interface methods don't require explicit 'abstract' definition
-    public Collection<Product> getProducts();
-    public Product createProduct(Product product);
-    public Product replaceProduct(Integer id, Product product);
-    public Product updateProduct(Integer id, Product product);
-    public Boolean deleteProduct(Integer id);
+    Collection<Product> getProducts();
+    Product createProduct(Product product);
+    Product replaceProduct(Integer id, Product product);
+    Product updateProduct(Integer id, Product product);
+    Boolean deleteProduct(Integer id);
 
 }
