@@ -28,6 +28,9 @@ dependencies {
 
 	// other dependencies
 
+	// javax.servlet api
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
 	// compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
@@ -38,7 +41,7 @@ dependencies {
 //	implementation 'mysql:mysql-connector-java' // TODO: uncomment when dependency-download ready
 
 	// compile('org.springframework.boot:spring-boot-starter-data-redis')
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// h2 db
 	// compile('com.h2database:h2')

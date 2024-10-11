@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class ProductControllerFilter implements Filter {
+public class ProductControllerFilter {/* implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -29,6 +29,6 @@ public class ProductControllerFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
-    }
+    } */
 
 }

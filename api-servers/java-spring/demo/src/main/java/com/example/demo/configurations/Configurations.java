@@ -1,12 +1,17 @@
 package com.example.demo.configurations;
 
+import com.example.demo.configurations.templates.RedisTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
 
 public class Configurations {
 
@@ -52,17 +57,17 @@ public class Configurations {
 
     // * Redis Template
 
-    @Autowired
+//    @Autowired
     RedisTemplate<String, Object> redis = new RedisTemplate<>();
 
     Map<Object, Object> dataList =
-            redis.opsForHash().entries("Redis_code_index_key");
+            redis.opsForHash();//.entries("Redis_code_index_key");
 
     // JDBC Template
 
-    @Autowired
+//    @Autowired
     JdbcTemplate jdbcTemplate;
 
-    Collection<Map<String, Object>> rows = jdbc.queryForList("SELECT QUERY");
+    Collection<Map<String, Object>> rows = null; // jdbc.queryForList("SELECT QUERY");
 
 }

@@ -2,7 +2,10 @@ package com.example.demo.configurations.templates;
 
 import org.springframework.context.annotation.Bean;
 
-public class RedisTemplate {
+import java.util.HashMap;
+import java.util.Map;
+
+public class RedisTemplate <T, U>  {
 
     /*
     @Bean
@@ -27,5 +30,9 @@ public class RedisTemplate {
         return template;
     }
     */
+
+    public Map<Object, U> opsForHash() {
+        return new HashMap<>();
+    }
 
 }

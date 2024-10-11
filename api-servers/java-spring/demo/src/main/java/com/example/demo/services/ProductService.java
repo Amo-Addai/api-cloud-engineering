@@ -68,9 +68,7 @@ public class ProductService implements ProductFunctions {
         );
         productRepo.put(product.getId(), product);
         productRecords.put(record.id(), record);
-        System.out.println("---------------------------------------------------------------------------------------------------------");
         System.out.println(productRecords);
-        System.out.println("---------------------------------------------------------------------------------------------------------");
         return product;
     }
 

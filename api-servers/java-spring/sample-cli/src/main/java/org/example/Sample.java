@@ -4,7 +4,7 @@ public class Sample {
 
     public static void main(String[] args) {
 
-        int x = 15 / 10;
+        int x = -32 * 10 - 1;
         System.out.println(x);
 
     }

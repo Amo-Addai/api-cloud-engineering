@@ -5,8 +5,7 @@ import com.example.demo.services.ProductService;
 
 import com.example.demo.test.abstract_tests.AbstractTest;
 
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +15,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+//import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertTrue;
 
 @Profile("test")
 @Configuration
 public class ProductServiceTest extends AbstractTest {
 
     @Override
-    @Before
+//    @Before
     public void setUp() {
         super.setUp();
     }
