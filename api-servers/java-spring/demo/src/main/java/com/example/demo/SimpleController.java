@@ -24,7 +24,7 @@ public class SimpleController {
     // GET Requests
 
     @RequestMapping(
-            value="/hi", // path="/hi",
+            value="/hello", // path="/hi",
             method=RequestMethod.GET,
             consumes="application/json", produces="application/json"
     )

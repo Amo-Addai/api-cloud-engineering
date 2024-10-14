@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.3.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.example</groupId>
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+<!--	<packaging>jar</packaging>--> <!-- build as .jar (or .war) -->
 	<name>demo</name>
 	<description>Sample projects for Spring Boot</description>
 	<url/>
+
 	<licenses>
 		<license/>
 	</licenses>
@@ -26,10 +31,30 @@
 		<tag/>
 		<url/>
 	</scm>
-	<properties>
+
+	<properties> <!-- env vars -->
+
 		<java.version>17</java.version>
+
+		<!-- TODO: other properties -->
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF- 8</project.reporting.outputEncoding>
+
+		<!-- TODO: spring-cloud -->
+		<spring-cloud.version>Edgware.RELEASE</spring-cloud.version>
+
+		<!-- TODO: docker maven -->
+		<docker.image.prefix>
+			spring-boot-example-demo
+		</docker.image.prefix>
+
 	</properties>
+
 	<dependencies>
+
+		<!-- TODO: default dependencies -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -47,7 +72,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- other dependencies -->
+		<!-- TODO: other dependencies -->
 
 		<!-- older version spring-web -->
 		<!--
@@ -66,10 +91,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- thymeleaf markup -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+
+		<!-- TODO: database dependencies -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -100,6 +128,27 @@
 
 		-->
 
+		<!-- TODO: security dependencies -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!--
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
+		</dependency>
+		-->
+
+		<!-- TODO: testing dependencies -->
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -107,14 +156,157 @@
 			<version>2.13.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- TODO: extra dependencies -->
+
+
+		<!-- TODO: spring-cloud dependencies -->
+
+		<!-- spring-cloud config server -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-config-server</artifactId>
+		</dependency>
+
+		<!-- spring-cloud config client - (server can't be both simultaneously) -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
+		<!-- TODO: eureka server dependencies -->
+
+		<!-- eureka server -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+		</dependency>
+
+		<!-- eureka client - (server can't be both simultaneously) -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+
+		<!-- TODO: zuul proxy (edge) server dependencies -->
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zuul</artifactId>
+		</dependency>
+
+		<!-- TODO: admin & client servers - actuator dependencies -->
+
+		<!-- actuator - provides endpoints for monitoring & managing server (admin client) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- admin client - monitored & managed by admin server (through its actuator endpoints) -->
+		<dependency>
+			<groupId>de.codecentric</groupId> <!-- provided by codecentric -->
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+
+		<!-- admin server - for monitoring & managing all servers (this server can't be both simultaneously) -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+
+		<!-- admin ui - for managing admin server -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server-ui</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+
+		<!-- TODO: swagger dependencies -->
+
+		<dependency>
+			<groupId>io.springfox</groupId> <!-- provided by springfox -->
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 	</dependencies>
+
+	<!-- TODO: management of above dependencies -->
+
+	<dependencyManagement>
+
+		<dependencies>
+
+			<!-- TODO: spring-cloud dependencies -->
+			<!-- TODO: required by eureka & zuul servers,  -->
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- TODO: Docker Maven plugin -->
+			<plugin>
+
+				<groupId>com.spotify</groupId> <!-- provide by spotify -->
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>1.0.0</version>
+
+				<configuration>
+					<imageName>
+						${docker.image.prefix}/${project.artifactId}
+					</imageName>
+					<dockerDirectory> <!-- path to Dockerfile -->
+						src/main/docker
+					</dockerDirectory>
+
+					<resources>
+
+						<resource>
+							<directory>
+								${project.build.directory}
+							</directory>
+							<includes>
+								${project.build.finalName}.jar
+							</includes>
+						</resource>
+
+					</resources>
+
+				</configuration>
+
+			</plugin>
+
 		</plugins>
 	</build>
 

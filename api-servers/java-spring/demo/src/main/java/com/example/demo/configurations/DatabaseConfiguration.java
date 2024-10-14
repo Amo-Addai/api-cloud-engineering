@@ -28,14 +28,14 @@ public class DatabaseConfiguration {
 
     // * Beans' Qualifiers should be 'Canonically'-named
     // 'Canonical names' should be kebab-case ('-' separated), lowercase alpha-numeric characters and must start with a letter
-    @Bean(name="dbproductservice")
+    @Bean(name="dbProductService")
     @ConfigurationProperties(prefix="spring.dbproductservice")
     @Primary
     public DataSource createProductServiceDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name="dbuserservice")
+    @Bean(name="dbUserService")
     @ConfigurationProperties(prefix="spring.dbuserservice")
     public DataSource createUserServiceDataSource() {
         return DataSourceBuilder.create().build();
@@ -44,7 +44,7 @@ public class DatabaseConfiguration {
     @Bean(name="jdbcProductService")
     @Autowired
     public JdbcTemplate createJdbcTemplate_ProductService(
-            @Qualifier("dbproductservice") DataSource productServiceDS
+            @Qualifier("dbProductService") DataSource productServiceDS
     ) {
         return new JdbcTemplate(productServiceDS);
     }
@@ -52,7 +52,7 @@ public class DatabaseConfiguration {
     @Bean(name="jdbcUserService")
     @Autowired
     public JdbcTemplate createJdbcTemplate_UserService(
-            @Qualifier("dbuserservice") DataSource userServiceDS
+            @Qualifier("dbUserService") DataSource userServiceDS
     ) {
         return new JdbcTemplate(userServiceDS);
     }

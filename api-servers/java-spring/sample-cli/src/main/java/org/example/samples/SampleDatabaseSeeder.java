@@ -1,4 +1,4 @@
-package com.example.demo.databases.repositories;
+package com.example.demo.samples;
 
 import com.example.samples.models.Company;
 import com.example.samples.models.User;
@@ -107,7 +107,7 @@ public class SampleDatabaseSeeder {
     private final CompanyRepoImpl companyRepo;
 
     // Inject UserRepoImpl using constructor injection
-    public DatabaseSeeder(
+    public SampleDatabaseSeeder(
         UserRepoImpl userRepo,
         CompanyRepoImpl companyRepo
     ) {

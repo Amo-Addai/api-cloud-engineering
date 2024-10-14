@@ -4,10 +4,13 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <title>SpringBoot</title>
 </head>
 <body>
+
+  <!-- welcome.text (with Internationalization) from messages[_fr/..].properties -->
+  <h1 th:text="#{welcome.text}"></h1>
 
 </body>
 </html>

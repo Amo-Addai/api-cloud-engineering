@@ -1,5 +1,29 @@
 
+
 TODO: add to application.properties when ready
+
+
+# custom port
+#server.port=9090
+
+# deprecated logging property
+#logging.path=/var/tmp/
+# specify custom log-file name
+#logging.file=/var/tmp/custom.log
+
+
+TODO: configure HTTPS
+
+
+server.port=443
+server.ssl.key-store=keystore.p12
+server.ssl.key-store-password=springboot
+server.ssl.keyStoreType=PKCS12
+server.ssl.keyAlias=tomcat
+
+
+TODO: JDBC Driver & DataSource
+
 
 spring.datasource.driverClassName=com.mysql.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/PRODUCTSERVICE?autoreconnect=true
@@ -41,3 +65,87 @@ spring.dbUserService.validationQuery=SELECT 1
 spring.dbUserService.max-active=15
 spring.dbUserService.max-idle=10
 spring.dbUserService.max-wait=8000
+
+
+TODO: OAuth2 Resource filter order
+
+
+security.oauth2.resource.filter-order=3
+
+
+TODO: Google Cloud Platform (GCP) - Cloud SQL
+TODO: NB: JDBC URL Format - jdbc:mysql://google/<DATABASE- NAME>?cloudSqlInstance=<GOOGLE_CLOUD_SQL_INSTANCE_NAME> &socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<USERNAME>&passwor d=<PASSWORD>
+
+
+spring.dbProductService.driverClassName=com.mysql.jdbc.Driver
+spring.dbProductService.url=jdbc:mysql://google/PRODUCTSERVICE?cloudSqlInstance =springboot-gcp-cloudsql:asia-northeast1:springboot-gcp-cloudsql- instance&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=root&passw ord=root
+spring.dbProductService.username=root
+spring.dbProductService.password=root
+spring.dbProductService.testOnBorrow=true
+spring.dbProductService.testWhileIdle=true
+spring.dbProductService.timeBetweenEvictionRunsMillis=60000
+spring.dbProductService.minEvictableIdleTimeMillis=30000
+spring.dbProductService.validationQuery=SELECT 1
+spring.dbProductService.max-active=15
+spring.dbProductService.max-idle=10
+spring.dbProductService.max-wait=8000
+
+
+TODO: Google Cloud Platform (GCP) - OAuth2
+TODO: NB: JDBC URL Format - jdbc:mysql://google/<DATABASE- NAME>?cloudSqlInstance=<GOOGLE_CLOUD_SQL_INSTANCE_NAME> &socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=<USERNAME>&passwor d=<PASSWORD>
+
+
+security.oauth2.client.clientId=<CLIENT_ID> todo: Input GOOGLE_OAUTH_CLIENT_ID
+security.oauth2.client.clientSecret=<CLIENT_SECRET> todo: Input GOOGLE_OAUTH_CLIENT_SECRET
+security.oauth2.client.accessTokenUri=https://www.googleapis.com/oauth2/v3/toke n
+security.oauth2.client.userAuthorizationUri=https://accounts.google.com/o/oauth 2/auth
+security.oauth2.client.tokenName=oauth_token
+security.oauth2.client.authenticationScheme=query
+security.oauth2.client.clientAuthenticationScheme=form
+security.oauth2.client.scope=profile email
+security.oauth2.resource.userInfoUri=https://www.googleapis.com/userinfo/v2/me
+security.oauth2.resource.preferTokenInfo=false
+
+
+TODO: Spring-Cloud Server
+
+
+spring.cloud.config.server.native.searchLocations=file:///C:/configprop/
+SPRING_PROFILES_ACTIVE=native
+#server.port=8888
+TODO: Spring-Cloud Client (server can't be both simultaneously)
+spring.cloud.config.uri=http://localhost:8888 todo: ensure the config-server on this url is running, before specifying in client
+TODO: config-client will access config-server on this url to fetch configuration properties (config-client.properties file-data), to @RefreshScope
+
+
+TODO: Eureka Server
+
+
+eureka.client.registerWithEureka=false
+eureka.client.fetchRegistry=false
+server.port=8761 todo: conflicts 'server.port=443'
+TODO: Eureka Client (server can't be both simultaneously)
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+eureka.client.instance.preferIpAddress=true
+
+
+TODO: Zuul Proxy (Edge) Server
+
+
+zuul.routes.products.path=/api/demo/**
+zuul.routes.products.url=http://localhost:8080/
+#server.port=8111
+
+
+TODO: Enable Actuator (secured) endpoints - for monitoring & managing server
+
+
+management.security.enabled=false todo: disable security for actuator endpoints
+management.port=9000 todo: to use separate port number for actuator endpoints (if required)
+TODO: important spring-boot actuator endpoints: "/(metrics/env/beans/health/info/trace/..)"
+
+
+TODO: Admin Server - to monitor & manage Admin Clients
+
+
+spring.boot.admin.url=http://localhost:9090/ todo: url for Admin Server UI - for managing Admin Server
