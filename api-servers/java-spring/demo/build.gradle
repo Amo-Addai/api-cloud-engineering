@@ -25,6 +25,7 @@ repositories {
 }
 
 ext {
+	springBootVersion = ''
 	springCloudVersion = 'Hoxton.SR9'
 	// or set('springCloudVersion', "2023.0.3")
 }
@@ -85,6 +86,15 @@ dependencies {
 	// compile('com.h2database:h2')
 	implementation 'com.h2database:h2'
 
+	// flyway db
+	// compile('org.flywaydb:flyway-core')
+	implementation 'org.flywaydb:flyway-core'
+
+	// TODO: mailing dependencies
+
+	// compile('org.springframework.boot:spring-boot-starter-mail')
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	// TODO: security dependencies
 
 	// compile('org.springframework.boot:spring-boot-starter-security')
@@ -110,6 +120,12 @@ dependencies {
 
 	// TODO: extra dependencies
 
+
+	// TODO: server dependencies
+
+	// hystrix - isolates points of access b/n services; stops cascading failures & provides fallback options
+	// compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+	implementation 'org.springframework.cloud:spring-cloud-starter-hystrix'
 
 	// TODO: spring-cloud dependencies
 
@@ -180,6 +196,26 @@ dependencies {
 	// zipkin ui - manages zipkin-server
 	// compile('io.zipkin.java:zipkin-autoconfigure-ui')
 	implementation 'io.zipkin.java:zipkin-autoconfigure-ui'
+
+	// TODO: socket dependencies
+
+	// compile("org.springframework.boot:spring-boot-starter-websocket")
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// compile("org.webjars:webjars-locator")
+	implementation 'org.webjars:webjars-locator'
+	// compile("org.webjars:sockjs-client:1.0.2")
+	implementation 'org.webjars:sockjs-client:1.0.2'
+	// compile("org.webjars:stomp-websocket:2.3.3")
+	implementation 'org.webjars:stomp-websocket:2.3.3'
+
+
+	// TODO: ui/ux dependencies
+
+
+	// compile("org.webjars:bootstrap:3.3.7")
+	implementation "org.webjars:bootstrap:3.3.7"
+	// compile("org.webjars:jquery:3.1.0")
+	implementation "org.webjars:jquery:3.1.0"
 
 }
 

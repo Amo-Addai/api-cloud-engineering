@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.EnableZuulServer;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +35,7 @@ import java.util.logging.Level;
 //@EnableAdminServer // app as Admin Server - to monitor & manage all servers (using their actuator endpoints)
 //@EnableSwagger2 // for API documentation
 //@EnableZipkinServer // app as Zipkin Server - to monitor & manage all Sleuth logs
+@EnableHystrix // Hystrix - isolates points of access b/n services; stops cascading failures & provides fallback options
 public class DemoApplication {
 
 	private static final java.util.logging.Logger logger =
