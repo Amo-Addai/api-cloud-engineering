@@ -5,7 +5,9 @@ plugins {
 
 	// TODO: other plugins
 
-	id 'docker' // deprecated - apply plugin: 'docker'
+//	id 'docker' // deprecated - apply plugin: 'docker'
+//	id 'com.palantir.docker' version '0.26.0'
+	// Plugin [id: 'docker'] was not found in any of the following sources:
 
 }
 
@@ -20,6 +22,11 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	springCloudVersion = 'Hoxton.SR9'
+	// or set('springCloudVersion', "2023.0.3")
 }
 
 /* // TODO: classpath dependencies - deprecated ?
@@ -183,7 +190,7 @@ dependencyManagement {
 
 	imports {
 
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" // Configuration with name 'springCloudVersion' not found.
 
 	}
 

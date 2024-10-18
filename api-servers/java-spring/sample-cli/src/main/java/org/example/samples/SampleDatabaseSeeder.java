@@ -129,7 +129,8 @@ public class SampleDatabaseSeeder {
 
 
     // TODO: Unnecessary Generic Logic (suffix-T) - only 2 domain-types being worked with
-    // also brings on unnecessary forced-castings
+    // also brings on unnecessary forced-castings; only required when data grows beyond 1 domain-pair
+    // * "unnecessary complexity / fraud-code"
 
 
     private static <T, U> void seedDatabasesT(

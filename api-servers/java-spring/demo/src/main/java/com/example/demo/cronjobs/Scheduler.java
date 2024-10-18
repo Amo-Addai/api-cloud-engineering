@@ -16,7 +16,7 @@ public class Scheduler {
     @Scheduled(cron="0 * 9 * * ?") // * Scheduler triggers cron at specific time (every minute at 9-hour)
     public void job1() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
+                "yyyy-MM-dd HH:mm:ss"
         );
         Date now = new Date();
         System.out.println(
@@ -28,7 +28,7 @@ public class Scheduler {
     @Scheduled(fixedRate=1000) // * triggers on app-startup, on every fixedRate millisecond(s) (1000ms)
     public void fixedFateSch() {
         SimpleDateFormat format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
+                "yyyy-MM-dd HH:mm:ss"
         );
         Date now = new Date();
         System.out.println(
@@ -41,7 +41,7 @@ public class Scheduler {
     // (triggered for every 1s, after 1st 3s after app-startup)
     public void fixedDelaySch() {
         SimpleDateFormat format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
+                "yyyy-MM-dd HH:mm:ss"
         );
         Date now = new Date();
         System.out.println(

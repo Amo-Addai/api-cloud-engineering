@@ -20,8 +20,8 @@ public class WebSecurityConfiguration2 {// extends WebSecurityConfigurerAdapter 
         return new BCryptPasswordEncoder();
     }
 
-    @Override
     @Autowired
+    @Override
     protected void configure(
             AuthenticationManagerBuilder auth
     ) throws Exception {
@@ -46,8 +46,8 @@ public class WebSecurityConfiguration2 {// extends WebSecurityConfigurerAdapter 
         web.ignoring();
     }
 
-    @Override
     @Bean
+    @Override
     public AuthenticationManger authenticationManagerBean()
         throws Exception {
         return super.authenticationManagerBean();
