@@ -105,13 +105,11 @@
 		</dependency>
 
 		<!--
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>msql-connector-java</artifactId>
 			<version>8.0.20</version>
 		</dependency>
-
 		-->
 
 		<dependency>
@@ -120,12 +118,10 @@
 		</dependency>
 
 		<!--
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-redis</artifactId>
 		</dependency>
-
 		-->
 
 		<!-- TODO: security dependencies -->
@@ -242,6 +238,33 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.7.0</version>
+		</dependency>
+
+		<!-- TODO: spring-cloud tracing-logs dependencies -->
+
+		<!-- sleuth - tracing logs -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+
+		<!-- sleuth-zipkin - exports sleuth logs to external zipkin-server -->
+		<dependency> <!-- todo: to-add AlwaysSampler @Bean to Configurations -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+		</dependency>
+
+		<!-- zipkin-server - monitors & manages sleuth logs -->
+		<!-- (server can't be both simultaneously) -->
+		<dependency>
+			<groupId>io.zipkin.java</groupId>
+			<artifactId>zipkin-server</artifactId>
+		</dependency>
+
+		<!-- zipkin ui - manages zipkin-server -->
+		<dependency>
+			<groupId>io.zipkin.java</groupId>
+			<artifactId>zipkin-autoconfigure-ui</artifactId>
 		</dependency>
 
 	</dependencies>

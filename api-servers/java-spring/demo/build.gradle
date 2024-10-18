@@ -155,6 +155,25 @@ dependencies {
 	// compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 	implementation 'io.springfox:springfox-swagger-ui:2.7.0'
 
+	// TODO: tracing-logs dependencies
+
+	// sleuth - tracing logs
+	// compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+
+	// sleuth-zipkin - exports sleuth logs to external zipkin-server
+	// todo: to-add AlwaysSampler @Bean to Configurations
+	// compile('org.springframework.cloud:spring-cloud-sleuth-zipkin')
+	implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin'
+
+	// zipkin-server - monitors & manages logs (server can't be both simultaneously)
+	// compile('io.zipkin.java:zipkin-server')
+	implementation 'io.zipkin.java:zipkin-server'
+
+	// zipkin ui - manages zipkin-server
+	// compile('io.zipkin.java:zipkin-autoconfigure-ui')
+	implementation 'io.zipkin.java:zipkin-autoconfigure-ui'
+
 }
 
 dependencyManagement {

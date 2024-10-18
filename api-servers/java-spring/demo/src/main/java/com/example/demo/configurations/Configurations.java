@@ -2,6 +2,7 @@ package com.example.demo.configurations;
 
 import com.example.demo.configurations.templates.RedisTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.LocaleResolver;
@@ -92,6 +93,11 @@ public class Configurations {
         .build();
     }
     */
+
+    @Bean // * exports sleuth logs to external Zipkin-Server
+    public AlwaysSampler defaultSampler() {
+        return new AlwaysSampler();
+    }
 
     // ..
 

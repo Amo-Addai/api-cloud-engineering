@@ -103,3 +103,15 @@ spring:
   boot:
     admin:
       url: http://localhost:9090/ # url for Admin Server UI - for managing Admin Server
+
+  # Sleuth-Zipkin Server - to export Sleuth logs to external Zipkin-Server (via url - on port: 9411)
+
+  spring:
+    zipkin:
+      baseUrl: http://localhost:9411/zipkin/
+  # Then, provide the trace id and find the traces in Zipkin UI - http://localhost:9411/zipkin/traces/{traceid}/
+
+  # Zipkin-Server - to monitor & manage Sleuth logs via Zipkin UI (server can't be both simultaneously)
+
+  # server:
+    port: 9411
