@@ -20,7 +20,7 @@ const sendName = () =>
     )
 
 const connect = (
-    socket = null,
+    socket = null
 ) => (
     socket = new SockJS('/websocket-endpoint-url'), // same as in WebSocketConfiguration.java
     stompClient = Stomp.over(socket),
