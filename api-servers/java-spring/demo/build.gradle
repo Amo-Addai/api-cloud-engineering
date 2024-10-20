@@ -90,10 +90,13 @@ dependencies {
 	// compile('org.flywaydb:flyway-core')
 	implementation 'org.flywaydb:flyway-core'
 
-	// TODO: mailing dependencies
+	// TODO: mailing & sms dependencies
 
 	// compile('org.springframework.boot:spring-boot-starter-mail')
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// compile group: "com.twilio.sdk", name:"twilio", version: "7.16.1"
+	implementation "com.twilio.sdk:twilio:7.16.1"
 
 	// TODO: security dependencies
 
@@ -207,6 +210,18 @@ dependencies {
 	implementation 'org.webjars:sockjs-client:1.0.2'
 	// compile("org.webjars:stomp-websocket:2.3.3")
 	implementation 'org.webjars:stomp-websocket:2.3.3'
+
+	// TODO: batch service dependencies
+
+	// compile("org.springframework.boot:spring-boot-starter-batch")
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	// compile("org.hsqldb:hsqldb")
+	implementation 'org.hsqldb:hsqldb'
+
+	// TODO: spring - apache kafka dependencies
+
+	// compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.1.0.RELEASE'
+	implementation 'org.springframework.kafka:spring-kafka:2.1.0.RELEASE'
 
 
 	// TODO: ui/ux dependencies

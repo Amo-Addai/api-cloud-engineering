@@ -41,6 +41,10 @@ public class DemoApplication {
 	private static final java.util.logging.Logger logger =
 			Logger.getLogger("java:logger");
 
+	public static java.util.logging.Logger getLogger() {
+		return logger;
+	}
+
 	private static final java.util.logging.Logger logger1 =
 			Logger.getLogger(DemoApplication.class.getName());
 
