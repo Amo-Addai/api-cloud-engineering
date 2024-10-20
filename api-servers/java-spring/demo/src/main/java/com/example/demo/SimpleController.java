@@ -40,6 +40,20 @@ public class SimpleController {
         return db.getFromDB(q);
     }
 
+    // GET http://localhost:8080/search?q=StringValue
+    @GetMapping("/search")
+    public String queryWord(
+        @RequestParam(
+            value = "query",
+            required = false,
+            defaultValue = ""
+        )
+        String q
+    ) {
+        DataStore db = new DataStore();
+        return db.getFromDB(q);
+    }
+
     // http://localhost:8080/users
     @GetMapping("/users")
     public List<User> getAllUsers() {
