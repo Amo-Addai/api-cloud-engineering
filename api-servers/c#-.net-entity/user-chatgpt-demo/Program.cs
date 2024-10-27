@@ -41,7 +41,7 @@ namespace ChatGPTBackend
 
             // Database connection
             // Configure database context based on configuration
-            var databaseType = _configuration["DatabaseType" ?? ""];
+            var databaseType = _configuration["DatabaseType"] ?? "";
             switch (databaseType)
             {
                 case "Sqlite":

@@ -10202,11 +10202,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/sample-app/ChatGPTBackend/ChatGPTBackend.csproj",
+      "projectUniqueName": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/api-feature-development/api-servers/c#-.net-entity/sample/ChatGPTBackend.csproj",
       "projectName": "ChatGPTBackend",
-      "projectPath": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/sample-app/ChatGPTBackend/ChatGPTBackend.csproj",
+      "projectPath": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/api-feature-development/api-servers/c#-.net-entity/sample/ChatGPTBackend.csproj",
       "packagesPath": "/Users/kwadwo/.nuget/packages/",
-      "outputPath": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/sample-app/ChatGPTBackend/obj/",
+      "outputPath": "/Users/kwadwo/Desktop/AUTOMAN/autocode/github/auto_portfolios/auto-portfolio - samples/api-feature-development/api-servers/c#-.net-entity/sample/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/kwadwo/.nuget/NuGet/NuGet.Config"

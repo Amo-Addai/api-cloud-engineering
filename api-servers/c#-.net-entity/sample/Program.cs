@@ -40,8 +40,9 @@ namespace ChatGPTBackend
             services.AddControllers();
 
             // Database connection
-            // Configure database context based on configuration
-            var databaseType = _configuration["DatabaseType" ?? ""];
+            // Configure database context based on configur]ation
+          var databaseType = _configuration["DatabaseType"] ?? "";
+
             switch (databaseType)
             {
                 case "Sqlite":
@@ -64,7 +65,8 @@ namespace ChatGPTBackend
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowSpecificOrigins",
+                options.AddPolicy(
+                    "AllowSpecificOrigins",
                     builder =>
                     {
                         builder 

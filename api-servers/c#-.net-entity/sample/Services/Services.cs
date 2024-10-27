@@ -286,27 +286,27 @@ namespace ChatGPTBackend.Services
     Sample - Tell me everything you know about C# Entity Server and Flutter
 
     {
-    "id": "chatcmpl-8vkNKDhUNkHub8qJWGqVB2i47OIiY",
-    "object": "chat.completion",
-    "created": 1708773654,
-    "model": "gpt-3.5-turbo-0125",
-    "choices": [
-        {
-        "index": 0,
-        "message": {
-            "role": "assistant",
-            "content": "C# Entity Server is a framework developed by Microsoft for building data-driven applications. It is part of the .NET ecosystem and is used to create web services and APIs that interact with databases. C# Entity Server allows developers to define data models, sample databases, and perform CRUD operations easily.\n\nFlutter, on the other hand, is an open-source UI software development kit created by Google for building natively compiled applications for mobile, web, and desktop from a single codebase. Flutter uses the Dart programming language and provides a rich set of pre-built widgets and tools for building beautiful and fast user interfaces.\n\nIn summary, C# Entity Server is used for creating backend services and APIs, while Flutter is used for building cross-platform user interfaces. Developers can use these two technologies together to create full-stack applications that are both performant and visually appealing."
+        "id": "chatcmpl-8vkNKDhUNkHub8qJWGqVB2i47OIiY",
+        "object": "chat.completion",
+        "created": 1708773654,
+        "model": "gpt-3.5-turbo-0125",
+        "choices": [
+            {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "C# Entity Server is a framework developed by Microsoft for building data-driven applications. It is part of the .NET ecosystem and is used to create web services and APIs that interact with databases. C# Entity Server allows developers to define data models, sample databases, and perform CRUD operations easily.\n\nFlutter, on the other hand, is an open-source UI software development kit created by Google for building natively compiled applications for mobile, web, and desktop from a single codebase. Flutter uses the Dart programming language and provides a rich set of pre-built widgets and tools for building beautiful and fast user interfaces.\n\nIn summary, C# Entity Server is used for creating backend services and APIs, while Flutter is used for building cross-platform user interfaces. Developers can use these two technologies together to create full-stack applications that are both performant and visually appealing."
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+            }
+        ],
+        "usage": {
+            "prompt_tokens": 19,
+            "completion_tokens": 168,
+            "total_tokens": 187
         },
-        "logprobs": null,
-        "finish_reason": "stop"
-        }
-    ],
-    "usage": {
-        "prompt_tokens": 19,
-        "completion_tokens": 168,
-        "total_tokens": 187
-    },
-    "system_fingerprint": "fp_86156a94a0"
+        "system_fingerprint": "fp_86156a94a0"
     }
 
     */

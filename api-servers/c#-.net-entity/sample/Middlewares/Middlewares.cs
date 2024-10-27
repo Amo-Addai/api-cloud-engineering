@@ -9,6 +9,36 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace ChatGPTBackend.Middlewares
 {
 
+    public class ApiKeyMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly IConfiguration _configuration;
+
+        public ApiKeyMiddleware(RequestDelegate next, IConfiguration configuration)
+        {
+            _next = next;
+            _configuration = configuration;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            string? expectedApiKey = _configuration["API_KEY"];
+            string? providedApiKey = context.Request.Headers["API-KEY"];
+
+            if (providedApiKey != null && providedApiKey != expectedApiKey)
+            {
+                context.Response.StatusCode =
+                    StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized: Invalid API Key.");
+                return;
+            }
+
+            await _next(context);
+        }
+    
+    }
+    
+
     // Custom middleware to extract user ID from JWT token
     public class JwtMiddleware
     {
@@ -62,10 +92,7 @@ namespace ChatGPTBackend.Middlewares
             // Console.WriteLine($"\nJwt Filter Token - {token}\n");
             if (token != null)
             {
-                var userId = ValidateToken(token);
-                // Console.WriteLine($"\nJwt Filter User-Id - {userId}\n");
-                context.HttpContext.Items["Authorized-User-Id"] = userId;
-                // Console.WriteLine($"\nJwt Filter User-Id - {context.HttpContext.Items["Authorized-User-Id"]}\n");
+                AttachUserIdToContext(context, ValidateToken(token));
             }
 
             await next();
@@ -74,6 +101,13 @@ namespace ChatGPTBackend.Middlewares
         private string ValidateToken(string token)
         {
             return MiddlewareMethods.ValidateToken(token, _configuration);
+        }
+
+        private void AttachUserIdToContext(ActionExecutingContext context, string userId)
+        {
+            // Console.WriteLine($"\nJwt Filter User-Id - {userId}\n");
+            context.HttpContext.Items["Authorized-User-Id"] = userId;
+            // Console.WriteLine($"\nJwt Filter User-Id - {context.HttpContext.Items["Authorized-User-Id"]}\n");
         }
     }
 

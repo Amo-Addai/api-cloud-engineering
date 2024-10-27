@@ -224,7 +224,7 @@ namespace ChatGPTBackend.Controllers
         }
     }
 
-    // Models for request payloads
+    // DTO Models for request payloads
 
     public class LoginRequest
     {
