@@ -39,7 +39,7 @@ public class ApiKeyAuthenticationHandler
         var principal = new System.Security.Principal.GenericPrincipal(identity, null);
         /* todo: 
         var identity1 = new System.Security.Claims.ClaimsIdentity("APIKey");
-        var principal1 = new System.Security.Claims.ClaimsPrincipal(identity);
+        var principal1 = new System.Security.Claims.ClaimsPrincipal(identity1);
         */
         
         var ticket = new AuthenticationTicket(principal, Scheme.Name);

@@ -47,6 +47,10 @@ public class ApiKeyAuthenticationHandler
             // Create a principal and ticket if the API key is valid
             var identity = new System.Security.Principal.GenericIdentity("APIKeyUser", "APIKey");
             var principal = new System.Security.Principal.GenericPrincipal(identity, null);
+            /* todo: 
+            var identity1 = new System.Security.Claims.ClaimsIdentity("APIKey");
+            var principal1 = new System.Security.Claims.ClaimsPrincipal(identity1);
+            */
             
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
         
