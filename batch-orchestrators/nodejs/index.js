@@ -100,13 +100,13 @@ const performBatchJob =
             'etlProcess':
                 await etlProcess(job.data)
         },
-        switchObj[job?.data?.type]
-        || (
+        !switchObj[job?.data?.type]
+        ? (
             console.log(`Error processing ${job?.id || '-'}:`),
             console.log(`Unknown job type: ${job?.data?.type || '-'}`),
             null
-        ),
-        console.log(`Job ${job?.id || '-'} processed successfully`)
+        )
+        : console.log(`Job ${job?.id || '-'} processed successfully`)
     )
 
 // example implementation of job types
