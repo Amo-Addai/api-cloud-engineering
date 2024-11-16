@@ -1,10 +1,10 @@
 using System.Text.Encodings.Web;
-using Cadly.Slicer.API.Authentication.Schemes;
-using Cadly.Slicer.API.Configuration;
+using Sample.Slicer.API.Authentication.Schemes;
+using Sample.Slicer.API.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace Cadly.Slicer.API.Authentication;
+namespace Sample.Slicer.API.Authentication;
 
 public class ApiKeyAuthenticationHandler
     // : AuthenticationHandler<AuthenticationSchemeOptions>

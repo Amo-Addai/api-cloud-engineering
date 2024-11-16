@@ -1,6 +1,6 @@
-﻿using Cadly.Slicer.API.Dtos;
-using Cadly.Slicer.API.Services;
-using Cadly.Slicer.API.Controllers;
+﻿using Sample.Slicer.API.Dtos;
+using Sample.Slicer.API.Services;
+using Sample.Slicer.API.Controllers;
 using Xunit;
 using Moq;
 using System.Text;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Cadly.Slicer.API.Tests.Controllers
+namespace Sample.Slicer.API.Tests.Controllers
 {
     public class SlicerControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {

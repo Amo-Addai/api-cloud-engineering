@@ -1,7 +1,7 @@
-using Cadly.Slicer.API.Authentication;
-using Cadly.Slicer.API.Authentication.Schemes;
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Services;
+using Sample.Slicer.API.Authentication;
+using Sample.Slicer.API.Authentication.Schemes;
+using Sample.Slicer.API.Configuration;
+using Sample.Slicer.API.Services;
 using Microsoft.AspNetCore.Authentication;
 using NuGet.Protocol;
 

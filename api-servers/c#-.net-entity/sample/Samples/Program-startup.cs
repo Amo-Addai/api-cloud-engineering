@@ -1,4 +1,4 @@
-using Cadly.Slicer.API;
+using Sample.Slicer.API;
 
 public partial class Program
 {

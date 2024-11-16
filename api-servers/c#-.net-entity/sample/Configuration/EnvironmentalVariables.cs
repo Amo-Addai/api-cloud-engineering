@@ -1,5 +1,5 @@
 
-namespace Cadly.Slicer.API.Configuration;
+namespace Sample.Slicer.API.Configuration;
 
 public record ApiVariables
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 
-namespace Cadly.Slicer.API.Authentication.Schemes;
+namespace Sample.Slicer.API.Authentication.Schemes;
 
 public class ApiAuthenticationSchemeOptions : AuthenticationSchemeOptions
 {

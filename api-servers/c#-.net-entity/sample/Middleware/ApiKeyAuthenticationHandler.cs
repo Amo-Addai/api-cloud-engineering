@@ -1,9 +1,9 @@
 using System.Text.Encodings.Web;
-using Cadly.Slicer.API.Configuration;
+using Sample.Slicer.API.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace Cadly.Slicer.API.Middlewares;
+namespace Sample.Slicer.API.Middlewares;
 
 public class ApiKeyAuthenticationHandler
     : AuthenticationHandler<AuthenticationSchemeOptions>

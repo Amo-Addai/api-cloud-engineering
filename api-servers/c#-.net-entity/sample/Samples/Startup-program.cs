@@ -1,9 +1,9 @@
-using Cadly.Slicer.API.Authentication;
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Services;
+using Sample.Slicer.API.Authentication;
+using Sample.Slicer.API.Configuration;
+using Sample.Slicer.API.Services;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Cadly.Slicer.API;
+namespace Sample.Slicer.API;
 
 public class Startup
 {

@@ -1,7 +1,7 @@
-using Cadly.Slicer.API.Dtos.Projects;
+using Sample.Slicer.API.Dtos.Projects;
 using Xunit;
 
-namespace Cadly.Slicer.API.Tests.Dtos.Projects
+namespace Sample.Slicer.API.Tests.Dtos.Projects
 {
     public class ProjectOutputDtoTests
     {
@@ -167,7 +167,7 @@ namespace Cadly.Slicer.API.Tests.Dtos.Projects
 
 using System.Text.Json.Serialization;
 
-namespace Cadly.Slicer.API.Dtos.Projects;
+namespace Sample.Slicer.API.Dtos.Projects;
 
 public record ProjectOutputDto
 {
