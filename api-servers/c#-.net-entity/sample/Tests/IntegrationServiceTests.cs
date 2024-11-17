@@ -4,18 +4,18 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Reflection;
-using Sample.Slicer.API.Services;
-using Sample.Slicer.API.Configuration;
-using Sample.Slicer.API.Dtos.Projects;
-using Sample.Slicer.API.Tests.Common;
+using Cadly.Slicer.API.Services;
+using Cadly.Slicer.API.Configuration;
+using Cadly.Slicer.API.Dtos.Projects;
+using Cadly.Slicer.API.Tests.Common;
+using Cadly.Slicer.API.Tests.Services.Common;
 using Moq;
 using Moq.Protected;
 using Microsoft.Extensions.Options;
 
-using Sample.Slicer.API.Enums; // TODO: Move to CustomMock.cs
-
-namespace Sample.Slicer.API.Tests.Services
+namespace Cadly.Slicer.API.Tests.Services
 {
+
     public class IIntegrationServiceTests
     {
         private readonly Mock<IIntegrationService> _serviceMock;
@@ -38,7 +38,7 @@ namespace Sample.Slicer.API.Tests.Services
         {
             string projectId = "project-id";
             var projectManufacturingUpdateInputDto =
-                SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
+                Dto_Utils.SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
             
             await _serviceMock.Object.StartManufacturerReviewAsync(projectId, projectManufacturingUpdateInputDto);
             _serviceMock.Verify(s => s.StartManufacturerReviewAsync(projectId, projectManufacturingUpdateInputDto), Times.Once);
@@ -57,15 +57,83 @@ namespace Sample.Slicer.API.Tests.Services
 
     public class IntegrationServiceTests
     {
-        private const string ValidApiUrl = "https://Sample-dev-private-api.blackocean-13874faf.eastus.azurecontainerapps.io";
-            // TODO: "https://example.com";
-        private const string ValidApiKey = "y8BIRLlAfFJ2JcJjdH0vSQYFdmM6WDnl";
-            // TODO: "test-api-key";
+        private const string ValidApiUrl = "https://example.com";
+        private const string ValidApiKey = "test-api-key";
 
         private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private readonly HttpClient _httpClient;
-        private readonly IntegrationService _service;
-        private readonly TestIntegrationService _testService;
+
+        private IntegrationService _service;
+        private TestIntegrationService _testService;
+
+		private delegate Task RequestLogger(
+			HttpRequestMessage req,
+			CancellationToken? token = null,
+			string url = null,
+			HttpMethod method = null,
+			string contentType = null,
+			object content = null,
+			bool shouldLog = false // TODO: false by default (toggle - true for debug; or per test-method)
+		);
+
+        private RequestLogger LogRequest = // * test-debug
+			async (req, token, url, method, contentType, content, shouldLog) => {
+				if (shouldLog)
+				{
+				    Console.WriteLine("Logging Request Object");
+	                
+				    Array.ForEach(
+				    	new string[] {
+				    		$"Request Object: {req?.ToString() ?? "-"}",
+				    		$"Request Url: {req?.RequestUri?.PathAndQuery?.ToString() ?? "-"}",
+				    		$"Url: {url ?? "-"}",
+				    		$"Request Method: {req?.Method?.ToString() ?? "-"}",
+				    		$"Method: {method?.ToString() ?? "-"}",
+				    		$"Request Content Type: {req?.Content?.Headers?.ContentType?.MediaType ?? "-"}",
+				    		$"Content Type: {contentType ?? "-"}",
+				    		$"Request Content: {(await req?.Content?.ReadAsStringAsync()) ?? "-"}",
+				    		$"Content: {content?.ToString() ?? "-"}",
+							
+				    		$"Content Match: {
+								(
+								    content != null
+								    ? ( ReferenceEquals(req?.Content, content).ToString() ?? "-" )
+								    : "-"
+								)
+							}",
+							
+							$"Request Match: {
+						        (
+				    	        	req?.Method == method
+                                    && ( req?.RequestUri?.PathAndQuery?.EndsWith(url) ?? false )
+						        	&& (
+						        		(
+						                	method != null
+						                	&& contentType != null
+						                	&& content != null
+						                )
+				                        ? req?.Content?.Headers?.ContentType?.MediaType == contentType
+				                            && ReferenceEquals(req?.Content, content)
+						                : true
+						        	)
+				    	        ).ToString()
+							}",
+
+				    		$"CancellationToken: {
+								(
+									token != null
+									? ( token.ToString() ?? "-" )
+									: "-"
+								)
+							}",
+                    		
+				    	},
+				    	Console.WriteLine
+				    );
+					
+					
+				}
+			};
 
         public IntegrationServiceTests()
         {
@@ -75,40 +143,30 @@ namespace Sample.Slicer.API.Tests.Services
             apiVariablesMock.Setup(config => config.Value)
                 .Returns(new ApiVariables { ApiUrl = ValidApiUrl, ApiKey = ValidApiKey });
 
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(); // TODO: MockBehavior.Strict
+            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object)
             {
                 BaseAddress = new Uri(apiVariablesMock.Object.Value.ApiUrl)
             };
 
-			// TODO: TEST
-
-            // _service = new IntegrationService(apiVariablesMock.Object);
-            
-			// Create an instance of IntegrationService
+			// Instead of instantiatio, Create a Reflection instance of IntegrationService
 			_service = (IntegrationService) Activator.CreateInstance(
 				typeof(IntegrationService),
 				new object[] {
 					apiVariablesMock.Object
 				}
-			);
-            
-            // TestService wrapper for testing private methods
-            // _testService = new TestIntegrationService(apiVariablesMock.Object);
+			)!; // Force reflection-instance; property requires a non-null value
+
 			_testService = (TestIntegrationService) Activator.CreateInstance(
-				typeof(IntegrationService),
+				typeof(TestIntegrationService),
 				new object[] {
 					apiVariablesMock.Object
 				}
-			);
-            
-            // TODO: TEST
-            // // _service.HttpClient = _httpClient;
-            // // _testService.HttpClient = _httpClient;
+			)!;
 
 			// Use reflection to set the private HttpClient field
-			var httpClientField = typeof(IntegrationService)
+			var httpClientField = typeof(IntegrationService) // Will also set reflection of Test sub-class (TestIntegrationService) private-field
 				.GetField(
 					"_httpClient",
 					BindingFlags.NonPublic | BindingFlags.Instance
@@ -126,8 +184,17 @@ namespace Sample.Slicer.API.Tests.Services
 
 			// Set the IntegrationService private _httpClient field to IntegrationServiceTests mock _httpClient field
 			httpClientField.SetValue(_service, _httpClient);
-			httpClientField.SetValue(_testService, _httpClient);
+			httpClientField.SetValue(_testService, _httpClient); // Also set reflection of Test sub-class private-field
         }
+
+		[Fact]
+		public void TestIntegrationServices_Instantiated()
+		{
+			Assert.NotNull(_httpMessageHandlerMock);
+			Assert.NotNull(_httpClient);
+            Assert.IsType<IntegrationService>(_service);
+            Assert.IsType<TestIntegrationService>(_testService);
+		}
 
         #region GetProjectAsync Tests
 
@@ -139,50 +206,43 @@ namespace Sample.Slicer.API.Tests.Services
             string projectId = "project-id";
             string requestUrl = $"/projects/{projectId}";
 			HttpMethod requestMethod = HttpMethod.Get;
-            ProjectOutputDto expectedProject = SampleProjectOutputDto.GetSampleProjectOutputDto();
-            string responseJson = JsonSerializer.Serialize<ProjectOutputDto>(expectedProject);
+            ProjectOutputDto expectedProject = Dto_Utils.SampleProjectOutputDto.GetSampleProjectOutputDto();
+            string expectedContent = JsonSerializer.Serialize<ProjectOutputDto>(expectedProject);
             
             // Mock HttpClient response to return a valid JSON response
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
                 )
-			/* TODO: TEST
-            _httpMessageHandlerMock
-                .Setup(handler => handler.SendAsync(
-                        It.Is<HttpRequestMessage>(
-                            req =>
-                                req.Method == requestMethod
-                                && req.RequestUri.PathAndQuery.EndsWith(requestUrl) // .ToString().EndsWith(..)
-                        ),
-                        It.IsAny<CancellationToken>()
-                    )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
-			*/
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(responseJson)
+                    Content = new StringContent(
+                        expectedContent,
+                        Encoding.UTF8,
+                        "application/json"
+                    )
                 })
 				.Verifiable();
             
-            // TODO: TEST
-            // // _service.HttpClient = _httpClient;
-
             // Act
             var result = await _service.GetProjectAsync(projectId);
 
             // Assert
             Assert.NotNull(result);
             Assert.IsType<ProjectOutputDto>(result);
-            Assert.Equal(expectedProject, result, Helpers.JsonSerializerComparer<ProjectOutputDto>.Instance);
+            Assert.Equal(expectedContent, JsonSerializer.Serialize<ProjectOutputDto>(result));
+            Assert.Equal(expectedProject, result, Utils.JsonSerializerComparer<ProjectOutputDto>.Instance);
             
             // Verify that the mock HttpClient request was made
             _httpMessageHandlerMock
@@ -190,27 +250,13 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
-			/*
-            _httpMessageHandlerMock.Verify(
-                handler => handler.SendAsync(
-					It.Is<HttpRequestMessage>(
-                        req =>
-                            req.Method == requestMethod
-                            && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
-                    ),
-                    It.IsAny<CancellationToken>()
-                ),
-                Times.Once
-            );
-			*/
-
         }
         
         // Test for GetProjectAsync failure case
@@ -227,21 +273,22 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.NotFound
                 })
 				.Verifiable();
-            
-            // _service.HttpClient = _httpClient;
-            
+                        
             // Act
             var result = await _service.GetProjectAsync(projectId);
             
@@ -254,12 +301,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
 
         }
@@ -277,18 +324,22 @@ namespace Sample.Slicer.API.Tests.Services
             string requestUrl = $"/projects/{projectId}/manufacturer-review";
             HttpMethod requestMethod = HttpMethod.Patch;
             ProjectManufacturingUpdateInputDto projectManufacturingUpdateInputDto =
-                SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
+                Dto_Utils.SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
             
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+					// TODO: pass in remaining (default-valued) arguments; & toggle 'shouldLog' true if required
+                    (req, token) => LogRequest(req) // for other method invocations too
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -296,9 +347,7 @@ namespace Sample.Slicer.API.Tests.Services
                     Content = new StringContent(true.ToString())
                 })
 				.Verifiable();
-            
-            // _service.HttpClient = _httpClient;
-            
+                        
             // Act
             var result = await _service.StartManufacturerReviewAsync(projectId, projectManufacturingUpdateInputDto);
             
@@ -311,12 +360,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -329,27 +378,28 @@ namespace Sample.Slicer.API.Tests.Services
             string requestUrl = $"/projects/{projectId}/manufacturer-review";
             HttpMethod requestMethod = HttpMethod.Patch;
             ProjectManufacturingUpdateInputDto projectManufacturingUpdateInputDto =
-                SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
+                Dto_Utils.SampleProjectManufacturingUpdateInputDto.GetSampleProjectManufacturingUpdateInputDto();
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.BadRequest
                 })
 				.Verifiable();
-            
-            // _service.HttpClient = _httpClient;
-            
+                        
             // Act
             var result = await _service.StartManufacturerReviewAsync(projectId, projectManufacturingUpdateInputDto);
 
@@ -362,12 +412,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -384,36 +434,42 @@ namespace Sample.Slicer.API.Tests.Services
             string fileId = "file-id";
             string requestUrl = $"/projects/{projectId}/files/{fileId}";
             HttpMethod requestMethod = HttpMethod.Get;
-            ProjectFileOutputDto expectedFile = SampleProjectFileOutputDto.GetSampleProjectFileOutputDto();
-            string responseJson = JsonSerializer.Serialize<ProjectFileOutputDto>(expectedFile);
+            ProjectFileOutputDto expectedFile = Dto_Utils.SampleProjectFileOutputDto.GetSampleProjectFileOutputDto();
+            string expectedContent = JsonSerializer.Serialize<ProjectFileOutputDto>(expectedFile);
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(responseJson)
+                    Content = new StringContent(
+                        expectedContent,
+                        Encoding.UTF8,
+                        "application/json"
+                    )
                 })
 				.Verifiable();
-            
-            // _service.HttpClient = _httpClient;
-            
+                        
             // Act
             var result = await _service.GetProjectFileAsync(projectId, fileId);
             
             // Assert
             Assert.NotNull(result);
             Assert.IsType<ProjectFileOutputDto>(result);
-            Assert.Equal(expectedFile, result, Helpers.JsonSerializerComparer<ProjectFileOutputDto>.Instance);
+            Assert.Equal(expectedContent, JsonSerializer.Serialize<ProjectFileOutputDto>(result));
+            Assert.Equal(expectedFile, result, Utils.JsonSerializerComparer<ProjectFileOutputDto>.Instance);
             
             // Verify that the mock HttpClient request was made
             _httpMessageHandlerMock
@@ -421,12 +477,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -444,21 +500,22 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.NotFound
                 })
 				.Verifiable();
-            
-            // _service.HttpClient = _httpClient;
-            
+                        
             // Act
             var result = await _service.GetProjectFileAsync(projectId, fileId);
             
@@ -471,12 +528,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -490,19 +547,23 @@ namespace Sample.Slicer.API.Tests.Services
         {
             // Arrange
             string fileName = "test-file.txt";
-            string fileUrl = "https://example.com/test-file";
+            string fileUrl = $"/files/{fileName}";
 			HttpMethod requestMethod = HttpMethod.Get;
 
+			// Mock request handler for MakeFileRequestAsync
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(fileUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -511,8 +572,6 @@ namespace Sample.Slicer.API.Tests.Services
                 })
 				.Verifiable();
             
-            // _testService.HttpClient = _httpClient;
-
             // Act
             var result = await _testService.SaveFileAsync(fileUrl, fileName, storagePath: ""); // todo: test with storagePath
 
@@ -525,12 +584,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(fileUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -540,19 +599,22 @@ namespace Sample.Slicer.API.Tests.Services
         {
             // Arrange
             string fileName = "test-file.txt";
-            string fileUrl = "https://example.com/test-file";
+            string fileUrl = $"/files/{fileName}";
 			HttpMethod requestMethod = HttpMethod.Get;
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(fileUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -560,8 +622,6 @@ namespace Sample.Slicer.API.Tests.Services
                 })
 				.Verifiable();
             
-            // _testService.HttpClient = _httpClient;
-
             // Act
             var result = await _testService.SaveFileAsync(fileUrl, fileName);
 
@@ -574,12 +634,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(fileUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -600,12 +660,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -613,8 +676,6 @@ namespace Sample.Slicer.API.Tests.Services
                     Content = new StringContent(expectedContent, Encoding.UTF8, "application/json")
                 })
 				.Verifiable();
-
-            // TODO: _service / // _testService.HttpClient = _httpClient; ??
 
             // Act
             var result = await _testService.MakeRequestAsync(requestUrl, requestMethod);
@@ -628,12 +689,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -649,12 +710,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -674,12 +738,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -698,13 +762,16 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
 							&& req.Content!.ReadAsStringAsync().Result == serializedData
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -735,12 +802,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -758,12 +825,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -789,12 +859,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -813,13 +883,16 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
 							&& req.Content!.ReadAsStringAsync().Result == serializedData
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -850,12 +923,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -873,12 +946,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -904,12 +980,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -928,13 +1004,16 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
 							&& req.Content!.ReadAsStringAsync().Result == serializedData
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -965,12 +1044,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -988,12 +1067,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1019,12 +1101,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -1041,12 +1123,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage
                 {
@@ -1067,12 +1152,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1088,12 +1173,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.NotFound })
 				.Verifiable();
@@ -1110,12 +1198,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1136,12 +1224,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1175,12 +1266,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1197,12 +1288,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1233,12 +1327,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -1249,21 +1343,44 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/form-data";
+            
             HttpMethod requestMethod = HttpMethod.Post;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
+            
+            var fileStream = new MemoryStream(
+                Encoding.UTF8.GetBytes(fileContent)
+            );
+            var formDataContent = new MultipartFormDataContent
+            {
+                // Add file Content
+                { new StreamContent(fileStream), "file", fileName },
+                
+                // Add additional form fields
+                { new StringContent("value1"), "key1" },
+                { new StringContent("value2"), "key2" }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartFormDataContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, formDataContent); // Check for exact instance
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
-							&& req.Content!.ReadAsStringAsync().Result == serializedData
+							&& validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1284,7 +1401,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				contentType: requestContentType,
+                content: (null, formDataContent),
                 callback: saveFileCallback
             );
             
@@ -1298,12 +1416,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1314,20 +1432,44 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/form-data";
+            
             HttpMethod requestMethod = HttpMethod.Post;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
+            
+            var fileStream = new MemoryStream(
+                Encoding.UTF8.GetBytes(fileContent)
+            );
+            var formDataContent = new MultipartFormDataContent
+            {
+                // Add file Content
+                { new StreamContent(fileStream), "file", fileName },
+                
+                // Add additional form fields
+                { new StringContent("value1"), "key1" },
+                { new StringContent("value2"), "key2" }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartFormDataContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, formDataContent);
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
+							&& validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1345,7 +1487,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				contentType: requestContentType,
+                content: (null, formDataContent),
                 callback: saveFileCallback
             );
             
@@ -1359,12 +1502,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -1375,21 +1518,38 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/*";
+            
             HttpMethod requestMethod = HttpMethod.Put;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
+
+            var multipartContent = new MultipartContent("*")
+            {
+                // Add fields
+                { new StringContent(fileName, Encoding.UTF8, "text/plain") },
+                { new ByteArrayContent(Encoding.UTF8.GetBytes(fileContent)) }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, multipartContent);
 
 			_httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
-							&& req.Content!.ReadAsStringAsync().Result == serializedData
+							&& validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1410,7 +1570,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				contentType: requestContentType,
+                content: (multipartContent, null),
                 callback: saveFileCallback
             );
             
@@ -1424,12 +1585,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1440,20 +1601,38 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/*";
+            
             HttpMethod requestMethod = HttpMethod.Put;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
+
+            var multipartContent = new MultipartContent("*")
+            {
+                // Add fields
+                { new StringContent(fileName, Encoding.UTF8, "text/plain") },
+                { new ByteArrayContent(Encoding.UTF8.GetBytes(fileContent)) }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, multipartContent);
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
+							&& validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1471,7 +1650,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				contentType: requestContentType,
+                content: (multipartContent, null),
                 callback: saveFileCallback
             );
             
@@ -1485,12 +1665,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -1501,21 +1681,38 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/*";
+            
             HttpMethod requestMethod = HttpMethod.Patch;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
 
+            var multipartContent = new MultipartContent("*")
+            {
+                // Add fields
+                { new StringContent(fileName, Encoding.UTF8, "text/plain") },
+                { new ByteArrayContent(Encoding.UTF8.GetBytes(fileContent)) }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, multipartContent);
+			
 			_httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
-							&& req.Content!.ReadAsStringAsync().Result == serializedData
+                            && validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1536,7 +1733,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				// requestContentType, // * no content-type - defaults-to "multipart/*"
+                content: (multipartContent, null),
                 callback: saveFileCallback
             );
             
@@ -1550,12 +1748,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1566,20 +1764,38 @@ namespace Sample.Slicer.API.Tests.Services
             // Arrange
             string requestUrl = "/projects/123/files";
             string fileName = "test-file.txt";
+            string fileContent = "Sample file content";
+            string requestContentType = "multipart/*";
+            
             HttpMethod requestMethod = HttpMethod.Patch;
-            var requestData = new { file = "data" };
-            string serializedData = JsonSerializer.Serialize(requestData);
+
+            var multipartContent = new MultipartContent("*")
+            {
+                // Add fields
+                { new StringContent(fileName, Encoding.UTF8, "text/plain") },
+                { new ByteArrayContent(Encoding.UTF8.GetBytes(fileContent)) }
+            };
+
+			Func<HttpRequestMessage, bool> validateMultipartContent =
+				req =>
+					req.Content is MultipartContent content
+					&& content.Headers.ContentType.MediaType == requestContentType
+					&& ReferenceEquals(content, multipartContent);
 
             _httpMessageHandlerMock
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
+                            && validateMultipartContent(req)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1596,7 +1812,8 @@ namespace Sample.Slicer.API.Tests.Services
                 requestUrl,
                 requestMethod,
                 fileName,
-                content: serializedData,
+				// requestContentType, // * no content-type - defaults-to "multipart/*"
+                content: (multipartContent, null),
                 callback: saveFileCallback
             );
             
@@ -1610,12 +1827,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
 
@@ -1632,12 +1849,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1670,12 +1890,12 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
@@ -1692,12 +1912,15 @@ namespace Sample.Slicer.API.Tests.Services
 				.Protected()
 				.Setup<Task<HttpResponseMessage>>(
 					"SendAsync",
-                    It.Is<HttpRequestMessage>(
+                    ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .Callback<HttpRequestMessage, CancellationToken>(
+                    (req, token) => LogRequest(req)
                 )
                 .ReturnsAsync(
                     new HttpResponseMessage
@@ -1727,219 +1950,17 @@ namespace Sample.Slicer.API.Tests.Services
 				.Verify(
 					"SendAsync",
 					Times.Once(),
-					It.Is<HttpRequestMessage>(
+					ItExpr.Is<HttpRequestMessage>(
                         req =>
                             req.Method == requestMethod
                             && req.RequestUri.PathAndQuery.EndsWith(requestUrl)
                     ),
-                    It.IsAny<CancellationToken>()
+                    ItExpr.IsAny<CancellationToken>()
             	);
         }
         
         #endregion MakeFileRequestAsync Tests
 
     }
-    
-    
-    // TODO: Setup Mock Files & Inject into IntegrationService (& other services
-    
-    
-    public class SampleProjectManufacturingUpdateInputDto
-    {
-        public static ProjectManufacturingUpdateInputDto GetSampleProjectManufacturingUpdateInputDto()
-        {
-            var material = ManufacturingMaterial.Pla;
-            var grams = 100;
-            var time = TimeSpan.FromHours(2);
-            double? customCost = 15.5;
 
-            var materialsUsage = new[]
-            {
-                new ProjectMaterialUsageDto
-                {
-                    Material = material,
-                    Grams = grams,
-                    Time = time,
-                    CustomCost = customCost
-                },
-                new ProjectMaterialUsageDto
-                {
-                    Material = material,
-                    Grams = grams,
-                    Time = time,
-                    CustomCost = customCost
-                }
-            };
-
-            var projectManufacturingUpdateInputDto = new ProjectManufacturingUpdateInputDto
-            {
-                MaterialsUsage = materialsUsage
-            };
-
-            return projectManufacturingUpdateInputDto;
-        }
-    }
-    
-    public class SampleProjectOutputDto
-    {
-        public static ProjectOutputDto GetSampleProjectOutputDto()
-        {
-            var id = Guid.NewGuid();
-            var title = "Test Project";
-            var category = "Category1";
-            var description = "This is a test project.";
-            var hashtags = new List<string> { "#test", "#project" };
-            var files = new List<ProjectFileOutputDto>
-            {
-                new ProjectFileOutputDto
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "File1",
-                    Extension = ".txt",
-                    Size = 1024,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    Quantifier = 1
-                }
-            };
-            var images = new List<ProjectImageOutputDto>
-            {
-                new ProjectImageOutputDto
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Image1",
-                    Extension = ".jpg",
-                    Size = 2048,
-                    IsProfileImage = true,
-                    Url = "http://example.com/image.jpg",
-                    CreatedAt = DateTime.UtcNow
-                }
-            };
-            var status = "Active";
-            var ownerId = Guid.NewGuid();
-            var createdAt = DateTime.UtcNow;
-            var updatedAt = DateTime.UtcNow;
-            var manufacturingDescription = "Manufacturing description";
-            var dimensions = new ProjectDimensionOutputDto
-            {
-                Width = 10.5,
-                Height = 20.5,
-                Depth = 30.5,
-                UnitOfMeasurement = "cm"
-            };
-            var price = 99.99;
-            var numberOfParts = 5;
-            var minStrength = "High";
-            var minQuality = "Premium";
-            var materialsUsage = new List<MaterialUsageOutputDto>
-            {
-                new MaterialUsageOutputDto
-                {
-                    Material = "PLA",
-                    Grams = 100,
-                    Time = TimeSpan.FromHours(2),
-                    CustomCost = 15.5,
-                    ManufacturingCost = 20.0,
-                    FinalPrice = 35.5
-                }
-            };
-            var supportStructures = new SupportStructuresOutputDto
-            {
-                HasSupportStructures = true,
-                SpecialInstructions = "Handle with care",
-                SupportStructureType = "Type1"
-            };
-            var qualitySettings = new QualitySettingsOutputDto
-            {
-                LayerHeightUnitOfMeasurement = "mm",
-                LayerHeight = 0.2,
-                InfillPercentage = 20.0,
-                InfillType = "Grid"
-            };
-            var postProcessingActions = new List<PostProcessingActionOutputDto>
-            {
-                new PostProcessingActionOutputDto
-                {
-                    Action = "Polishing",
-                    Duration = TimeSpan.FromHours(1),
-                    Cost = 10.0
-                }
-            };
-            var overallAssessment = new OverallAssessmentOutputDto
-            {
-                EquipmentQuality = "Excellent",
-                PotentialChanges = "None",
-                AdditionalNotes = "No additional notes",
-                Dimensions = dimensions,
-                Weight = 500
-            };
-            var reviewerId = Guid.NewGuid();
-            var adminActions = new List<AdminActionsOutputDto>
-            {
-                new AdminActionsOutputDto
-                {
-                    Action = "Approve",
-                    Status = "Completed"
-                }
-            };
-
-            var projectOutputDto = new ProjectOutputDto
-            {
-                Id = id,
-                Title = title,
-                Category = category,
-                Description = description,
-                Hashtags = hashtags,
-                Files = files,
-                Images = images,
-                Status = status,
-                OwnerId = ownerId,
-                CreatedAt = createdAt,
-                UpdatedAt = updatedAt,
-                ManufacturingDescription = manufacturingDescription,
-                Dimensions = dimensions,
-                Price = price,
-                NumberOfParts = numberOfParts,
-                MinStrength = minStrength,
-                MinQuality = minQuality,
-                MaterialsUsage = materialsUsage,
-                SupportStructures = supportStructures,
-                QualitySettings = qualitySettings,
-                PostProcessingActions = postProcessingActions,
-                OverallAssessment = overallAssessment,
-                ReviewerId = reviewerId,
-                AdminActions = adminActions
-            };
-
-            return projectOutputDto;
-        }
-    }
-
-    public class SampleProjectFileOutputDto
-    {
-        public static ProjectFileOutputDto GetSampleProjectFileOutputDto()
-        {
-            var id = Guid.NewGuid();
-            var name = "Test Project";
-            var extension = ".txt";
-            var size = 1024L;
-            var createdAt = DateTime.UtcNow;
-            var updatedAt = DateTime.UtcNow;
-            int? quantifier = 5;
-
-            var projectFileOutputDto = new ProjectFileOutputDto
-            {
-                Id = id,
-                Name = name,
-                Extension = extension,
-                Size = size,
-                CreatedAt = createdAt,
-                UpdatedAt = updatedAt,
-                Quantifier = quantifier
-            };
-
-            return projectFileOutputDto;
-        }
-    }
-    
 }

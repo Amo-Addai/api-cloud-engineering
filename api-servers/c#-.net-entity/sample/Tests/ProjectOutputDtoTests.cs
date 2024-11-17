@@ -1,14 +1,15 @@
-using Sample.Slicer.API.Dtos.Projects;
 using Xunit;
+using Cadly.Slicer.API.Dtos.Projects;
+using Cadly.Slicer.API.Tests.Dtos.Common;
 
-namespace Sample.Slicer.API.Tests.Dtos.Projects
+namespace Cadly.Slicer.API.Tests.Dtos.Projects
 {
     public class ProjectOutputDtoTests
     {
         [Fact]
         public void Should_CreateDto_WithDefaultValues()
         {
-            var id = Guid.NewGuid();
+            var id = new Guid("12345678-1234-1234-1234-123456789abc");
             var title = "Test Project";
             var category = "Category1";
             var description = "This is a test project.";
@@ -17,12 +18,12 @@ namespace Sample.Slicer.API.Tests.Dtos.Projects
             {
                 new ProjectFileOutputDto
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("12345678-1234-1234-1234-123456789abc"),
                     Name = "File1",
                     Extension = ".txt",
                     Size = 1024,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     Quantifier = 1
                 }
             };
@@ -30,19 +31,19 @@ namespace Sample.Slicer.API.Tests.Dtos.Projects
             {
                 new ProjectImageOutputDto
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("12345678-1234-1234-1234-123456789abc"),
                     Name = "Image1",
                     Extension = ".jpg",
                     Size = 2048,
                     IsProfileImage = true,
                     Url = "http://example.com/image.jpg",
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 }
             };
             var status = "Active";
-            var ownerId = Guid.NewGuid();
-            var createdAt = DateTime.UtcNow;
-            var updatedAt = DateTime.UtcNow;
+            var ownerId = new Guid("12345678-1234-1234-1234-123456789abc");
+            var createdAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var updatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var manufacturingDescription = "Manufacturing description";
             var dimensions = new ProjectDimensionOutputDto
             {
@@ -97,7 +98,7 @@ namespace Sample.Slicer.API.Tests.Dtos.Projects
                 Dimensions = dimensions,
                 Weight = 500
             };
-            var reviewerId = Guid.NewGuid();
+            var reviewerId = new Guid("12345678-1234-1234-1234-123456789abc");
             var adminActions = new List<AdminActionsOutputDto>
             {
                 new AdminActionsOutputDto
@@ -159,191 +160,9 @@ namespace Sample.Slicer.API.Tests.Dtos.Projects
             Assert.Equal(overallAssessment, dto.OverallAssessment);
             Assert.Equal(reviewerId, dto.ReviewerId);
             Assert.Equal(adminActions, dto.AdminActions);
+
+			// Assert Snapshot
+			Utils.Snapshot<ProjectOutputDto>(dto, nameof(ProjectOutputDto));
         }
     }
 }
-
-/*
-
-using System.Text.Json.Serialization;
-
-namespace Sample.Slicer.API.Dtos.Projects;
-
-public record ProjectOutputDto
-{
-    [JsonPropertyName("id")]
-    public required Guid Id { get; init; }
-
-    [JsonPropertyName("title")]
-    public required string Title { get; init; }
-
-    [JsonPropertyName("category")]
-    public required string Category { get; init; }
-
-    [JsonPropertyName("description")]
-    public required string Description { get; init; }
-
-    [JsonPropertyName("hashtags")]
-    public required IEnumerable<string> Hashtags { get; init; }
-
-    [JsonPropertyName("files")]
-    public required IEnumerable<ProjectFileOutputDto> Files { get; init; }
-
-    [JsonPropertyName("images")]
-    public required IEnumerable<ProjectImageOutputDto> Images { get; init; }
-
-    [JsonPropertyName("status")]
-    public required string Status { get; init; }
-
-    [JsonPropertyName("ownerId")]
-    public required Guid OwnerId { get; init; }
-
-    [JsonPropertyName("createdAt")]
-    public required DateTime CreatedAt { get; init; }
-
-    [JsonPropertyName("updatedAt")]
-    public required DateTime UpdatedAt { get; init; }
-
-    [JsonPropertyName("manufacturing_description")]
-    public string? ManufacturingDescription { get; init; }
-
-    [JsonPropertyName("dimensions")]
-    public ProjectDimensionOutputDto? Dimensions { get; init; }
-
-    [JsonPropertyName("price")]
-    public double? Price { get; init; }
-
-    [JsonPropertyName("number_of_parts")]
-    public required int NumberOfParts { get; init; }
-
-    [JsonPropertyName("min_strength")]
-    public required string MinStrength { get; init; }
-
-    [JsonPropertyName("min_quality")]
-    public required string MinQuality { get; init; }
-
-    [JsonPropertyName("materials_usage")]
-    public IEnumerable<MaterialUsageOutputDto>? MaterialsUsage { get; init; }
-
-    [JsonPropertyName("support_structures")]
-    public SupportStructuresOutputDto? SupportStructures { get; init; }
-
-    [JsonPropertyName("quality_settings")]
-    public QualitySettingsOutputDto? QualitySettings { get; init; }
-
-    [JsonPropertyName("post_processing_actions")]
-    public IEnumerable<PostProcessingActionOutputDto>? PostProcessingActions { get; init; }
-
-    [JsonPropertyName("overall_assessment")]
-    public OverallAssessmentOutputDto? OverallAssessment { get; init; }
-
-    [JsonPropertyName("reviewer_id")]
-    public Guid? ReviewerId { get; init; }
-
-    [JsonPropertyName("admin_actions")]
-    public IEnumerable<AdminActionsOutputDto>? AdminActions { get; init; }
-}
-
-public record ProjectDimensionOutputDto
-{
-    [JsonPropertyName("width")]
-    public required double Width { get; init; }
-
-    [JsonPropertyName("height")]
-    public required double Height { get; init; }
-
-    [JsonPropertyName("depth")]
-    public required double Depth { get; init; }
-
-    [JsonPropertyName("unit_of_measurement")]
-    public required string UnitOfMeasurement { get; init; }
-}
-
-public record MaterialUsageOutputDto
-{
-    [JsonPropertyName("material")]
-    public required string Material { get; init; }
-
-    [JsonPropertyName("grams")]
-    public required int Grams { get; init; }
-
-    [JsonPropertyName("time")]
-    public required TimeSpan Time { get; init; }
-
-    [JsonPropertyName("custom_cost")]
-    public double? CustomCost { get; init; }
-
-    [JsonPropertyName("manufacturing_cost")]
-    public required double ManufacturingCost { get; init; }
-
-    [JsonPropertyName("final_price")]
-    public required double FinalPrice { get; init; }
-}
-
-public record SupportStructuresOutputDto
-{
-    [JsonPropertyName("has_support_structures")]
-    public required bool HasSupportStructures { get; init; }
-
-    [JsonPropertyName("special_instructions")]
-    public string? SpecialInstructions { get; init; }
-
-    [JsonPropertyName("support_structure_type")]
-    public required string SupportStructureType { get; init; }
-}
-
-public record QualitySettingsOutputDto
-{
-    [JsonPropertyName("layer_height_unit_of_measurement")]
-    public required string LayerHeightUnitOfMeasurement { get; init; }
-
-    [JsonPropertyName("layer_height")]
-    public required double LayerHeight { get; init; }
-
-    [JsonPropertyName("infill_percentage")]
-    public required double InfillPercentage { get; init; }
-
-    [JsonPropertyName("infill_type")]
-    public required string InfillType { get; init; }
-}
-
-public record PostProcessingActionOutputDto
-{
-    [JsonPropertyName("action")]
-    public required string Action { get; init; }
-
-    [JsonPropertyName("duration")]
-    public required TimeSpan Duration { get; init; }
-
-    [JsonPropertyName("cost")]
-    public required double Cost { get; init; }
-}
-
-public record OverallAssessmentOutputDto
-{
-    [JsonPropertyName("equipment_quality")]
-    public required string EquipmentQuality { get; init; }
-
-    [JsonPropertyName("potential_changes")]
-    public string? PotentialChanges { get; init; }
-
-    [JsonPropertyName("additional_notes")]
-    public string? AdditionalNotes { get; init; }
-
-    [JsonPropertyName("dimensions")]
-    public required ProjectDimensionOutputDto Dimensions { get; init; }
-
-    [JsonPropertyName("weight")]
-    public required int Weight { get; init; }
-}
-
-public record AdminActionsOutputDto
-{
-    [JsonPropertyName("action")]
-    public required string Action { get; init; }
-
-    [JsonPropertyName("status")]
-    public required string Status { get; init; }
-}
-
-*/
