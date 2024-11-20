@@ -3,6 +3,7 @@ node_modules/
 .scala-build/
 .history/
 .vscode/
+.idea/
 .editorconfig
 .hintrc
 .DS_STORE
@@ -25,6 +26,7 @@ node_modules/
 .scala-build/
 .history/
 .vscode/
+.idea/
 node_modules/
 
 # Byte-compiled / optimized / DLL files
