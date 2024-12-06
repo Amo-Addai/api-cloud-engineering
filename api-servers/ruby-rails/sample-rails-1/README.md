@@ -12,14 +12,14 @@ bundle install
 yarn install
 ```
 
-## Running
-
-```shell
-./bin/dev
-```
-
-## Tests
+## Test
 
 ```shell
 rails test
+```
+
+## Run Server
+
+```shell
+./bin/dev
 ```
