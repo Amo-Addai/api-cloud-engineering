@@ -1,24 +1,20 @@
 package org.example.samples;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Stack;
-import java.util.Queue;
-import java.util.PriorityQueue;
-import java.util.ArrayDeque;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
 
 /*
- * // TODO:
+ * // TODO: Change Filename from 'Data-Algo - Java.java' to 'DataAlgoJava.java' (to avoid all errors)
  * Work with in-built DataStructure classes, from all java source libs
  */
 
@@ -123,7 +119,7 @@ public class DataAlgoJava {
                 Arrays.sort(arr); // O(n log n) t
 
                 // using FunctionalInterfaces with lambda's as values
-                BiFunction<int[], Integer, Integer>[] rBinarySearch = new BiFunction[1];
+                BiFunction<Integer[], Integer, Integer>[] rBinarySearch = new BiFunction[1];
                 // must be an array (of length 1), if function-item is required for recursive-calls
                 // so function-item can be retrieved by 'accessing' it by index [0] 1st, before recursive-calling
                 // if not, java wouldn't have noted FunctionalInterface var's existence yet
@@ -154,7 +150,7 @@ public class DataAlgoJava {
 
                 int f = 0, l = arr.length - 1;
 
-                rBinarySearch[0].apply(arr, 7); // todo: int[] to Integer[] - Arrays.from(arr)
+                rBinarySearch[0].apply(ArrayUtils.toObject(arr), 7);
                 rbSearch[0].rBinarySearch2p(arr, 7, f, l);
 
                 int m;
@@ -241,7 +237,7 @@ public class DataAlgoJava {
                 if (arr == null || arr.length == 0)
                     return new int[0];
 
-                BiFunction<int[], Integer, Integer> findLowerClosest = (a, x) -> {
+                BiFunction<Integer[], Integer, Integer> findLowerClosest = (a, x) -> {
                     int start = 0, end = a.length - 1, mid = -1;
                     while (start + 1 < end) {
                         mid = start + (end - start) / 2;
@@ -267,7 +263,7 @@ public class DataAlgoJava {
                     return false;
                 };
 
-                int lowerClosestIndex = findLowerClosest.apply(arr, num);
+                int lowerClosestIndex = findLowerClosest.apply(ArrayUtils.toObject(arr), num);
                 int[] res = new int[k];
                 int left = lowerClosestIndex, right = lowerClosestIndex + 1, index = 0;
                 for (int i = 0; i < k; i++) {
@@ -348,7 +344,7 @@ public class DataAlgoJava {
                 if (img[0] == null || img[0].length == 0)
                     return 0;
 
-                BiFunction<char[][], Integer, Boolean> rowHasBlackPixel = (im, row) -> {
+                BiFunction<Character[][], Integer, Boolean> rowHasBlackPixel = (im, row) -> {
                     for (int i = 0; i < im[row].length; i++) {
                         if (im[row][i] == '1')
                             return true;
@@ -356,7 +352,7 @@ public class DataAlgoJava {
                     return false;
                 };
 
-                BiFunction<char[][], Integer, Boolean> colHasBlackPixel = (im, col) -> {
+                BiFunction<Character[][], Integer, Boolean> colHasBlackPixel = (im, col) -> {
                     for (int i = 0; i < im.length; i++) {
                         if (im[i][col] == '1')
                             return true;
@@ -370,14 +366,14 @@ public class DataAlgoJava {
                 int start = 0, end = x, mid;
                 while (start + 1 < end) {
                     mid = start + (end - start) / 2;
-                    if (rowHasBlackPixel.apply(img, mid))
+                    if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), mid))
                         end = mid;
                     else
                         start = mid;
                 }
-                if (rowHasBlackPixel.apply(img, end))
+                if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), end))
                     res[0] = end;
-                if (rowHasBlackPixel.apply(img, start))
+                if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), start))
                     res[0] = start;
 
                 // now, find bottom ..
@@ -385,14 +381,14 @@ public class DataAlgoJava {
                 end = img.length - 1;
                 while (start + 1 < end) {
                     mid = start + (end - start) / 2;
-                    if (rowHasBlackPixel.apply(img, mid))
+                    if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), mid))
                         start = mid;
                     else
                         end = mid;
                 }
-                if (rowHasBlackPixel.apply(img, start))
+                if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), start))
                     res[1] = start;
-                if (rowHasBlackPixel.apply(img, end))
+                if (rowHasBlackPixel.apply(ArrayUtils.toObject(img), end))
                     res[1] = end;
 
                 // find left
@@ -400,14 +396,14 @@ public class DataAlgoJava {
                 end = y;
                 while (start + 1 < end) {
                     mid = start + (end - start) / 2;
-                    if (colHasBlackPixel.apply(img, mid))
+                    if (colHasBlackPixel.apply(ArrayUtils.toObject(img), mid))
                         end = mid;
                     else
                         start = mid;
                 }
-                if (colHasBlackPixel.apply(img, end))
+                if (colHasBlackPixel.apply(ArrayUtils.toObject(img), end))
                     res[2] = end;
-                if (colHasBlackPixel.apply(img, start))
+                if (colHasBlackPixel.apply(ArrayUtils.toObject(img), start))
                     res[2] = start;
 
                 // find right
@@ -415,14 +411,14 @@ public class DataAlgoJava {
                 end = img[0].length - 1;
                 while (start + 1 < end) {
                     mid = start + (end - start) / 2;
-                    if (colHasBlackPixel.apply(img, mid))
+                    if (colHasBlackPixel.apply(ArrayUtils.toObject(img), mid))
                         start = mid;
                     else
                         end = mid;
                 }
-                if (colHasBlackPixel.apply(img, start))
+                if (colHasBlackPixel.apply(ArrayUtils.toObject(img), start))
                     res[3] = start;
-                if (colHasBlackPixel.apply(img, end))
+                if (colHasBlackPixel.apply(ArrayUtils.toObject(img), end))
                     res[3] = end;
 
                 // finally, return the rectangle's area
@@ -432,7 +428,7 @@ public class DataAlgoJava {
 
             public int findPeakItem(int[] arr) {
 
-                BiFunction<int[], Integer, Integer> isPeak = (a, i) -> {
+                BiFunction<Integer[], Integer, Integer> isPeak = (a, i) -> {
                     if (i < 0 || i > a.length - 1)
                         return Integer.MAX_VALUE;
                     // find the peak
@@ -450,7 +446,7 @@ public class DataAlgoJava {
                 int start = 0, end = arr.length - 1, mid, peak;
                 while (start - 1 < end) {
                     mid = start + (end - start) / 2;
-                    peak = isPeak.apply(arr, mid);
+                    peak = isPeak.apply(ArrayUtils.toObject(arr), mid);
                     if (peak == 0)
                         return mid;
                     if (peak == 1)
@@ -460,9 +456,9 @@ public class DataAlgoJava {
                     else
                         start = mid;
                 }
-                if (isPeak.apply(arr, start) == 0)
+                if (isPeak.apply(ArrayUtils.toObject(arr), start) == 0)
                     return start;
-                if (isPeak.apply(arr, end) == 0)
+                if (isPeak.apply(ArrayUtils.toObject(arr), end) == 0)
                     return end;
                 return Integer.MAX_VALUE;
             }
@@ -535,7 +531,7 @@ public class DataAlgoJava {
             public double minmaxDistance(int[] locations, int k) {
 
                 // Get number of lcoations needed with current distance d
-                BiFunction<int[], Double, Integer> count = (ls, d) -> {
+                BiFunction<Integer[], Double, Integer> count = (ls, d) -> {
                     int c = 0;
                     for (int i = 0; i < ls.length - 1; i++)
                         c += (ls[i + 1] - ls[i]) / d;
@@ -547,12 +543,12 @@ public class DataAlgoJava {
                 double eps = 1e-6, mid;
                 while (left + eps < right) {
                     mid = left + (right - left) / 2.0;
-                    if (count.apply(locations, mid) > k)
+                    if (count.apply(ArrayUtils.toObject(locations), mid) > k)
                         left = mid;
                     else
                         right = mid;
                 }
-                if (count.apply(locations, left) == k)
+                if (count.apply(ArrayUtils.toObject(locations), left) == k)
                     return left;
                 return right;
             }
@@ -565,472 +561,2501 @@ public class DataAlgoJava {
 
         public static class DataStructures {
 
-            public DataStructures() {
-            }
+            public DataStructures() {}
 
-            // Arrays & Strings
+            // Arrays & Strings // ! TODO: FIX ALL - .stream / .contains / .remove / ..
 
-            // TODO: Fix
+            public static class ArraysStrings {
 
-            public int reverse(int n) { // O(1 - regular number - of digits > n - very large number - of digits) t ; O(1) s
+                public static class Arrays {
 
-                // int r = Integer.parseInt(("" + n).reverse())
-                // return r;
+                    public Arrays() {
 
-                // todo: handle all pre-checks in-loop - O(n) t
+                        // ! primitiveType[], AbstractType[], Arrays.staticMethods, System.array-staticmethods, .. 
+                        // ! List<AbstractType>, ArrayList<AbstractType>, Stream<AbstractType>, .. 
+                        // TODO: interconnecting methods, conversions, & algo's used between all (main three 1st) of them
 
-                String str = ""; Boolean negative = n < 0;
+                    /*
 
-                // remove any preceding 0 (1st list item)
-                if (n % 10 == 0) n = n / 10;
+                        - use primitive-types only when working with raw data & algo's (most-optimized algorithms only)
+                        - use Abstract-Types only when working with suface data & user-centric systems & platforms (& their algo's too)
+                        - use combinations between them when coding exploratively
+                        - use Arrays.staticMethods with Abstract-Types mainly (& only)
+                        - for primitive-types, consider System.array-staticmethods instead, if an Array.staticMethod is heavily required
+                            - else: implement the method, using raw data & algo's
 
-                while (n > 0) {
-                    str = str + (n % 10); // cut out last digit of n & appends to str
-                    n = n / 10; // remove last digit - already returns floored-integer - Math.floor not required
-                }
+                        Tips:
 
-                System.out.println(str);
-                return Integer.parseInt(str)
-                        * (
-                        negative
-                                ? -1 : 1
-                );
-            }
+                        - eg. 0 - x.length - primitiveType[] | x.length() - String | x.size() - AbstractListType | ..
 
-            // 3rd-Party
-            public int reverse1(int x) { // O(n ~ 1) t; O(1) s
-                int reversed = 0, pop = 0;
-                while (x != 0) {
-                    pop = x % 10; // modulo out last digit (also -ve if x -ve)
-                    x /= 10; // integer-divide out last digit - Math.floor not required
+                        - default - always use primitive-types by default; use AbstractTypes only when necessary (eg. as <TypeArguments>, or AbstractType.methods required);
+                            - make conversions between primitive (at right/initial time) - abstract when methods / other Abstract-Type<Arguments> / .. are required
 
-                    // Check for overflow/underflow before adding the popped digit
-                    // return 0 on very large-number digits
-                    if (
-                            reversed > Integer.MAX_VALUE/10 // max-possible number of digits (hence Integer.MAX_VALUE/10 last digit int-divided out)
-                                    || (reversed == Integer.MAX_VALUE / 10 && pop > 7)
-                    ) return 0;
-                    if (
-                            reversed < Integer.MIN_VALUE/10
-                                    || (reversed == Integer.MIN_VALUE / 10 && pop < -8)
-                    ) return 0;
+                                - eg. Integer A = a / Integer.valueOf(a) -> (int -> Integer) / new Integer(primInt) -> Integer / 
+                                    
+                                    ! Arrays.from(primIntArr) -> Integer[] - wrong ('Arrays.from' in .js not .java)
+                                    ! Arrays.asList(primIntArr) -> cannot convert into Integer[] ; only List<Integer> 
+                                    ! & that can also be passed as a constructor argument of ArrayList<>(new List<Integer>())
+                                    * to convert int[] to Integer[], create a new Integer[] & manually assign values within a loop (or with Arrays.copyOf & System.arraycopy)
 
-                    reversed = reversed * 10 + pop; // pad another '0' digit, then add x-modulo'd out digit (if x -ve new '-ve additions' don't matter; -reversed already in -ve zone)
-                }
-                return reversed; // if x -ve, reversed already -ve
-            }
+                                    ! or use the extra Apache Commons Lang's 'ArrayUtils' library's static methods too
+                                    * or use other libs: Guava, ..
 
-            String reorganizeString(String S) { // TODO: verify - O(n + n log n) t | O(n) s
+                                    ! Apache Commons Lang eg: ArrayUtils.toObject(primIntArr) -> Integer[]
+                                    * Guava eg: Ints.asList(primIntArray).toArray(new Integer[0 or primIntArr.length]) -> Integer[]
 
-                Map<Character, Integer> counts = new HashMap<>();
+                                    * main / other examples 
 
-                // O(n)
-                for (char c : S.toCharArray())
-                    counts.put(c, counts.getOrDefault(c, 0) + 1);
+                                    Integer[] A = new Integer[a.length]; List<Integer>/ArrayList<Integer> A = new ArrayList<>(); for-loop to assign a[i] -> all A[i] / 
 
-                PriorityQueue<Character> maxHeap = new PriorityQueue<>(
-                        (a, b) -> counts.get(b) - counts.get(a));
-                maxHeap.addAll(counts.keySet());
+                                    new ArrayList<>(Arrays.asList(primIntArr)) -> ArrayList<Integer> / 
 
-                // todo: NB: Concatenating a String takes in more buffer data or additional
-                // memory overhead (more space complexity) than manually building up a String
-                // with a mutable StringBuilder object, Character by Character
-                // Concatenating to an immutable String object creates a new String object
-                // (leading to additional memory overhead)
+                                    Arrays.asList(primIntArr) / Arrays.asList( variadic int args ..) -> List<Integer> / 
+                                    
+                                    Arrays.stream(primIntArr) -> IntStream / 
+                                    Arrays.stream(primIntArr).boxed().toArray(Integer[]::new) -> Integer[] / 
 
-                StringBuilder result = new StringBuilder();
-                char current;
-                char next;
-                char last;
+                                    Arrays.stream(primIntArr).boxed().collect(Collectors.toList()) -> List<Integer> / 
+                                    Arrays.stream(primIntArr).boxed().collect(Collectors.toCollection(ArrayList::new)) -> ArrayList<Integer> / 
 
-                // O(n log n)
-                while (maxHeap.size() > 1) {
-                    current = maxHeap.poll();
-                    next = maxHeap.poll();
-                    result.append(current);
-                    result.append(next);
-                    counts.put(current, counts.get(current) - 1);
-                    counts.put(next, counts.get(next) - 1);
-                    if (counts.get(current) > 0)
-                        maxHeap.add(current);
-                    if (counts.get(next) > 0)
-                        maxHeap.add(next);
-                    // base-case check
-                    if (!maxHeap.isEmpty()) {
-                        last = maxHeap.poll();
-                        if (counts.get(last) > 1)
-                            return "";
-                        result.append(last);
+                                    Arrays.asList(primIntArr).stream().mapToObj(Integer::valueOf).collect(Collectors.toList()) -> List<Integer> / 
+                                    Arrays.asList(primIntArr).stream().mapToObj(Integer::valueOf).collect(Collectors.toCollection(ArrayList::new)) -> ArrayList<Integer> / 
+
+
+                                    new Integer[] { primIntArr[0], primIntArr[1], [find out how to spread primIntArr here] } / ... 
+
+                            - whenever getting values from AbstractType.methods are required to be primitive - (cast-to-primitive-type) for end-usage
+                        
+                        - problem-solution (game) examples:
+                        
+                        - eg. 1 - convert input primitive types to abstract types, then convert back to output primitive types (sub-optimal)
+                        - eg. 2 - only work with primitive types (if passed as input); use custom methods (or System.static-methods) wherever necessary (most-optimal)
+                        - eg. 3 - only work with abstract types (if passed as input); use in-built methods where necessary (acceptable - on surface systems level)
+                        - eg. 4 - convert input abstract types to primitive types, (play around with Abstract-static methods still), then return output primitive types (or convert back to abstract outputs) - 'just to prove a point'
+                        - eg. 5 - play around with combo's of both of them - use Abstract-types' static methods (Arrays/Strings/System) wherever necessary (for more experience)
+                        - eg. 6 - compare changes in Big O for each manipulation, in order to know most optimal options when working with whichever data-type / problem-solution
+
+                        - eg. 0 again - x.length - O(1) t - primitiveType[] | x.length() - O(n~1) t - String | x.size() - O(n~1) t - AbstractListType | ..
+
+                        ! TODO: confirm obj.length() / .size() does't already store a 'length / size' property in its implementation first; else would be O(1) t by default
+                        
+                        ! TODO: convert primitive-type array (int[]) to AbstractType array (new Integer[]) - eg. ArrayUtils.toObject(arr)
+
+                        ..
+
+                     */
+
                     }
-                }
 
-                return result.toString();
-            }
+                    // ! wrong implementation
+                    public int reverse(int n) { // O(1 - regular number - of digits > n - very large number - of digits) t ; O(1) s
 
-            @FunctionalInterface
-            interface NumSwaps {
-                int swap(int num, int[] a, int[] b);
-            }
+                        // int r = Integer.parseInt(("" + n).reverse())
+                        // return r;
 
-            // TODO: Test
-            int minimumDominoRotations(int[] a, int[] b) {
+                        // todo: handle all pre-checks in-loop - O(n) t
 
-                NumSwaps numSwaps = (num, a1, b1) -> {
-                    int nSwaps = 0;
-                    for (int i = 0; i < a1.length; i++) {
-                        if (a1[i] != num && b1[i] != num)
-                            return Integer.MAX_VALUE;
-                        else if (a1[i] != num)
-                            nSwaps++;
+                        String str = ""; Boolean negative = n < 0;
+
+                        // remove any preceding 0 (1st list item)
+                        if (n % 10 == 0) n = n / 10;
+
+                        while (n > 0) {
+                            str = str + (n % 10); // cut out last digit of n & appends to str
+                            n = n / 10; // remove last digit - already returns floored-integer - Math.floor not required
+                        }
+
+                        System.out.println(str);
+                        return Integer.parseInt(str)
+                                * (negative ? -1 : 1);
                     }
-                    return nSwaps;
-                };
 
-                int minSwaps = Math.min(
-                        numSwaps.swap(a[0], a, b),
-                        numSwaps.swap(b[0], a, b));
-                minSwaps = Math.min(minSwaps, numSwaps.swap(a[0], b, a));
-                minSwaps = Math.min(minSwaps, numSwaps.swap(b[0], a, b));
-                return minSwaps == Integer.MAX_VALUE ? -1 : minSwaps;
-            }
+                    // 3rd-Party
+                    public int reverse1(int x) { // O(n ~ 1) t; O(1) s
+                        int reversed = 0, pop = 0;
+                        while (x != 0) {
+                            pop = x % 10; // modulo out last digit (also -ve if x -ve)
+                            x /= 10; // integer-divide out last digit - Math.floor not required
 
-            int maximumPointsFromCards(int[] points, int k) {
-                int sum = 0, max = 0;
-                int n = points.length - 1;
-                int[] left = new int[k + 1];
-                int[] right = new int[k + 1];
-                left[0] = 0;
-                right[0] = 0;
+                            // Check for overflow/underflow before adding the popped digit
+                            // return 0 on very large-number digits
+                            if (
+                                    reversed > Integer.MAX_VALUE/10 // max-possible number of digits (hence Integer.MAX_VALUE/10 last digit int-divided out)
+                                            || (reversed == Integer.MAX_VALUE / 10 && pop > 7)
+                            ) return 0;
+                            if (
+                                    reversed < Integer.MIN_VALUE/10
+                                            || (reversed == Integer.MIN_VALUE / 10 && pop < -8)
+                            ) return 0;
 
-                for (int i = 1; i <= k; i++)
-                    left[i] = left[i - 1] + points[i - 1];
+                            reversed = reversed * 10 + pop; // pad another '0' digit, then add x-modulo'd out digit (if x -ve new '-ve additions' don't matter; -reversed already in -ve zone)
+                        }
+                        return reversed; // if x -ve, reversed already -ve
+                    }
 
-                for (int i = 1; i <= k; i++)
-                    right[i] = right[i - 1] + points[n--];
+                    /**
+                     * Given an array nums. We define a running sum of an array as runningSum[i] = sum(nums[0]…nums[i]).
+                     * Return the running sum of nums.
+                     */
 
-                for (int j = 0; j < left.length; j++) {
-                    sum = left[j] + right[right.length - j - 1];
-                    max = Math.max(sum, max);
+                    public int[] runningSums(int[] nums) { // O(n) t ; O(1) s
+                        int[] sums = new int[nums.length];
+                        int sum = 0, i = 0;
+                        for (int num : nums) {
+                            sum += num;
+                            sums[i++] = sum;
+                        }
+                        return sums;
+                    }
+
+                    // using a hashmap (cannot use an extra array; index (as hashmap values) also needed)
+                    public int[] twoSum(int[] nums, int target) { // O(n) t ; O(n) s
+                        HashMap<Integer, Integer> map = new HashMap<>();
+                        int d;
+                        for (int i = 0; i < nums.length; i++) {
+                            d = target - nums[i];
+                            if (map.containsKey(d))
+                                return new int[] { map.get(d), i }; // ! new / raw int-array value
+                            map.put(nums[i], i);
+                        }
+                        return null;
+                    }
+
+                    // sorting & 2-pointer
+                    public int[] twoSum1(int[] nums, int target) { // O(n log n + (n/2 ~ n)) t ; O(1) s
+
+                        // nums.sort(); // ! NO .sort() on primitive-type arrays
+                        Arrays.sort(nums); // sorts primitive-type array in-place
+                        // or: Arrays.sort(nums, Comparator.reverseOrder()); - sort in reverse order
+                        // or: nums = Arrays.stream(nums).sorted().toArray(); - convert to stream, sort, then convert back to array
+
+
+                        int i = 0, j = nums.length - 1, s;
+                        while (i < j) {
+                            s = nums[i] + nums[j];
+                            if (s == target) return new int[] { i, j };
+                            else if (s < target) i++;
+                            else j--;
+                        }
+                        return null;
+                    }
+
+                    public int[] twoSum2(int[] nums, int target) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #1
+                    public int[][][] twoSum3(int[] nums, int target) { // O(n) t ; O(2n ~ n) s
+                        int[][] ips = new int[nums.length][2];
+                        int[][] nps = new int[nums.length][2];
+                        Map<Integer, Integer> map = new HashMap<>();
+                        int c = 0, d;
+
+                        for (int i = 0; i < nums.length; i++) {
+                            d = target - nums[i];
+                            if (map.containsKey(d)) {
+                                ips[c][0] = map.get(d);
+                                ips[c][1] = i;
+                                nps[c][0] = d;
+                                nps[c][1] = nums[i];
+                                c++;
+                            } else map.put(nums[i], i);
+                        }
+
+                        return new int[][][] { ips, nps };
+                    }
+
+                    public boolean containsDuplicates(int[] arr) { // O(n) t ; O(n) s
+                        if (arr.length < 2) return false;
+                        HashMap<Integer, Integer> map = new HashMap();
+                        for (int a : arr) {
+                            if (map.containsKey(a)) return true;
+                            else map.put(a, 1);
+                        }
+                        return false;
+                    }
+
+                    public boolean containsDuplicates1(int[] arr) { // O(n) t ; O(n) s
+                        if (arr.length < 2) return false;
+                        HashMap<Integer, Integer> map = new HashMap();
+                        boolean res = false;
+                        arr.stream().map((int a) -> {
+                            if (map.containsKey(a)) res = true; // ! find out how to break out of .map() via callback-iteration
+                            else map.put(a, 1);
+                        });
+                        return res; // ! only correct if .map() can be broken out from an iteration
+                    }
+
+                    // working with same input array
+                    public boolean containsDuplicates2(int[] arr) { // O(n) t ; O(1) s
+                        if (arr.length < 2) return false;
+                        ArrayList<Integer> a = new List<>(arr); // ! find out: convert arr to list/array-list
+                        boolean res = false;
+                        a.stream().map((int n, int i) -> {
+                            a.remove(i); // ! confirm .remove at index
+                            if (a.contains(n)) res = true; // ! confirm .contains
+                            // ! find-out: how to break out of .map cb-iteration
+                        });
+                        res = true;
+                    }
+
+                    public char containsDuplicates3(char[] arr) { // O(n) t ; O(1) s
+                        char c;
+                        for (int i = 0; i < arr.length; i++) {
+                            c = arr[i];
+                            arr.remove(i);
+                            if (arr.contains(c))
+                                return true;
+                        }
+                        return false;
+                    }
+
+                    // sorting, then checking adjacent values
+                    public boolean containsDuplicates4(int[] arr) { // O(n log n + (n/? ~ n)) t ; O(1) s
+                        if (arr.length < 2) return false;
+                        Arrays.sort(arr);
+                        for (int i = 1; i < arr.length; i++)
+                            if (arr[i - 1] == arr[i])
+                                return true;
+                        return false;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #217
+                    public boolean containsDuplicates5(int[] arr) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #217
+                    public boolean containsDuplicates6(int[] arr) { // O(n) t ; O(n) s
+                        if (arr.length <= 1) return false;
+                        HashMap<Integer, Boolean> map = new HashMap<>();
+                        for (int num : arr) {
+                            if (map.containsKey(num))
+                                return true;
+                            map.put(num, true);
+                        }
+                        return false;
+                    }
+
+                    // first unique character
+                    public char firstNonRepeatingChar(char[] arr) { // O(2n ~ n) t ; O(n) s
+                        HashMap<Character, Integer> map = new HashMap<>();
+                        char c;
+                        for (int i = 0; i < arr.length; i++) {
+                            c = arr[i];
+                            if (map.containsKey(c))
+                                map.put(c, map.get(c) + 1);
+                            else map.put(c, 1);
+                        }
+                        for (int i = 0; i < arr.length; i++) {
+                            c = arr[i];
+                            if (
+                                    map.containsKey(c)
+                                            && map.get(c) == 1
+                            ) return c;
+                        }
+                        return '-';
+                    }
+
+                    public char firstNonRepeatingChar1(char[] arr) {
+                        return null;
+                    }
+
+                    public char firstNonRepeatingChar2(char[] arr) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #387
+                    public char firstNonRepeatingChar3(char[] arr) {
+                        return null;
+                    }
+
+                    // first non-repeating character
+                    public char firstUniqueChar(char[] arr) {
+                        return null;
+                    }
+
+                    public char firstUniqueChar1(char[] arr) {
+                        return null;
+                    }
+
+                    public char firstUniqueChar2(char[] arr) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #387
+                    public char firstUniqueChar3(char[] arr) {
+                        return null;
+                    }
+
+                    public int majorityElement(int[] arr) { // O(n) t ; O(n) s
+                        HashMap<Integer, Integer> map = new HashMap<>();
+                        int max, majority;
+                        Arrays.asList(arr).stream().map(n -> {
+                            if (map.containsKey(n)) {
+                            const int count = map.get(n) + 1;
+                                map.put(n, count);
+                                if (count > max) {
+                                    max = count;
+                                    majority = n;
+                                }
+                            } else map.put(n, 1);
+                        });
+                        return majority;
+                    }
+
+                    public int majorityElement1(int[] arr) {
+                        HashMap<Integer, Integer> map = new HashMap<>();
+                        int max, majority, n;
+                        for (int i = 0; i < arr.length; i++) {
+                            n = arr[i];
+                            if (map.containsKey(n)) {
+                                const int count = map.get(n) + 1;
+                                map.put(n, count);
+                                if (count > max) {
+                                    max = count;
+                                    majority = n;
+                                }
+                            } else map.put(n, 1);
+                        }
+                        return majority;
+                    }
+
+                    public int majorityElement2(int[] arr) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #169
+                    public int majorityElement3(int[] arr) { // O(n + m ~ 2n ~ n) t ; O(n) s
+
+                        Map<Integer, Integer> map = new HashMap<>();
+
+                        // 1st pass: keep count of items in arr in hashmap
+                        for (int num : arr)
+                            if (!map.containsKey(num))
+                                map.put(num, 1);
+                            else map.put(num, map.get(num) + 1);
+
+                        // 2nd pass: for each item in map, return key of count which is > n/2
+                        int majority = (int) Math.floor((double) arr.length / 2.0);
+                        int majorityElement = arr[0];
+
+                        for (Map.Entry entry : map.entrySet())
+                            if ((int) entry.getValue() > majority)
+                                majorityElement = (int) entry.getKey();
+
+                        return majorityElement;
+                    }
+
+                    public int removeElement(int[] arr, int elem) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #27
+
+                    @FunctionalInterface
+                    interface NumSwaps2 {
+                        void swap(int[] nums, int front, int end);
+                    }
+
+                    public int removeElement1(int[] arr, int elem) { // O(n) t ; O(1) s
+
+                        NumSwaps2 swap = (nums, front, end) -> {
+                            int tmp = nums[front];
+                            nums[front] = nums[end];
+                            nums[end] = tmp;
+                        };
+
+                        int nonValidLastIndex = 0, runner = 0;
+
+                        while (runner < arr.length) {
+                            if (arr[runner] != elem)
+                                swap.swap(arr, nonValidLastIndex++, runner);
+                            runner++;
+                        }
+
+                        return nonValidLastIndex;
+                    }
+
+                    public int[] removeElements(int[] arr, int[] elems) { // O(2n ~ n) t ; O(n ~ 1) s - extra list not actually required; ArrayList forcely used for it methods
+                        ArrayList<Integer> nums = Arrays.asList(arr); // O(n) t & s
+                        // ! convert elems to List<Integer> type, before converting to stream, to map through (waste of execution-time)
+                        // * best to use a for-loop for primitive types
+                        Arrays.asList(elems).stream().map(e -> { // O(n)
+                            if (nums.contains(e)) // O(n~1)
+                                nums.remove(nums.indexOf(e)); // O(2n~1)
+                        });
+                        return nums.toArray(new int[0]); // O(n~1)
+                    }
+
+                    // without ArrayList / List conversion of 2nd array
+                    public int[] removeElements1(int[] arr, int[] elems) { // O(2n ~ n) t ; O(n ~ 1) s
+                        ArrayList<Integer> nums = Arrays.asList(arr); // O(n) t & s
+                        for (int e : elems) { // O(n)
+                            if (nums.contains(e)) // O(n~1)
+                                nums.remove(nums.indexOf(e)); // O(2n~1)
+                        }
+                        return nums.toArray(new int[0]); // O(n~1)
+                    }
+
+                    // without ArrayList / List at all
+                    public int[] removeElements2(int[] arr, int[] elems) { // O(en ~ 1) t ; O(n ~ 1) s
+                        // e - length of smaller 'elems' array | n = length of larger 'arr' array
+
+                        // even if new int[] is used,
+                        // only copying items from input array to this array
+                        // should keep space-complexity constant,
+                        // ! only if old array is garbage-collected immediately after
+                        int[] newArr = new int[arr.length - 1]; // less 1 item to be removed
+
+                        int i;
+                        for (int e : elems) {
+
+                            // class 'Arrays' regular static method for confirming & finding index from primitive arrays
+                            // ! .binarySearch - used to confirm if arr contains e, & find its index
+                            // * i = Arrays.binarySearch(arr, e); // O(logn) t
+                            // * O(nlogn + logn ~ (n + 1)logn) t - might assume that this method sorts arr first, before searching through it
+                            // ! BUT, it actually doesn't
+                            /**
+                             * In Java, the Arrays.binarySearch() method assumes that the array passed to it is sorted in ascending order.
+                             * If the array is not sorted, the behavior of Arrays.binarySearch() is undefined.
+                             * There is no guarantee that it will correctly find the element you are looking for, and it may return incorrect results.
+                             *
+                             * If the array is not sorted, the search may fail to find the element or return an incorrect index.
+                             */
+
+                            // ! find a constant-time [O(1) t] method of confirming e in arr, & finding its index
+
+                            if (i > -1) {
+                                // ! now, remove e from arr, at index i
+                                System.arraycopy(arr, 0, newArr, 0, i); // O(i ~ 1) t // * i (exclusive) - index to remove
+                                System.arraycopy(arr, i + 1, newArr, i, arr.length - 1 - i); // O(n - i ~ 1) t
+                            }
+
+                        }
+
+                        return newArr;
+                    }
+
+                    public int[] removeElements3(int[] arr, int[] elems) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #
+                    public int[] removeElements4(int[] arr, int[] elems) {
+                        return null;
+                    }
+
+                    // ! WRONG - padding zeroes to end - infinite loop
+                    public int[] moveZeroes(int[] arr) { // O(n^2 ~ n) t ; O(1) s
+                        int n;
+                        for (int i = 0; i < arr.length; i++) {
+                            n = arr[i];
+                            if (n == 0) {
+                                // ! wrong - popping out from index will disrupt iterations
+                                // * (next iteration will skip this index's replacement item)
+                                // ! best to use a manual while-loop & only iterate (increment 'i') when necessary
+                                Arrays.remove(i, arr); // also O(n ~ 1) // ! confirm: static.remove at index
+
+                                // arr[arr.length] = 0; // ! wrong - appending 0s also turns to an infinite loop
+
+                                // ! make a copy of new array with incremented length, then set
+                                arr = Arrays.copyOf(arr, arr.length + 1); // O(n)
+                                arr[arr.length - 1] = 0;
+                                // ! TODO: using System.arraycopy(5 args: fromArr, startIndex, toArray, startIndex, endIndex)
+                            }
+                        }
+                        return arr;
+                        // ! use a while-loop (manual iteration-control) if the same input array must be edited
+                    }
+
+                    // ! TEST: most optimal - using a manual while loop (only iterate when necessary)
+                    public int[] moveZeroes1(int[] arr) { // O(n) t ; O(1) s
+                        if (arr.length < 1) return null;
+                        int i = 0, c = 0, n;
+
+                        while (i < arr.length) { // predicate still required in case there's already no 0 in array
+                            n = arr[i];
+
+                            if (n == 0) {
+                                c++; // count number of zeroes to calculate new end of array
+                                Arrays.remove(i, arr); // O(n ~ 1) // ! confirm: Arrays.static remove at index
+                                // ! wrong: cannot 'set' at array-length to append - out of bounds error
+                                // arr[arr.length] = 0; // O(1) if possible in .java
+                                Arrays.append(0, arr); // O(n ~ 1) // ! confirm: Arrays.static append to primitive array
+                                // ! confirm: Arrays.static method work with primitive-type arrays by reference-pointers still / in-place
+                                // todo: return array values if 'by copy'
+                            }
+
+                            // ! always base-case check here before iterating, in-case of a loop-break
+                            if (arr.length - 1 - i == c) // ! to ensure that padded 0s are accounted for; to break out of manual while-loop
+                                break;
+
+                            // ! only move on to next iteration if n != 0; else continue with this iteration since 0 has been replaced by next item already
+                            if (n != 0) i++;
+                        }
+
+                        return arr;
+                    }
+
+                    // ! TEST: using a manual while loop - working with Abstract-Types only
+                    // * simplest & most optimal so far - // ! if tests pass
+                    public int[] moveZeroes2(int[] arr) { // O(2n ~ n) t ; O(1) s
+                        if (arr.length < 1) return null;
+
+                        List<Integer> a = new List<>(arr); // O(n) to instantiate from primitive to abstract // ! confirm: for sure
+                        Integer i = 0, c = 0, n;
+
+                        while (i < arr.length) { // a.length(), but still using primitive arr.length a bit faster
+                            n = a.get(i); // O(n~1)
+                            if (n == 0) {
+                                if (arr.length - i <= c) break; // ! should be '==' but added <= in case of length-subtraction errors - Test & confirm
+                                c++;
+                                a.remove(i); // O(n~1)
+                                a.add(0); // O(n~1)
+                            } else i++;
+                        }
+
+                        return a.toArray(new int[a.size()]); // O(n~1) // ! confirm: how to convert abstract-type List to primitive-type array
+                    }
+
+                    // ! optimal - using an extra array
+                    public int[] moveZeroes3(int[] arr) { // O(n) t ; O(n) s
+                        List<Integer> a = new List<>(arr);
+                        List<Integer> z = new List<>();
+                        Integer n;
+
+                        for (int i = 0; i < arr.length; i++) {
+                            n = a.get(i);
+                            if (n == 0) {
+                                a.remove(i);
+                                z.add(0);
+                            }
+                        }
+
+                        a.add(z); // ! confirm: concatenating List to List
+                        // or: for (Integer n : z) { a.add(n); } // ! confirm: for-each loop on List<T> to T
+
+                        return a.toArray(new int[a.size()]); // O(n~1) // ! confirm: how to convert abstract-type List to primitive-type array
+                    }
+
+                    // ! more optimal - only count zeroes (no extra array) // ! using primitive-types only
+                    public int[] moveZeroes4(int[] arr) {
+
+                        // ! since we're using primitive-types only, also avoid using Consumer-Interface in production
+                        // * move this method outside
+                        Consumer<Integer> remove = i  -> {
+
+                            // TODO: Implement custom option
+
+                        };
+
+                        // ! Sample primitive-array remove-methods, with Arrays
+
+                        Consumer<Integer> remove1 = i -> { // ! 2nd argument with default value - a = arr ?
+                            int[] a = arr;
+                            int indexToRemove = i; // Index to remove
+
+                            // Check if index is valid
+                            if (indexToRemove < 0 || indexToRemove >= a.length) {
+                                throw new IndexOutOfBoundsException("Index is out of bounds");
+                            }
+
+                            // Using Arrays.copyOf() // ! not optimal
+                            // int[] newArr = Arrays.copyOf(a, a.length - 1); // ! length - 1 due to removal
+                            // ! but then, could not copy a's items to newArr due to an out-of-bounds exception
+
+                            int[] newArr = new int[a.length - 1]; // ! so rather required to instantiate a new and empty array manually
+                            System.arraycopy(a, 0, newArr, 0, indexToRemove); // ! then copy arr's items (from 0 to index to remove) to newArr
+                            System.arraycopy(a, indexToRemove + 1, newArr, indexToRemove, a.length - indexToRemove - 1);
+                            // ! then copy arr's remaining items from next index (from the removed 1) to the end
+
+                            // Print the resulting array
+                            System.out.println("Result using Arrays.copyOf(): " + Arrays.toString(newArr));
+                        };
+
+                        Consumer<Integer> remove2 = i -> {
+                            int[] a = arr;
+                            int indexToRemove = i; // Index to remove
+
+                            // Check if index is valid
+                            if (indexToRemove < 0 || indexToRemove >= a.length) {
+                                throw new IndexOutOfBoundsException("Index is out of bounds");
+                            }
+
+                            // Using System.arraycopy()
+                            int[] newArr = new int[a.length - 1];
+                            System.arraycopy(a, 0, newArr, 0, indexToRemove);
+                            System.arraycopy(a, indexToRemove + 1, newArr, indexToRemove, a.length - indexToRemove - 1);
+
+                            // Print the resulting array
+                            System.out.println("Result using System.arraycopy(): " + Arrays.toString(newArr));
+                        };
+
+                        /**
+
+                         int c = 0, n;
+
+                         // * Loop Option 1:
+                         for (int i = 0; i < arr.length; i++) {
+                         n = arr[i];
+                         if (n == 0) {
+                         c++;
+                         remove.accept(i);
+                         }
+                         // ! this still needs to be optimized due to for-loop auto-iteration
+                         // ! or: purposely decrement iterator, for next iteration
+                         i--; // ! sub-optimal
+                         }
+
+                         */
+
+                        // * Loop Option 2:
+                        int i = 0, c = 0, n;
+
+                        while (i < arr.length) {
+                            n = arr[i];
+                            if (n == 0) {
+                                c++;
+                                // exec 'remove' lambda (Consumer Functional-Interface)
+                                remove1.accept(i); // ! TODO: Test: remove, remove1, & remove2
+                            } else i++;
+                        }
+
+                        // * now concatenate padded zeroes, based on count
+
+                        // create a new primitive int-array, with enough size to add padded 0s
+                        int[] newArr = Arrays.copyOf(arr, arr.length + c);
+                        // ! Arrays.copyOf(arr, arr.length + appendArray.length):
+                        // ! Creates a new array newArr with a length equal to the sum of the lengths of arr and appendArray.
+                        // ! Copies all elements from arr to newArr.
+
+                        // * int[] newArr = new int[arr.length + c]; // ! also workable, but wouldn't copy arr's items into newArray
+                        // * System.arraycopy(arr, 0, newArr, 0, arr.length); // ! also workable, and would also copy arr's items into newArray
+
+                        // create new array with padded 0s
+                        int[] paddedZeroes = new int[c];
+                        // ! In Java, when you create a new array of primitive integers (int), such as int[] appendArray = new int[5];,
+                        // ! the array is automatically initialized with default values. For int arrays, the default value is 0.
+
+                        // now, copy padded-zeroes to the empty padded space in new-array
+                        System.arraycopy(paddedZeroes, 0, newArr, arr.length, paddedZeroes.length);
+                        // ! System.arraycopy(appendArray, 0, newArr, arr.length, appendArray.length):
+                        // ! Copies elements from appendArray to newArr starting from index arr.length.
+                        /**
+                         * appendArray: The source array to copy from.
+                         * 0: The starting index in appendArray from which to start copying.
+                         * newArr: The destination array where elements are copied to.
+                         * arr.length: The starting index in newArr where elements are copied to.
+                         * appendArray.length: The number of elements to copy.
+                         */
+
+                        /* // ! this custom way also workable, in place of System.arraycopy
+                        int i = arr.length;
+                        for (int zero : paddedZeroes) {
+                            newArr[i] = zero; i++;
+                        }
+                        */
+
+                        return newArr;
+                    }
+
+                    // ! ?
+                    public int[] moveZeroes5(int[] arr) {
+                        return null;
+                    }
+
+                    // ! ?
+                    public int[] moveZeroes6(int[] arr) {
+                        return null;
+                    }
+
+                    // ! BEST (& Confirmed) - Iterative Swaps - iteratively reset only counting numbers, then pad the remaining space with 0s
+                    public int[] moveZeroes7(int[] arr) { // O(2n ~ n) t ; O(1) s
+                        // * 2 consecutive loops used, but much more closer to a 1-loop O(n) t (2nd loop with a much shorter length - 0 count
+                        int i = 0, c = 0;
+                        for (int n : arr)
+                            if (n != 0) {
+                                arr[i] = n;
+                                i++;
+                            } else c++; // * count number of 0s
+                        for (int n : new int[c]) {
+                            // ! i already a step ahead, due to last increment in previous loop's last iteration
+                            arr[i++] = 0; // ! 'n' also 0, so can be used
+                            // in Java, and empty array with a given length - init'd with 0s by default
+                        }
+                        return arr;
+                    }
+
+                    // ! BETTER - Iterative Swaps - without 0 count; just continue iteration until array's length
+                    public int[] moveZeroes8(int[] arr) {
+                        int i = 0;
+                        for (int n : arr)
+                            if (n != 0) {
+                                arr[i] = n;
+                                i++;
+                            }
+                        for (int j = i; j < arr.length; j++)
+                            arr[j] = 0;
+                        return arr;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #283 - using Iterative Swaps - while loop
+
+                    @FunctionalInterface
+                    interface NumSwaps1 {
+                        void swap(int[] nums, int i, int j);
+                    }
+
+                    public int[] moveZeroes9(int[] arr) { // O(n) t ; O(1) s
+
+                        NumSwaps1 swap = (nums, i, j) -> {
+                            int tmp = nums[i];
+                            nums[i] = nums[j];
+                            nums[j] = tmp;
+                        };
+
+                        int nonZeroLastIndex = 0, runner = 0;
+
+                        while (runner < arr.length) {
+                            if (arr[runner] != 0)
+                                swap.swap(arr, nonZeroLastIndex++, runner);
+                            runner++;
+                        }
+
+                        return arr;
+                    }
+
+                    // finding out multiple intersections (repeating intersections added)
+                    public int[] intersections(int[] a1, int[] a2) { // O(n) t ; O(1) s - extra data-structure only used as result; not used for the algo's implementation itself (except for checking !.contains - which is insignificant)
+                        return null;
+                    }
+
+                    public int[] intersections1(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // if different array-lengths, iterate through shorter array; append unique intersections
+                    public int[] intersections2(int[] a1, int[] a2) { // O() t ; O() s
+                        List<Integer> ints = new List<>(); // * confirm: primitive int-array instead
+                        for (int n : a1.length > a2.length ? a2 : a1) { // O(n)
+                            if ( // ! TODO: use a better method from 'Arrays' to check: array contains value
+                                // ! .binarySearch sometimes returns -1 when array not sorted (even if value exists)
+                                    Arrays.binarySearch(a1, n) >= 0
+                                            && Arrays.binarySearch(a1, n) >= 0
+                                            && !ints.contains(n)
+                            ) ints.add(n); // O(n~1)
+                        }
+                        return ints.toArray(new int[ints.size()]); // O(n~1)
+                        // ! confirm: .toArray with dummy primitive argument
+                        // * whether list.size() / 0 is required for primitive-array's length
+                    }
+
+                    public int[] intersections3(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // if same array-lengths, iterate through 1 array, check its items in the other
+                    public int[] intersections4(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    public int[] intersections5(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // if same array-lengths, iterate through 1 array, using its indices to access the other, in constant time
+                    public int[] intersections6(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    public int[] intersections7(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // using a hashmap
+                    public int[] intersections8(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    public int[] intersections9(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #349
+                    public int[] intersections10(int[] a1, int[] a2) { // O() t ; O() s
+                        if (a1.length == 0 || a2.length == 0) return null;
+
+                        // 1st pass: add items in a1 to hashmap
+                        Map<Integer, Integer> m = new HashMap<>();
+                        for (int n : a1)
+                            if (!map.containsKey(n))
+                                m.put(n, 1);
+
+                        // 2nd pass: for each item in a1, mark ones that exist in hashmap as 0
+                        int numInts = 0;
+                        for (int n : a2)
+                            if (m.containsKey(n) && m.get(n) == 1) {
+                                m.put(n, 0);
+                                numInts++;
+                            }
+
+                        // 3rd pass: loop through hashmap; if map[k, v]'s v = 0, then add to intersections array
+                        int[] intersections = new int[numInts];
+                        int i = 0;
+                        for (Map.Entry entry : m.entrySet())
+                            if ((int) entry.getValue() == 0) {
+                                intersections[i] = (int) entry.getKey();
+                                i++;
+                            }
+
+                        return intersections;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #349
+                    public int[] intersections11(int[] a1, int[] a2) { // O() t ; O() s
+                        return null;
+                    }
+
+                    // Minimum Domino Rotations
+
+                    @FunctionalInterface
+                    interface NumSwaps {
+                        int swap(int num, int[] a, int[] b);
+                    }
+
+                    // TODO: Test
+                    int minimumDominoRotations(int[] a, int[] b) { // O(n) t ; O(1) s
+
+                        NumSwaps numSwaps = (num, a1, b1) -> {
+                            int nSwaps = 0;
+                            for (int i = 0; i < a1.length; i++)
+                                if (a1[i] != num && b1[i] != num)
+                                    return Integer.MAX_VALUE;
+                                else if (a1[i] != num)
+                                    nSwaps++;
+                            return nSwaps;
+                        };
+
+                        int minSwaps = Math.min(
+                                numSwaps.swap(a[0], a, b),
+                                numSwaps.swap(b[0], a, b)
+                        );
+
+                        minSwaps = Math.min(minSwaps, numSwaps.swap(a[0], b, a));
+                        minSwaps = Math.min(minSwaps, numSwaps.swap(b[0], a, b));
+
+                        return minSwaps == Integer.MAX_VALUE ? -1 : minSwaps;
+                    }
+
+                    int maximumPointsFromCards(int[] points, int k) {
+                        int sum = 0, max = 0;
+                        int n = points.length - 1;
+                        int[] left = new int[k + 1];
+                        int[] right = new int[k + 1];
+                        left[0] = 0; right[0] = 0;
+
+                        for (int i = 1; i <= k; i++)
+                            left[i] = left[i - 1] + points[i - 1];
+
+                        for (int i = 1; i <= k; i++)
+                            right[i] = right[i - 1] + points[n--];
+
+                        for (int j = 0; j < left.length; j++) {
+                            sum = left[j] + right[right.length - j - 1];
+                            max = Math.max(sum, max);
+                        }
+
+                        return max;
+                    }
+
+                    /*
+                        ! TWO-POINTER ALGO'S
+                        - same direction 2-pointers
+                        - different direction 2-pointers
+                            - reverse / 2-sum / partition Q types
+                        - almost all 2-sum related Qs
+                        - partition Qs
+                            - quick select
+                            - divided into 2 / 3 parts
+                        - linked-list cycle Qs
+                        - other sorting algo's
+                            - quick & merge sort algo's
+                    */
+
+                    public class SortInteger {
+
+                        /**
+                         * @param A: an integer array
+                         * @return: void
+                         */
+                        public void sortIntegers(int[] A) {
+                            if (A == null || A.length == 0)
+                                return;
+
+                            quickSort(A, 0, A.length - 1);
+                            mergeSort(A, 0, A.length - 1);
+                        }
+
+                        private void quickSort(int[] A, int start, int end) { // O(n log n) / O(n ^ 2) t | O(log n) s
+                            if (start >= end) return;
+
+                            int left = start, right = end;
+                            int pivot = A[left + (right - left) / 2];
+                            int temp;
+
+                            while (left <= right) {
+                                while (left <= right && A[left] < pivot)
+                                    left++;
+                                while (left <= right && A[right] > pivot)
+                                    right--;
+                                if (left <= right) {
+                                    temp = A[left];
+                                    A[left] = A[right];
+                                    A[right] = temp;
+                                    left++; right--;
+                                }
+                            }
+
+                            // recurse
+                            quickSort(A, start, right);
+                            quickSort(A, left, end);
+                        }
+
+                        private void mergeSort(int[] A, int start, int end) { // O(n log n) t | O(n + log n) ~ O(n) s
+                            if (start >= end) return;
+
+                            int[] tmp = new int[A.length]; // * extra space-usage
+
+                            // divide
+                            int mid = start + (end - start) / 2;
+                            mergeSort(A, start, mid);
+                            mergeSort(A, mid + 1, end);
+
+                            // merge (conquer)
+                            int index = start;
+                            int leftStart = start;
+                            int rightStart = mid + 1;
+
+                            while (leftStart <= mid && rightStart <= end) {
+                                // increment values after access; all 3 start from exact beginnings
+                                if (A[leftStart] <= A[rightStart])
+                                    tmp[index++] = A[leftStart++];
+                                else tmp[index++] = A[rightStart++]; // * remember this 'very good' coding
+                            }
+
+                            while (leftStart <= mid)
+                                tmp[index++] = A[leftStart++];
+
+                            while (rightStart <= end)
+                                tmp[index++] = A[rightStart++];
+
+                            for (int i = start; i <= end; i++) {
+                                A[i] = tmp[i];
+
+                                // TODO: ?
+
+                            }
+
+                            // TODO: ?
+
+                            // * return A; - not required here; A sorted in-place
+                        }
+
+                    }
+
+                    public class MoveZeroes {
+
+                        /** // * Move Zeroes
+                         *
+                         * Given an array nums, write a function to move all 0's to the end of it
+                         * while maintaining the relative order of the non-zero elements.
+                         * 1. without making a copy of the array
+                         * 2. minimize the total number of operations
+                         *
+                         */
+
+                        /**
+                         * @param A: an integer array
+                         * @return: void
+                         */
+                        public void moveZeroes(int[] A) {
+                            int left = 0, right = 0;
+
+                            while (right < A.length) {
+                                if (A[right] != 0) {
+                                    if (left != right)
+                                        A[left] = A[right];
+                                    left++;
+                                }
+                                right++;
+                            }
+
+                            while (left < A.length) {
+                                if (A[left] != 0)
+                                    A[left] = 0;
+                                left++;
+                            }
+                        }
+                    }
+
+                    public class TwoSum {
+
+                        /**
+                         * Design and implement a 2-Sum class.
+                         * It should support the following operations: add & find.
+                         * add - Add the number to an internal data structure.
+                         * find - Find if there exists any pair of numbers which sum is equal to the value.
+                         */
+
+                        public class DataStructure {
+
+                            private Map<Integer, Integer> counter;
+
+                            public DataStructure() {
+                                counter = new HashMap<Integer, Integer>();
+                            }
+
+                            // Add the number to an internal data structure
+                            public void add(int number) {
+                                counter.put(number, counter.getOrDefault(number, 0) + 1);
+                            }
+
+                            // FInd if there exists any pair of numbers which sum is equal to the value
+                            public boolean find(int value) {
+                                int num2, desiredCount;
+                                for (Integer num1 : counter.keySet()) {
+                                    num2 = value - num1;
+                                    desiredCount = num1 == num2 ? 2 : 1;
+                                    if (counter.getOrDefault(num2, 0) >= desiredCount)
+                                        return true;
+                                }
+                                return false;
+                            }
+
+                        }
+
+                        public void test() {
+                            DataStructure obj = new DataStructure();
+                            obj.add(7); obj.add(5); obj.add(7); obj.add(5);
+                            obj.find(7);
+                        }
+
+                        public class TwoSum_InputArraySorted {
+
+                            /** // * 2-Sum with input array sorted
+                             *
+                             * Given an array of integers that is already sorted in ascending order,
+                             * find 2 numbers such that they add up to a specific target number.
+                             * the function 2-sum should return indices of the 2 numbers such that they add up to the target,
+                             * where index i1 must be less than i2.
+                             *
+                             * Constraint: returned answers (both i1 & i2) cannot be zero-based
+                             *
+                             */
+
+                            /**
+                             * @param nums: array of integers
+                             * @param target: target = nums[i1] + nums[i2]
+                             * @return: [i1 + 1, i2 + 1] (with i1 < i2)
+                             */
+                            public int[] twoSum(int[] nums, int target) {
+                                if (nums == null || nums.length < 2)
+                                    return new int[0];
+
+                                int left = 0, right = nums.length - 1;
+
+                                while (left < right) {
+                                    if (nums[left] + nums[right] < target)
+                                        left++;
+                                    if (nums[left] + nums[right] > target)
+                                        right--;
+                                    if (nums[left] + nums[right] == target)
+                                        return new int[] {
+                                                left + 1,
+                                                right + 1
+                                        };
+                                }
+
+                                return new int[0];
+                            }
+
+                        }
+
+                        public class TwoSumLessThanK {
+
+                            /**
+                             * Given an array A of integers and integer K,
+                             * find maximum sum S such that there exists i < j
+                             * with A[i] + A[j] = S & S <= K
+                             * if no i, j exist satisfying this equation, return -1
+                             */
+
+                            public int twoSum(int[] A, int K) {
+                                int max = -1; Arrays.sort(A);
+                                int left = 0, right = A.length - 1;
+
+                                while (left < right) {
+                                    if (A[left] + A[right] < K) {
+                                        max = Math.max(max, A[left] + A[right]);
+                                        left++;
+                                    } else right--;
+                                }
+
+                                return max;
+                            }
+
+                        }
+
+                    }
+
+                    public class ThreeSum {
+
+                        /**
+                         * Given an array A of n integers, are there elements a, b, c in A such that:
+                         * a + b + c = 0 ? Find all unique triplets in the array which give the sum of zero.
+                         * Elements in a triplet (a, b, c) must be in non-descending order.
+                         * (i.e. a <= b <= c) The solution set must not contain duplicate triplets.
+                         */
+
+                        /**
+                         * @param nums: array of n integers
+                         * @return: List-matrix of integers - all unique triplets in @param 'nums' which give the sum of zero
+                         */
+                        public List<List<Integer>> threeSum(int[] nums) {
+                            Arrays.sort(nums); // ! confirm: Arrays.sort static method - argument passed by reference - on AbstractTypes only ? primitiveTypes too ?
+                            List<List<Integer>> res = new ArrayList<>();
+
+                            for (int i = 0; i < nums.length; i++) {
+                                if (i != 0 && nums[i] == nums[i - 1])
+                                    continue;
+                                findTwoSum(nums, i, res); // 'res' passed in by reference
+                            }
+
+                            return res;
+                        }
+
+                        private void findTwoSum(int[] nums, int index, List<List<Integer>> res) {
+                            int left = index + 1, right = nums.length - 1;
+                            int target = -nums[index];
+                            int twoSum;
+                            List<Integer> triplets;
+
+                            while (left < right) {
+                                twoSum = nums[left] + nums[right];
+                                if (twoSum < target) left++;
+                                else if (twoSum > target) right--;
+                                else {
+                                    triplets = new ArrayList<>();
+                                    triplets.add(nums[index]);
+                                    triplets.add(nums[left]);
+                                    triplets.add(nums[right]);
+                                    res.add(triplets);
+                                    left++; right--;
+                                    while (
+                                            left < right
+                                                    && nums[left] == nums[left - 1]
+                                    ) left++;
+                                }
+                            }
+                        }
+
+                        // TODO: 3-Sum - smaller & 3-sum - closest
+
+                    }
+
+
+                    // TODO: 4-Sum
+
+
+                    public class ValidTriangleNumber {
+
+                        /**
+                         * Given an array that consists of non-negative integers,
+                         * count the number of triplets chosen from the array
+                         * that can make triangles if we take them as side lengths of a triangle.
+                         */
+
+                        /**
+                         * @param nums: array of integers
+                         * @return: number of triplets chosen from the array, that can make triangles
+                         */
+                        public int triangleNumber(int[] nums) {
+                            Arrays.sort(nums); // ! confirm: Arrays.sort static method - argument passed by reference - on AbstractTypes only ? primitiveTypes too ?
+                            int count = 0, n = nums.length, i, l, r;
+
+                            for (i = n - 1; i >= 2; i--) {
+                                l = 0; r = i - 1;
+                                while (l < r) {
+                                    if (nums[l] + nums[r] > nums[i]) {
+                                        count += r - l;
+                                        r--;
+                                    } else l++;
+                                }
+                            }
+
+                            return count;
+                        }
+
+                    }
+
+                    public class Partition {
+
+                        public class PartitionArray_DisjointIntervals {
+
+                            /**
+                             * Given an array A, partition it into 2 (contiguous) sub-arrays left & right
+                             * so that:
+                             *      left & right sub-arrays are non-empty
+                             *      every element in the left sub-array is less than or equal to every element in the right
+                             *      left has the smallest possible size
+                             *
+                             * return the length of left after such a partitioning
+                             * NB: it is guaranteed that such a partitioning exists
+                             */
+
+                            public int partition(int[] A) {
+                                int N = A.length;
+                                int[] maxLeft = new int[N];
+                                int[] minRight = new int[N];
+                                int m = A[0];
+
+                                for (int i = 0; i < N; ++i) {
+                                    m = Math.max(m, A[i]);
+                                    maxLeft[i] = m;
+                                }
+
+                                m = A[N - 1];
+
+                                for (int i = N - 1; i >= 0; --i) {
+                                    m = Math.min(m, A[i]);
+                                    minRight[i] = m;
+                                }
+
+                                for (int i = 1; i < N; ++i) {
+                                    if (maxLeft[i - 1] <= minRight[i])
+                                        return i;
+                                }
+
+                                return -1;
+                            }
+
+                        }
+
+                    }
+
+                    public class KthLargestElement {
+
+                        /**
+                         * Find K-th largest element in an array
+                         *
+                         * - Base on heap: O(n log n + k)
+                         * - Sort the Array: O(n log n)
+                         * - Quick Select: O(n) t | O(1) s on average-case
+                         */
+
+                        /**
+                         * @param n: integer
+                         * @param nums: array of integers
+                         * @return: kth largest element
+                         */
+                        public int kthLargestElement(int k, int[] nums) {
+                            if (nums == null || nums.length == 0)
+                                return -1;
+                            if (k <= 0 || k > nums.length)
+                                return -1;
+                            return quickSelect(nums, 0, nums.length - 1, k);
+                        }
+
+                        private int quickSelect(int[] nums, int start, int end, int k) {
+                            if (start == end) return nums[start];
+
+                            int left = start, right = end,
+                                    mid = left + (right - left) / 2,
+                                    pivot = nums[mid], tmp;
+
+                            // from large to small
+                            while (left <= right) {
+                                while (left <= right && nums[left] > pivot)
+                                    left++;
+                                while (left <= right && nums[right] < pivot)
+                                    right--;
+                                if (left <= right) {
+                                    tmp = nums[left];
+                                    nums[left] = nums[right];
+                                    nums[right] = tmp;
+                                    left++; right--;
+                                }
+                            }
+
+                            if (k <= right - start + 1)
+                                return quickSelect(nums, start, right, k);
+                            if (k > left - start)
+                                return quickSelect(nums, left, end, k - left + start);
+
+                            return nums[right + 1];
+                        }
+
+                    }
+
+                    public class SortArrayByParity {
+
+                        /**
+                         * Given an array A of non-negative integers, return an array consisting of all th even elements of A,
+                         * followed by all the odd elements of A.
+                         *
+                         * NB: Can return any result array that satisfies the condition.
+                         */
+
+                        public int[] sortArray(int[] A) {
+                            int left = 0, right = A.length - 1, tmp;
+
+                            while (left <= right) {
+                                if (A[left] % 2 > A[right] % 2) {
+                                    tmp = A[left];
+                                    A[left] = A[right];
+                                    A[right] = tmp;
+                                }
+                                if (A[left] % 2 == 0)
+                                    left++;
+                                if (A[right] % 2 == 1)
+                                    right--;
+                            }
+
+                            return A;
+                        }
+
+                    }
+
+                    public class SortColors {
+
+                        /**
+                         * Given an array nums with n objects colored red, white, or blue.
+                         * sort them in-place so that objects of the same color are adjacent,
+                         * with the colors in the order red, white, & blue.
+                         *
+                         * NB: can use the integers 0, 1, & 2 to represent the color red, white, & blue, respectively.
+                         *
+                         * Constraints:
+                         *      - without using the the Array.sort method
+                         *      - 1-pass algo in O(1) (constant) space only
+                         *
+                         * - sort array - O(n log n) t
+                         * - count the numbers 0, 1, 2, two-pass
+                         * - 2-pointers; O(n) t | O(1) s
+                         */
+
+                        /**
+                         * @param nums: list of integers (0, 1, or 2)
+                         * @return: void
+                         */
+
+                        /*
+                            left: 0/1 border, right: 1/2 border
+                            [0, left) all 0s,
+                            [left, right] all 1s,
+                            (right, end] all 2s
+                        */
+
+                        public void sortColors(int[] nums) {
+                            int left = 0, right = nums.length - 1,
+                                    mid = 0;
+
+                            while (mid <= right) {
+                                if (nums[mid] == 0) {
+                                    swap(nums, mid, left);
+                                    mid++; left++;
+                                } else if (nums[mid] == 2) {
+                                    swap(nums, mid, right);
+                                    right--;
+                                } else mid++;
+                            }
+                        }
+
+                        private void swap(int[] a, int i, int j) {
+                            int tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+                        }
+
+                        /**
+                         * what if there are k different colors?
+                         *
+                         * Given an array of n objects with k different colors (numbered from 1 to k),
+                         * sort them so that objects of the same color are adjacent,
+                         * with the colors in the order 1, 2, ... , k.
+                         *
+                         * NB: can use Quick Sort - O(n log k) t - k = number of different colors
+                         * can also either use Rainbow or Counting Sort algo's
+                         */
+
+                        /**
+                         * @param colors: list of integers
+                         * @param k: integer
+                         * @return: void
+                         */
+
+                        public void sortColors2(int[] colors, int k) {
+                            if (colors == null || colors.length == 0)
+                                return;
+                            rainbowSort(colors, 0, colors.length - 1, 1, k);
+                        }
+
+                        private void rainbowSort(int[] arr, int left, int right, int from, int to) {
+                            if (from == to) return;
+                            if (left >= right) return;
+
+                            int mid = (from + to) / 2;
+                            int l = left, r = right, tmp;
+
+                            while (l <= r) {
+                                while (l <= r && arr[l] <= mid) l++;
+                                while (l <= r && arr[r] > mid) r--;
+                                if (l <= r) {
+                                    tmp = arr[l];
+                                    arr[l] = arr[r];
+                                    arr[r] = tmp;
+                                    l++; r--;
+                                }
+                            }
+
+                            rainbowSort(arr, left, r, from, mid);
+                            rainbowSort(arr, l, right, mid + 1, to);
+                        }
+
+                        // TODO: Other Sorting Algo's that can be used here
+                        // Quick, Counting Sorting Algo's ; & Pancake, Sleep, Spaghetti, Bogo Sorting Algo's
+
+                    }
+
                 }
 
-                return max;
+                public static class Strings {
+
+                    public Strings() {
+
+                        // ! String, StringBuilder, Strings.staticMethods, char[], Character[] ; List<String>, ArrayList<String>, Stream<String>, ..
+                        // TODO: interconnecting methods, conversions, & algo's used between all (main 5 1st) of them
+
+                        /*
+
+                         * ..
+
+                         */
+
+                        /*
+
+                            String str = "orange";
+
+                            * Convert String to char[]
+                            char[] charArray = str.toCharArray();
+
+                            * Convert char[] to String
+                            String str = new String(charArray);
+                            String str1 = String.valueOf(charArray);
+                            String str2 = new StringBuilder().append(charArray).toString();
+
+                            * Convert char[] to Character[]
+                            Character[] charObjectArray = new Character[charArray.length];
+                            for (int i = 0; i < charArray.length; i++) {
+                                charObjectArray[i] = charArray[i];
+                            }
+
+                            * Convert Character[] to List<Character> with a manual loop
+                            List<Character> charList = new ArrayList<>();
+                            for (Character c : charObjectArray) {
+                                charList.add(c);
+                            }
+
+                            * Convert String to List<Character> using streams
+                            List<Character> charList = str.chars() // IntStream
+                                .mapToObj(c -> (char) c)       // Stream<Character>
+                                .collect(Collectors.toList()); // Collect to List<Character>
+
+                            * Convert String to List<Character> using Apache Commons Lang
+                            Character[] charObjectArray = ArrayUtils.toObject(str.toCharArray());
+                            List<Character> charList = Arrays.asList(charObjectArray);
+
+                            * Convert String to List<Character> using StringUtils and ArrayUtils
+                            Character[] charObjectArray = ArrayUtils.toObject(StringUtils.toCharArray(str));
+                            List<Character> charList = Arrays.asList(charObjectArray);
+
+                            * Convert String to List<Character> using StringUtils and Streams
+                            List<Character> charList = StringUtils
+                                .toCharArray(str)        // char[]
+                                .stream()                // Stream<Character>
+                                .collect(Collectors.toList()); // Collect to List<Character>
+                            
+                            * Convert String to List<Character> using Java Streams
+                            List<Character> charList = str.chars()               // IntStream
+                                .mapToObj(c -> (char) c) // Convert int to char
+                                .collect(Collectors.toList()); // Collect to List<Character>
+
+                            * Convert String to List<Character> using traditional loop
+                            List<Character> charList = new ArrayList<>();
+                            for (int i = 0; i < str.length(); i++) {
+                                charList.add(str.charAt(i));
+                            }
+                            
+                            * Convert String to List<Character> using StringUtils and Streams
+                            List<Character> charList = StringUtils
+                                .toCharArray(str)                // char[]
+                                .chars()                         // IntStream
+                                .mapToObj(c -> (char) c)         // Convert int to char
+                                .collect(Collectors.toList());  // Collect to List<Character>
+                            
+                            * Remove character at index, using StringBuilder
+                            StringBuilder sb = new StringBuilder(str);
+                            sb.deleteCharAt(indexToRemove);
+                            str = sb.toString();
+                        
+                        */
+
+                        String str = "orange";
+
+                        String sortedString = StringUtils.sort(str); // * also from the Apache Commons Lang library
+
+                        String sortedString1 = str.chars()
+                                .sorted()
+                                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                                .toString();
+
+                        String sortedString2 = str.chars()
+                                .mapToObj(c -> (char) c)
+                                .sorted(Comparator.reverseOrder())
+                                .map(String::valueOf)
+                                .collect(Collectors.joining());
+
+                    }
+
+                    public String reorganizeString(String S) { // TODO: verify - O(n + n log n) t | O(n) s
+
+                        Map<Character, Integer> counts = new HashMap<>();
+
+                        // O(n)
+                        for (char c : S.toCharArray())
+                            counts.put(c, counts.getOrDefault(c, 0) + 1);
+
+                        PriorityQueue<Character> maxHeap = new PriorityQueue<>(
+                                (a, b) -> counts.get(b) - counts.get(a));
+                        maxHeap.addAll(counts.keySet());
+
+                        // todo: NB: Concatenating a String takes in more buffer data or additional
+                        // memory overhead (more space complexity) than manually building up a String
+                        // with a mutable StringBuilder object, Character by Character
+                        // Concatenating to an immutable String object creates a new String object
+                        // (leading to additional memory overhead)
+
+                        StringBuilder result = new StringBuilder();
+                        char current;
+                        char next;
+                        char last;
+
+                        // O(n log n)
+                        while (maxHeap.size() > 1) {
+                            current = maxHeap.poll();
+                            next = maxHeap.poll();
+                            result.append(current);
+                            result.append(next);
+                            counts.put(current, counts.get(current) - 1);
+                            counts.put(next, counts.get(next) - 1);
+                            if (counts.get(current) > 0)
+                                maxHeap.add(current);
+                            if (counts.get(next) > 0)
+                                maxHeap.add(next);
+                            // base-case check
+                            if (!maxHeap.isEmpty()) {
+                                last = maxHeap.poll();
+                                if (counts.get(last) > 1)
+                                    return "";
+                                result.append(last);
+                            }
+                        }
+
+                        return result.toString();
+                    }
+
+                    public String reverse(String s) { // O(n) t ; O(1) s
+                        return new StringBuilder(s).reverse().toString(); // .js s.split('').reverse().join('')
+                    }
+
+                    public String reverse1(String s) { // O(2n/2 ~ n) t ; O(1) s
+                        int i = 0, j = s.length() - 1; // O(n) . length() - assumed
+                        char tmp;
+                        while (i < j) { // O(n/2)
+                            tmp = s.charAt(i); // todo: confirm O(?) t
+                            s.setCharAt(i, s.charAt(j));
+                            s.setCharAt(j, tmp);
+                            i++; j--;
+                        }
+                        return s;
+                    }
+
+                    public String reverse2(String s) { // O(3n/2 ~ n) t ; O(1) s
+                        char[] sArr = s.toCharArray(); // O(n)
+                        int i = 0, j = s.length - 1;
+                        char tmp;
+                        while (i < j) { // O(n/2)
+                            tmp = sArr[i];
+                            sArr[i++] = sArr[j];
+                            sArr[j--] = tmp;
+                        }
+                        return new String(sArr); // O(n)
+                    }
+
+                    public String reverse3(String s) { // O(n) t ; O(1) s
+                        String s1 = "";
+                        for (int i = s.length() - 1; i >= 0; i--)
+                            s += s.charAt(i);
+                        return s1;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #344
+
+                    @FunctionalInterface
+                    interface CharacterSwaps {
+                        void swap(char[] c, int a, int b);
+                    }
+
+                    public String reverse4(String s) { // O(n/2 ~ n) t ; O(1) s
+                        if (s.length() <= 1) return null;
+
+                        CharacterSwaps swap = (c, front, end) -> {
+                            char tmp = c[front];
+                            c[front] = c[end];
+                            c[end] = tmp;
+                        };
+
+                        char[] cArr = s.toCharArray();
+                        int front = 0, end = s.length() - 1;
+
+                        while (front < end) {
+                            swap.swap(cArr, front, end);
+                            front++; end--;
+                        }
+
+                        return new String(cArr);
+                    }
+
+                    public String reverseWords(String s) {
+                        String[] words = s.split("\\s+");
+                        Collections.reverse(words);
+                        return String.join(" ", words); // .js s.split(' ').reverse().join(' ')
+                    }
+
+                    public String reverseWords1(String s) {
+                        String[] words = new StringBuilder(s).split(" ");
+                        Collections.reverse(words);
+                        return String.join(" ", words); // .js s.split(' ').reverse().join(' ')
+                    }
+
+                    public String reverseWords2(String s) {
+                        return null;
+                    }
+
+                    @FunctionalInterface
+                    interface Reverse {
+                        void reverse(char[] c, int front, int end);
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #557
+                    public String reverseWords3(String s) { // ! O(nm ~ n) t ; O(1) s
+                        if (s.length() <= 1) return s;
+
+                        Reverse reverse = (c, front, end) -> {
+                            while (front < end) {
+                                char tmp = c[front];
+                                c[front] = c[end];
+                                c[end] = tmp;
+                                front++; end--;
+                            }
+                        };
+
+                        int front = 0, end = 0;
+                        char[] c = s.toCharArray();
+
+                        while (end < s.length()) {
+                            if (c[end] == ' ') {
+                                reverse.reverse(c, front, end - 1);
+                                front = end + 1;
+                            } else if (end == s.length() - 1)
+                                reverse.reverse(c, front, end);
+                            end++;
+                        }
+
+                        return new String(c);
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #557
+                    public String reverseWords4(String s) {
+                        return null;
+                    }
+
+                    public boolean containsDuplicates(String s) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #
+                    public boolean containsDuplicates(String s) {
+                        return null;
+                    }
+
+                    // first non-repeating character
+                    // using hashmap - cannot use an extra arraylist, because the char-count is needed (as hashmap values)
+                    public int firstUniqueCharacter(String str) { // O(2n ~ n) t ; O(n) s
+                        if (str.length() == 0) return -1;
+                        else if (str.length() == 1) return 0;
+
+                        HashMap<Character, Integer> map = new HashMap<>();
+
+                        // only most-optimal way is to loop through entire array, storing char-counts 1st
+                        // then iterate through it again, finding the first char with count = 1
+                        for (char c : str.toCharArray())
+                            if (map.containsKey(c))
+                                map.put(c, map.get(c) + 1);
+                            else map.put(c, 1);
+
+                        for (int i = 0; i < str.length(); i++)
+                            if (
+                                    map.containsKey(str.charAt(i))
+                                            && map.get(str.charAt(i)) == 1
+                            ) return i;
+
+                        return -1;
+                    }
+
+                    // using same input string - this works since we're finding out if a char doesn't exist in string anymore after removing it
+                    // so opposite of the 'same input' algo for 'containsDuplicates' problem
+                    public int firstUniqueCharacter1(String str) { // O(n) t ; O(1) s
+                        if (str.length() == 0) return -1;
+                        else if (str.length() == 1) return 0;
+                        for (int i = 0; i < str.length(); i++) {
+
+                            // str.remove(i); // ! String has no 'remove at index' method; use StringBuilder & .deleteCharAt / convert to List<Character> then .remove()
+
+                            str = new StringBuilder(str).deleteCharAt(i).toString(); // ! confirmed
+
+                            // String.join("", ArrayUtils.toObject(str.toCharArray()).remove(i)); // ! confirm
+
+                            // Arrays.asList(ArrayUtils.toObject(StringUtils.toCharArray(str))).remove(i)
+
+                            // String.join("", ); // ! confirm
+                            // String.join("", Arrays.asList(str).remove(i)); // ! confirm
+
+                            if (!str.contains(str.charAt(i)))
+                                return i;
+                        }
+                        return -1;
+                    }
+
+                    // ! wrong to sort string if its exact order is required to find the 1st non-repeating
+                    // this only finds the 1st non-repeating character when string is sorted alphabetically
+                    // so 1st non-repeating character is also the earliest alphabet
+                    public int firstUniqueCharacter2(String str) { // O(n log n + n) t ; O(1) s
+
+                        if (str.length() == 0) return -1;
+                        else if (str.length() == 1) return 0;
+
+                        // str.sort(); // ! String has NO .sort method
+                        // ! and cannot sort a string itself with Arrays.sort(str)
+                        // * can only sort a String[] array with Arrays.sort(strArr [, Comparator.comparing(String::length)] )
+                        // * can also sort a List<String> object with Collections.sort(obj)
+                        // * also: List<Character> with Collections.sort(obj) // ! must convert string to .chars collected by List (check 'Strings' constructor)
+                        // * str.chars().sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString()
+                        // * str.chars().mapToObj(c -> (char) c).sorted(Comparator.reverseOrder()).map(String::valueOf).collect(Collectors.joining())
+                        // * String sortedString = StringUtils.sort(str); // Requires Apache Commons Lang library
+
+
+                        // ! must convert String to char[] array, to Arrays.sort, then convert back to a String
+
+                        char[] chars = str.toCharArray();
+                        Arrays.sort(chars); // * sorts chars in-place (& by reference pointers - figure out how, with 'char[]' primitive type)
+                        str = new String(chars);
+
+                        // ! better / faster options below ?
+                        // * str = str.chars().sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+                        // * str = StringUtils.sort(str); // Requires Apache Commons Lang library
+
+                        for (int i = 1; i < str.length(); i++)
+                            if (str.charAt(i - 1) != str.charAt(i))
+                                return i - 1;
+
+                        return -1;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #387
+                    public int firstUniqueCharacter3(String str) { // O(2n ~ n) t ; O(n) s
+                        if (str.length() == 0) return -1;
+                        else if (str.length() == 1) return 0;
+
+                        HashMap<Integer, Integer> map = new HashMap<>();
+
+                        // store & increment all characters in map
+                        for (char c : str.toCharArray())
+                            if (map.containsKey((int) c))
+                                map.put(
+                                        (int) c,
+                                        map.get((int) c) + 1
+                                );
+                            else map.put((int) c, 1);
+
+                        // now, iterate again and find the earliest character with count = 1 in map
+                        for (int i = 0; i < str.length(); i++)
+                            if (
+                                map.containsKey((int) str.charAt(i))
+                                && map.get(str.charAt(i)) == 1
+                            ) return i;
+
+                        return -1;
+                    }
+
+                    // first unique character
+                    public char firstNonRepeatingChar(String str) {
+                        return null;
+                    }
+
+                    public char firstNonRepeatingChar1(String str) {
+                        return null;
+                    }
+
+                    public char firstNonRepeatingChar2(String str) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #387
+                    public char firstNonRepeatingChar3(String str) { // O(2n ~ n) t ; O(n) s
+                        if (str.length() <= 1) return '-';
+                        Map<Integer, Integer> map = new HashMap<>();
+                        // 1st pass: increment character counts
+                        for (char c : str.toCharArray()) {
+                            if (!map.containsKey((int) c))
+                                map.put((int) c, 1);
+                            else map.put((int) c, map.get((int) c) + 1);
+                        }
+                        // 2nd pass: find 1st character with count = 1
+                        for (int i = 0; i < str.length(); i++)
+                            if (map.get((int) str.charAt(i)) == 1)
+                                return str.charAt(i);
+                        return '-';
+                    }
+
+                    public boolean isAnagram(String s1, String s2) {
+                        return false;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #242
+                    public boolean isAnagram1(String s, String t) { // O(2n + m ~ 3n ~ n) t ; O(n) s
+                        if (s == null || t == null) return false;
+                        if (s.length() != t.length()) return false;
+                        if (s.isEmpty() && t.isEmpty()) return true;
+
+                        Map<Integer, Integer> map = new HashMap<>();
+
+                        // 1st pass: add chars in s to hashmap and keep count
+                        for (char c : s.toCharArray())
+                            if (!map.containsKey((int) c))
+                                map.put((int) c, 1);
+                            else map.put((int) c, map.get((int) c) + 1);
+
+                        // 2nd pass: reduce counts of chars in t found in map
+                        for (char c : t.toCharArray()) {
+                            if (!map.containsKey((int) c))
+                                return false;
+                            map.put((int) c, map.get((int) c) - 1);
+                        }
+
+                        // 3rd pass: check for all counts in hashmap not 0, then true
+                        for (Map.Entry entry : map.entrySet())
+                            if ((int) entry.getValue() != 0)
+                                return false;
+
+                        return true;
+                    }
+
+                    // remove matches from 1 string
+                    public boolean checkAnagrams(String s1, String s2) { // O(5n ~ n) t ; O(1) s
+                        for (char c : s1.toCharArray()) // { // toCharArray - O(n) ? | loop - O(n)
+                            if (s2.contains(c)) // even this could also be O(n) t
+                                s2.remove(s2.indexOf(c)); // ! confirm: remove at index-of - both O(2n)
+                            else return false;
+                        // } // ! commented on purpose - also test this 1-line-scope syntax for - if-else
+                        return true;
+                    }
+                    public boolean checkAnagrams1(String s1, String s2) {
+
+                        // * Arrays.asList(s1.toCharArray(new char[s1.length()])).stream().map((c, i) -> {});
+
+                        boolean res = true;
+
+                        /*
+                        Arrays.asList(s1.toCharArray()).stream().map((c, i) -> {
+                            if (s2.contains(c))
+                                s2.remove(s2.indexOf(c));
+                            else res = false; // ! confirm: how to break from .map iteration
+                        });
+                        */
+
+                        for (char c : s1.toCharArray())
+                            if (s2.contains(c))
+                                s2.remove(s2.indexOf(c));
+                            else res = false;
+
+                        return res;
+                    }
+                    public boolean checkAnagrams2(String s1, String s2) {
+                        char c;
+                        for (int i = 0; i < s1.length(); i++) {
+                            c = s1.charAt(i);
+                            if (s2.contains(c))
+                                s2.remove(s2.indexOf(c));
+                            else return false;
+                        }
+                        return true;
+                    }
+                    public boolean checkAnagrams3(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams4(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams5(String s1, String s2) {
+                        return null;
+                    }
+
+                    // sort both strings & compare
+                    public boolean checkAnagrams6(String s1, String s2) { // O(2n log n ~ nlogn) t ; O(1) s
+                        // ! best & fastest way to sort strings
+                        char[] c1 = s1.toCharArray(), c2 = s2.toCharArray();
+                        Arrays.sort(c1); Arrays.sort(c2); // O(2nlogn)
+                        s1 = new String(c1); s2 = new String(c2);
+                        return s1.equals(s2); // s1 == s2; - O(n~1)
+                    }
+                    public boolean checkAnagrams7(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams8(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams9(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams10(String s1, String s2) {
+                        return null;
+                    }
+                    public boolean checkAnagrams11(String s1, String s2) {
+                        return null;
+                    }
+
+                    // 3rd-Party (Tutorial) - LC #
+                    public boolean checkAnagrams12(String s1, String s2) {
+                        return null;
+                    }
+
+                    public class MinimumWindowSubstring {
+
+                        /**
+                         * Given to strings s1 & s2, return the minimum window in s1 which will contain all the characters in s2
+                         * if there is no such window in s1 that covers all characters in s2, return an empty string ""
+                         * NB: if there is such a window, it's guaranteed that there'll always be only 1 unique minimum window in s1
+                         *
+                         * Constraints:
+                         *
+                         * 1 <= s1.length, s2.length < 10^5
+                         * s1 & s2 consist of English letters
+                         */
+
+                        /**
+                         * @param source: string
+                         * @param target: string
+                         * @return: string to denote the minimum window, or ""
+                         */
+
+                        public String minWindow(String s1, String s2) {
+                            if (s1 == null || s1.length() == 0)
+                                return s1;
+                            if (s2 == null || s2.length() == 0)
+                                return s2;
+
+                            HashMap<Character, Integer> targetCounts = new HashMap<>();
+
+                            for (char c : s2.toCharArray())
+                                targetCounts.put(c, targetCounts.getOrDefault(c, 0) + 1);
+
+                            String res = "";
+                            int minLen = Integer.MAX_VALUE;
+                            int currLen = 0;
+                            int i = 0, j = 0;
+                            char c, sourceCh;
+
+                            for (; i < s1.length(); i++) {
+                                while (j < s1.length() && currLen < s2.length()) {
+                                    c = s1.charAt(j);
+                                    if (targetCounts.containsKey(c)) {
+                                        if (targetCounts.get(c) > 0)
+                                            currLen++;
+                                        targetCounts.put(c, targetCounts.get(c) - 1);
+                                    }
+                                    j++;
+                                }
+                                if (currLen >= s2.length())
+                                    if (j - i < minLen) {
+                                        minLen = j - i;
+                                        res = s1.substring(i, j);
+                                    }
+                                sourceCh = s1.charAt(i);
+                                if (targetCounts.containsKey(sourceCh)) {
+                                    targetCounts.put(sourceCh, targetCounts.get(sourceCh) + 1);
+                                    if (targetCounts.get(sourceCh) > 0) currLen--;
+                                }
+                            }
+
+                            return res;
+                        }
+
+                        // GitHub Copilot - Alt Option
+                        public String minWindow1(String source, String target) {
+                            if (source == null || target == null || source.length() == 0 || target.length() == 0)
+                                return "";
+
+                            Map<Character, Integer> targetCounts = new HashMap<>();
+                            Map<Character, Integer> sourceCounts = new HashMap<>();
+                            int left = 0, right = 0;
+                            int minLen = Integer.MAX_VALUE;
+                            int count = 0;
+                            int start = 0;
+                            int end = 0;
+                            char c;
+                            String result = "";
+
+                            // O(n)
+                            for (char t : target.toCharArray())
+                                targetCounts.put(t, targetCounts.getOrDefault(t, 0) + 1);
+
+                            // O(n)
+                            while (right < source.length()) {
+                                c = source.charAt(right);
+                                if (targetCounts.containsKey(c)) {
+                                    sourceCounts.put(c, sourceCounts.getOrDefault(c, 0) + 1);
+                                    if (sourceCounts.get(c).equals(targetCounts.get(c)))
+                                        count++;
+                                }
+                                right++;
+
+                                // O(n)
+                                while (count == targetCounts.size()) {
+                                    if (right - left < minLen) {
+                                        minLen = right - left;
+                                        start = left;
+                                        end = right;
+                                    }
+                                    c = source.charAt(left);
+                                    if (targetCounts.containsKey(c)) {
+                                        sourceCounts.put(c, sourceCounts.get(c) - 1);
+                                        if (sourceCounts.get(c) < targetCounts.get(c))
+                                            count--;
+                                    }
+                                    left++;
+                                }
+                            }
+
+                            if (minLen != Integer.MAX_VALUE)
+                                result = source.substring(start, end);
+
+                            return result;
+                        }
+
+                    }
+
+                    public class ValidPalindrome {
+
+                        /**
+                         * Given a non-empty string s, find out whether it can be made into a valid palindrome
+                         *
+                         * Constraint: can delete at-most 1 character
+                         */
+
+                        public boolean validPalindrome(String s) {
+                            int left = 0, right = s.length() - 1;
+
+                            while (left < right) {
+                                if (s.charAt(left) != s.charAt(right))
+                                    break;
+                                left++; right --;
+                            }
+
+                            if (left >= right) return true;
+
+                            return
+                                    isSubPalindrome(s, left + 1, right)
+                                            || isSubPalindrome(s, left, right - 1);
+                        }
+
+                        private boolean isSubPalindrome(String s, int left, int right) {
+                            while (left < right) {
+                                if (s.charAt(left) != s.charAt(right))
+                                    return false;
+                                left++; right--;
+                            }
+                            return true;
+                        }
+
+                    }
+
+                }
+
             }
 
             // (Array) Lists & Tuples
 
+            public static class ListsTuples {
+
+                public static class Lists {}
+
+                public static class ArrayLists {}
+
+                public static class Tuples {}
+
+            }
+
             // Sets & Sequences
+
+            public static class SetsSequences {
+
+                public static class Sets {}
+
+                public static class Sequences {}
+
+            }
 
             // WeakMaps & WeakSets
 
+            public static class WeakStructures {
+
+                public static class WeakMaps {}
+
+                public static class WeakSets {}
+
+            }
+
             // HashMaps & HashTables
+
+            public static class HashStructures {
+
+                public static class HashMaps {}
+
+                public static class HashTables {}
+
+            }
 
             // Matrices
 
-            // TODO: Test
-            int[][] rotateMatrix(int[][] matrix) { // O(n) t | O(1) s
-                // only for square NxN matrices, or else, find number of columns too
-                // (matrix[0].length)
-                int N = matrix.length;
-                int temp;
+            public static class Matrices {
 
-                for (int i = 0; i < N; i++)
-                    for (int j = i; j < N; j++) {
-                        temp = matrix[i][j];
-                        matrix[i][j] = matrix[j][i];
-                        matrix[j][i] = temp;
-                    }
+                // TODO: Test
+                int[][] rotateMatrix(int[][] matrix) { // O(n) t | O(1) s
+                    // only for square NxN matrices, or else, find number of columns too
+                    // (matrix[0].length)
+                    int N = matrix.length;
+                    int temp;
 
-                for (int i = 0; i < N; i++)
-                    for (int j = 0; j < N / 2; j++) {
-                        temp = matrix[i][j];
-                        matrix[i][j] = matrix[i][N - 1 - j];
-                        matrix[i][N - 1 - j] = temp;
-                    }
+                    for (int i = 0; i < N; i++)
+                        for (int j = i; j < N; j++) {
+                            temp = matrix[i][j];
+                            matrix[i][j] = matrix[j][i];
+                            matrix[j][i] = temp;
+                        }
 
-                return matrix;
-            }
+                    for (int i = 0; i < N; i++)
+                        for (int j = 0; j < N / 2; j++) {
+                            temp = matrix[i][j];
+                            matrix[i][j] = matrix[i][N - 1 - j];
+                            matrix[i][N - 1 - j] = temp;
+                        }
 
-            // This diagonal iteration solution only works on square matrices
-            void setZeroesDiagonally(int[][] matrix) {
-                int r = 0;
-                int c = 0;
-                Boolean isZ = false;
-                int r2 = 0;
-                int rs = matrix.length;
-                int cs = matrix[0].length;
-                while (r < rs) {
-                    while (c < cs) {
-                        System.out.println(matrix[r][c]);
-                        if (isZ)
-                            matrix[r][c] = 0;
-                        else if (matrix[r][c] == 0)
-                            isZ = true;
-                        else
-                            break;
-                    }
-                    if (isZ) {
-                        r2 = r + 1;
-                        while (r2 < rs)
-                            matrix[r2][c] = 0;
-                    }
-                    r++;
-                    c++;
-                }
-            }
-
-            // Q - Given 2 sparse matrices A & B, return AB (assume A's cols.length == B's
-            // rows.length)
-
-            int[][] sparseMatrixMultiplication(int[][] A, int[][] B) {
-                int n = A.length,
-                        m = B[0].length,
-                        t = A[0].length; // A's column length should == B's row length, for matrix multiplication to be
-                // possible
-                int[][] res = new int[n][m];
-
-                List<List<Integer>> col = new ArrayList<>();
-                int i, j, k;
-
-                for (i = 0; i < t; i++) {
-                    col.add(new ArrayList<>());
-                    for (j = 0; j < m; j++)
-                        if (B[i][j] != 0)
-                            col.get(i).add(j);
-                }
-                for (i = 0; i < n; i++)
-                    for (k = 0; k < t; k++) {
-                        if (A[i][k] == 0)
-                            continue;
-                        for (int x : col.get(k)) // todo: foreach loops always require declared datatype on iterator var
-                            res[i][x] += A[i][k] * B[k][x];
-                    }
-
-                return res;
-            }
-
-            /*
-             * Q - With an array of ith prices of a given stock on day i
-             * and a permit for only 1 transaction per day,
-             * Design an algo to find maximum profit
-             * Cannot sell a stock before buying one
-             */
-
-            // or maximumProfit(..)
-            int bestTimeToBuyOrSellStock(int[] prices) {
-                if (prices == null || prices.length == 0)
-                    return 0;
-
-                int min = Integer.MAX_VALUE,
-                        profit = 0;
-
-                for (int i : prices) {
-                    min = i < min ? i : min;
-                    profit = (i - min) > profit
-                            ? i - min
-                            : profit;
+                    return matrix;
                 }
 
-                return profit;
-            }
+                // This diagonal iteration solution only works on square matrices
+                void setZeroesDiagonally(int[][] matrix) {
+                    int r = 0;
+                    int c = 0;
+                    Boolean isZ = false;
+                    int r2 = 0;
+                    int rs = matrix.length;
+                    int cs = matrix[0].length;
+                    while (r < rs) {
+                        while (c < cs) {
+                            System.out.println(matrix[r][c]);
+                            if (isZ)
+                                matrix[r][c] = 0;
+                            else if (matrix[r][c] == 0)
+                                isZ = true;
+                            else
+                                break;
+                        }
+                        if (isZ) {
+                            r2 = r + 1;
+                            while (r2 < rs)
+                                matrix[r2][c] = 0;
+                        }
+                        r++;
+                        c++;
+                    }
+                }
 
-            // Q - Given an nxm 2d grid map of 1s (land) & 0s (water), return number of
-            // islands
-            // Island = land (1) surrounded by water (0s) & is formed by connecting adjacent
-            // lands horizontally / vertically
-            // Can assume all 4 edges of the grid are all surrounded by water
+                // Q - Given 2 sparse matrices A & B, return AB (assume A's cols.length == B's
+                // rows.length)
 
-            @FunctionalInterface
-            interface BFS {
-                void bfs(char[][] grid, int x, int y);
-            }
+                int[][] sparseMatrixMultiplication(int[][] A, int[][] B) {
+                    int n = A.length,
+                            m = B[0].length,
+                            t = A[0].length; // A's column length should == B's row length, for matrix multiplication to be
+                    // possible
+                    int[][] res = new int[n][m];
 
-            @FunctionalInterface
-            interface IsValid {
-                boolean check(int x, int y, char[][] grid);
-            }
+                    List<List<Integer>> col = new ArrayList<>();
+                    int i, j, k;
 
-            int numberOfIslands(char[][] grid) {
-
-                if (grid == null ||
-                        grid.length == 0 ||
-                        grid[0].length == 0)
-                    return 0;
-
-                IsValid isValid = (x, y, g) -> {
-                    int n = g.length, m = g[0].length;
-                    return x >= 0
-                            && x < n
-                            && y >= 0
-                            && y < m
-                            && g[x][y] == '1';
-                };
-
-                BFS bfs = (g, x, y) -> {
-                    int[][] directions = {
-                            { 0, 1 }, { 0, -1 },
-                            { -1, 0 }, { 1, 0 }
-                    };
-                    Queue<int[]> queue = new java.util.LinkedList<>();
-                    queue.offer(new int[] { x, y });
-                    g[x][y] = '2'; // '2' means marked as 'visited' (or create a visited set)
-
-                    int[] node = null;
-                    int i, nextX, nextY;
-
-                    while (!queue.isEmpty()) {
-                        node = queue.poll();
-                        for (i = 0; i < 4; i++) {
-                            nextX = node[0] + directions[i][0];
-                            nextY = node[1] + directions[i][1];
-
-                            if (!isValid.check(nextX, nextY, grid))
+                    for (i = 0; i < t; i++) {
+                        col.add(new ArrayList<>());
+                        for (j = 0; j < m; j++)
+                            if (B[i][j] != 0)
+                                col.get(i).add(j);
+                    }
+                    for (i = 0; i < n; i++)
+                        for (k = 0; k < t; k++) {
+                            if (A[i][k] == 0)
                                 continue;
-
-                            g[nextX][nextY] = '2';
-                            queue.offer(new int[] { nextX, nextY });
+                            for (int x : col.get(k)) // todo: foreach loops always require declared datatype on iterator var
+                                res[i][x] += A[i][k] * B[k][x];
                         }
+
+                    return res;
+                }
+
+                /*
+                 * Q - With an array of ith prices of a given stock on day i
+                 * and a permit for only 1 transaction per day,
+                 * Design an algo to find maximum profit
+                 * Cannot sell a stock before buying one
+                 */
+
+                // or maximumProfit(..)
+                int bestTimeToBuyOrSellStock(int[] prices) {
+                    if (prices == null || prices.length == 0)
+                        return 0;
+
+                    int min = Integer.MAX_VALUE,
+                            profit = 0;
+
+                    for (int i : prices) {
+                        min = i < min ? i : min;
+                        profit = (i - min) > profit
+                                ? i - min
+                                : profit; // * Math.max(profit, i - min);
                     }
 
-                };
+                    return profit;
+                }
 
-                int n = grid.length,
-                        m = grid[0].length,
-                        islands = 0;
+                // Q - Given an nxm 2d grid map of 1s (land) & 0s (water), return number of
+                // islands
+                // Island = land (1) surrounded by water (0s) & is formed by connecting adjacent
+                // lands horizontally / vertically
+                // Can assume all 4 edges of the grid are all surrounded by water
 
-                for (int i = 0; i < n; i++)
-                    for (int j = 0; j < m; j++)
-                        if (grid[i][j] == '1') {
-                            bfs.bfs(grid, i, j);
-                            islands++;
-                        }
+                @FunctionalInterface
+                interface BFS {
+                    void bfs(char[][] grid, int x, int y);
+                }
 
-                return islands;
-            }
+                @FunctionalInterface
+                interface IsValid {
+                    boolean check(int x, int y, char[][] grid);
+                }
 
-            /*
-             * In an infinite chess board with coordinates from -inf to +inf, there's a
-             * knight at square [0, 0]
-             * A knight has 8 possible moves it can make. Each move is 2 squares in a
-             * cardinal direction,
-             * then 1 square in an orthogonal direction.
-             *
-             * Return the minimum number of steps needed to move the knight to the square
-             * [x, y].
-             * It is guaranteed the answer exists
-             *
-             * Constraint - |x| + |y| <= 300
-             */
+                int numberOfIslands(char[][] grid) {
 
-            @FunctionalInterface
-            interface IsValid2 {
-                boolean check(int x, int y, boolean[][] visited);
-            }
+                    if (grid == null ||
+                            grid.length == 0 ||
+                            grid[0].length == 0)
+                        return 0;
 
-            // minimumKnightMoves()
-            int knightShortestPath(int x, int y) {
-                if (x == 0 && y == 0)
-                    return 0;
+                    IsValid isValid = (x, y, g) -> {
+                        int n = g.length, m = g[0].length;
+                        return x >= 0
+                                && x < n
+                                && y >= 0
+                                && y < m
+                                && g[x][y] == '1';
+                    };
 
-                IsValid2 isValid = (x1, y1, v) -> {
-                    if (Math.abs(x1 - 300)
-                            + Math.abs(y1 - 300) <= 300
-                            && !v[x1][y1])
-                        return true;
-                    return false;
-                };
+                    BFS bfs = (g, x, y) -> {
+                        int[][] directions = {
+                                { 0, 1 }, { 0, -1 },
+                                { -1, 0 }, { 1, 0 }
+                        };
+                        Queue<Integer[]> queue = new java.util.LinkedList<>();
+                        queue.offer(new int[] { x, y });
+                        g[x][y] = '2'; // '2' means marked as 'visited' (or create a visited set)
 
-                int[][] Directions = new int[][] {
-                        { 1, 2 }, { 2, 1 }, { -1, 2 }, { 1, -2 },
-                        { -1, -2 }, { -2, 1 }, { -2, -1 }, { 2, -1 }
-                };
-                Queue<int[]> queue = new java.util.LinkedList<>();
-                boolean[][] visited = new boolean[601][601];
+                        int[] node = null;
+                        int i, nextX, nextY;
 
-                int step = 0, size, nextX, nextY;
-                int[] node;
+                        while (!queue.isEmpty()) {
+                            node = queue.poll();
+                            for (i = 0; i < 4; i++) {
+                                nextX = node[0] + directions[i][0];
+                                nextY = node[1] + directions[i][1];
 
-                queue.offer(new int[] { 300, 300 });
-                visited[300][300] = true;
+                                if (!isValid.check(nextX, nextY, grid))
+                                    continue;
 
-                while (!queue.isEmpty()) {
-                    size = queue.size();
-                    while (size-- > 0) {
-                        node = queue.poll();
-                        for (int[] dir : Directions) {
-                            nextX = node[0] + dir[0];
-                            nextY = node[1] + dir[1];
-                            if (nextX == x + 300 &&
-                                    nextY == y + 300)
-                                return step + 1;
-                            if (isValid.check(nextX, nextY, visited)) {
+                                g[nextX][nextY] = '2';
                                 queue.offer(new int[] { nextX, nextY });
-                                visited[nextX][nextY] = true;
                             }
                         }
-                    }
-                    step++;
+
+                    };
+
+                    int n = grid.length,
+                            m = grid[0].length,
+                            islands = 0;
+
+                    for (int i = 0; i < n; i++)
+                        for (int j = 0; j < m; j++)
+                            if (grid[i][j] == '1') {
+                                bfs.bfs(grid, i, j);
+                                islands++;
+                            }
+
+                    return islands;
                 }
 
-                return step;
-            }
+                /*
+                 * In an infinite chess board with coordinates from -inf to +inf, there's a
+                 * knight at square [0, 0]
+                 * A knight has 8 possible moves it can make. Each move is 2 squares in a
+                 * cardinal direction,
+                 * then 1 square in an orthogonal direction.
+                 *
+                 * Return the minimum number of steps needed to move the knight to the square
+                 * [x, y].
+                 * It is guaranteed the answer exists
+                 *
+                 * Constraint - |x| + |y| <= 300
+                 */
 
-            /*
-             * Given a matrix and a target, return number of non-empty submatrices that sum
-             * up to target
-             * A submatrix [(x1, y1), (x2, y2)] is a set of all cells matrix[x][y],
-             * with x1 <= x <= x2 and y1 <= y <= y2
-             * 2 submatrices (x1, y1, x2, y2) and (x1', y1', x2', y2') are different if they
-             * have some coordinate that's different
-             */
+                @FunctionalInterface
+                interface IsValid2 {
+                    boolean check(int x, int y, boolean[][] visited);
+                }
 
-            // Use prefix sum & convert it to. a 1-D Array
-            // Find the subarray with sum that equals target
+                // minimumKnightMoves()
+                int knightShortestPath(int x, int y) {
+                    if (x == 0 && y == 0)
+                        return 0;
 
-            int numberOfSubmatrixSumToTarget(int[][] mat, int target) {
-                int n = mat.length, m = mat[0].length;
-                int[][] prefixSum = new int[n][m];
+                    IsValid2 isValid = (x1, y1, v) -> {
+                        if (Math.abs(x1 - 300)
+                                + Math.abs(y1 - 300) <= 300
+                                && !v[x1][y1])
+                            return true;
+                        return false;
+                    };
 
-                // calc prefix sum for each row
-                int i, j;
-                for (i = 0; i < n; i++)
-                    for (j = 0; j < m; j++)
-                        prefixSum[i][j] = j > 0
-                                ? mat[i][j]
-                                + prefixSum[i][j - 1]
-                                : mat[i][j];
+                    int[][] Directions = new int[][] {
+                            { 1, 2 }, { 2, 1 }, { -1, 2 }, { 1, -2 },
+                            { -1, -2 }, { -2, 1 }, { -2, -1 }, { 2, -1 }
+                    };
+                    Queue<Integer[]> queue = new java.util.LinkedList<>();
+                    boolean[][] visited = new boolean[601][601];
 
-                int res = 0;
-                HashMap<Integer, Integer> map = new HashMap<>();
+                    int step = 0, size, nextX, nextY;
+                    int[] node;
 
-                int startCol, endCol, sum, row;
+                    queue.offer(new int[] { 300, 300 });
+                    visited[300][300] = true;
 
-                for (startCol = 0; startCol < m; startCol++)
-                    for (endCol = startCol; endCol < m; endCol++) {
-                        map.clear();
-                        map.put(0, 1);
-                        sum = 0;
-
-                        // convert it to 1-D Array, find a subarray sum to target
-                        for (row = 0; row < m; row++) {
-                            if (startCol == 0)
-                                sum += prefixSum[row][endCol];
-                            else
-                                sum += endCol > startCol
-                                        ? (prefixSum[row][endCol]
-                                        - prefixSum[row][startCol - 1])
-                                        : mat[row][startCol];
-
-                            res += map.getOrDefault(sum - target, 0);
-                            map.put(sum, map.getOrDefault(sum, 0) + 1);
+                    while (!queue.isEmpty()) {
+                        size = queue.size();
+                        while (size-- > 0) {
+                            node = queue.poll();
+                            for (int[] dir : Directions) {
+                                nextX = node[0] + dir[0];
+                                nextY = node[1] + dir[1];
+                                if (nextX == x + 300 &&
+                                        nextY == y + 300)
+                                    return step + 1;
+                                if (isValid.check(nextX, nextY, visited)) {
+                                    queue.offer(new int[] { nextX, nextY });
+                                    visited[nextX][nextY] = true;
+                                }
+                            }
                         }
+                        step++;
                     }
 
-                return res;
+                    return step;
+                }
+
+                /*
+                 * Given a matrix and a target, return number of non-empty submatrices that sum
+                 * up to target
+                 * A submatrix [(x1, y1), (x2, y2)] is a set of all cells matrix[x][y],
+                 * with x1 <= x <= x2 and y1 <= y <= y2
+                 * 2 submatrices (x1, y1, x2, y2) and (x1', y1', x2', y2') are different if they
+                 * have some coordinate that's different
+                 */
+
+                // Use prefix sum & convert it to. a 1-D Array
+                // Find the subarray with sum that equals target
+
+                int numberOfSubmatrixSumToTarget(int[][] mat, int target) {
+                    int n = mat.length, m = mat[0].length;
+                    int[][] prefixSum = new int[n][m];
+
+                    // calc prefix sum for each row
+                    int i, j;
+                    for (i = 0; i < n; i++)
+                        for (j = 0; j < m; j++)
+                            prefixSum[i][j] = j > 0
+                                    ? mat[i][j]
+                                    + prefixSum[i][j - 1]
+                                    : mat[i][j];
+
+                    int res = 0;
+                    HashMap<Integer, Integer> map = new HashMap<>();
+
+                    int startCol, endCol, sum, row;
+
+                    for (startCol = 0; startCol < m; startCol++)
+                        for (endCol = startCol; endCol < m; endCol++) {
+                            map.clear();
+                            map.put(0, 1);
+                            sum = 0;
+
+                            // convert it to 1-D Array, find a subarray sum to target
+                            for (row = 0; row < m; row++) {
+                                if (startCol == 0)
+                                    sum += prefixSum[row][endCol];
+                                else
+                                    sum += endCol > startCol
+                                            ? (prefixSum[row][endCol]
+                                            - prefixSum[row][startCol - 1])
+                                            : mat[row][startCol];
+
+                                res += map.getOrDefault(sum - target, 0);
+                                map.put(sum, map.getOrDefault(sum, 0) + 1);
+                            }
+                        }
+
+                    return res;
+                }
+
             }
 
             // Linked Lists
 
-            public class LinkedList {
+            public static class LinkedList {
 
                 public class ListNode {
                     private Object value;
@@ -1401,21 +3426,20 @@ public class DataAlgoJava {
                     return head;
                 }
 
-                public LinkedList flattenBinaryTreeToLinkedList(Tree.TreeNode root) { // O(n) t ; O(n) s (not done
-                    // in-place; LinkedList with n
-                    // nodes required)
+                public LinkedList flattenBinaryTreeToLinkedList(Trees.Tree.TreeNode root) { // O(n) t ; O(n) s 
+                    // (not done in-place; LinkedList with n nodes required)
 
-                    if (root == null)
-                        return null;
+                    if (root == null) return null;
+
                     ListNode lRoot = new ListNode(root.value(), null);
 
-                    Tree.TreeNode node = null;
+                    Trees.Tree.TreeNode node = null;
                     ListNode lNode = lRoot;
 
                     // bfs
 
                     // todo: Use Java's in-built Queue class, because Trees is the current study
-                    java.util.Queue<Tree.TreeNode> q = new java.util.LinkedList<Tree.TreeNode>(); // not Queue();
+                    java.util.Queue<Trees.Tree.TreeNode> q = new java.util.LinkedList<Trees.Tree.TreeNode>(); // not Queue();
                     // Java Queue cannot be instantiated directly
                     // can only be instantiated by classes that implement it as an interface
                     // eg. LinkedList, PriorityQueue, ArrayDeque, customs, etc
@@ -1430,7 +3454,7 @@ public class DataAlgoJava {
 
                     while (!q.isEmpty()) {
 
-                        node = (Tree.TreeNode) q.poll(); // not .dequeue() / .pop();
+                        node = (Trees.Tree.TreeNode) q.poll(); // not .dequeue() / .pop();
                         // no need to store node.value()s into ListNodes
                         // because root.value() has been stored, as lRoot (lNode in 1st iteration)
                         // only store node.left() & .right() .value()s (left to right in this case; or
@@ -1457,7 +3481,7 @@ public class DataAlgoJava {
                         /*
                          * lNode = lDummy (before root)
                          *
-                         * node = (Tree.TreeNode) q.poll();
+                         * node = (Trees.Tree.TreeNode) q.poll();
                          * lNode.setNext(new ListNode(node.value(), null));
                          * lNode = lNode.getNext();
                          * if (node.left() != null) q.add(node.left());
@@ -1476,7 +3500,7 @@ public class DataAlgoJava {
 
                     // dfs - average
 
-                    Consumer<Tree.TreeNode>[] dfs = new Consumer[1];
+                    Consumer<Trees.Tree.TreeNode>[] dfs = new Consumer[1];
 
                     dfs[0] = (n) -> {
                         if (n == null)
@@ -1587,7 +3611,7 @@ public class DataAlgoJava {
 
                 }
 
-                public Tree.TreeNode flattenBinaryTreeToLinkedList2(Tree.TreeNode root) { // O(n) t ; O(1) s
+                public Trees.Tree.TreeNode flattenBinaryTreeToLinkedList2(Trees.Tree.TreeNode root) { // O(n) t ; O(1) s
                     // in-place; No LinkedList with n nodes required
                     return null;
                 }
@@ -1596,113 +3620,140 @@ public class DataAlgoJava {
 
             // Stacks
 
+            public static class Stacks {}
+
             // Queues
+
+            public static class Queues {}
 
             // Heaps (max & min)
 
+            public static class HeapsMaxMin {
+
+                public static class Heaps {}
+
+                public static class MinHeaps {}
+
+                public static class MaxHeaps {}
+
+            }
+
             // Binary Heaps
+
+            public static class BinaryHeaps {}
 
             // Priority Queues
 
+            public static class PriorityQueues {}
+
             // Trees
 
-            public static class Tree { // todo: Static even though it doesn't contain any custom-defined
-                // @FunctionalInterface
-                // Should be static because its child-class is static; and the child-class
-                // instantiates super(..) in its constructor
-                // * Child-class is static because it contains 1+ custom-defined
-                // @FunctionalInterfaces
+            public static class Trees {
 
-                public class TreeNode {
+                public static class Tree {
+                    // * needs to be accessed 'statically' by other classes (eg. 'BST') external from outer class 'Trees'
 
-                    private Object value;
-                    private TreeNode left;
-                    private TreeNode right;
+                    // even though this class doesn't contain any custom-defined Functional-Interfaces
 
-                    public TreeNode(Object v, TreeNode l, TreeNode r) {
-                        this.value = v;
-                        this.left = l;
-                        this.right = r;
+                    // @FunctionalInterface
+                    // Should be static because its child-class is static; and the child-class
+                    // instantiates super(..) in its constructor
+                    // * Child-class is static because it contains 1+ custom-defined
+                    // @FunctionalInterfaces
+
+                    public static class TreeNode {
+                        // * also required to be static - needs to be accessed by 'BST' & other classes (external from outer classes 'Trees.Tree')
+
+                        private Object value;
+                        private TreeNode left;
+                        private TreeNode right;
+
+                        public TreeNode(Object v, TreeNode l, TreeNode r) {
+                            this.value = v;
+                            this.left = l;
+                            this.right = r;
+                        }
+
+                        public Object value() {
+                            return this.value;
+                        }
+
+                        public void value(Object node) {
+                            this.value = node;
+                        }
+
+                        public TreeNode left() {
+                            return this.left;
+                        }
+
+                        public void left(TreeNode node) {
+                            this.left = node;
+                        }
+
+                        public TreeNode right() {
+                            return this.right;
+                        }
+
+                        public void right(TreeNode node) {
+                            this.right = node;
+                        }
+
                     }
 
-                    public Object value() {
-                        return this.value;
+                    private TreeNode root;
+
+                    public Tree(TreeNode root) {
+                        this.root = root;
                     }
 
-                    public void value(Object node) {
-                        this.value = node;
+                    private TreeNode lastNode = null;
+
+                    // 3rd-Party (Tutorial) DFS Traversal
+                    public void flattenBinaryTreeToLinkedList(TreeNode root) {
+                        if (root == null)
+                            return;
+
+                        if (lastNode != null) {
+                            lastNode.left(null);
+                            lastNode.right(root);
+                        }
+
+                        lastNode = root;
+                        TreeNode right = root.right; // root might be changed
+                        this.flattenBinaryTreeToLinkedList(root.left);
+                        this.flattenBinaryTreeToLinkedList(right);
+                        // recurse on the right node instead, because root might be changed
+                        // this.flattenBinaryTreeToLinkedList(root.right);
                     }
 
-                    public TreeNode left() {
-                        return this.left;
+                    // DFS Divide & Conquer
+                    public TreeNode DCFlattenBinaryTreeToLinkedList(TreeNode root) {
+                        if (root == null)
+                            return null;
+
+                        TreeNode left = this.DCFlattenBinaryTreeToLinkedList(root.left);
+                        TreeNode right = this.DCFlattenBinaryTreeToLinkedList(root.right);
+
+                        if (left != null) {
+                            left.right = root.right;
+                            root.right = root.left;
+                            root.left = null;
+                        }
+
+                        if (right != null)
+                            return right;
+                        if (left != null)
+                            return left;
+                        return root;
                     }
 
-                    public void left(TreeNode node) {
-                        this.left = node;
-                    }
-
-                    public TreeNode right() {
-                        return this.right;
-                    }
-
-                    public void right(TreeNode node) {
-                        this.right = node;
-                    }
-
-                }
-
-                private TreeNode root;
-
-                public Tree(TreeNode root) {
-                    this.root = root;
-                }
-
-                private TreeNode lastNode = null;
-
-                // 3rd-Party (Tutorial) DFS Traversal
-                public void flattenBinaryTreeToLinkedList(TreeNode root) {
-                    if (root == null)
-                        return;
-
-                    if (lastNode != null) {
-                        lastNode.left(null);
-                        lastNode.right(root);
-                    }
-
-                    lastNode = root;
-                    TreeNode right = root.right; // root might be changed
-                    this.flattenBinaryTreeToLinkedList(root.left);
-                    this.flattenBinaryTreeToLinkedList(right);
-                    // recurse on the right node instead, because root might be changed
-                    // this.flattenBinaryTreeToLinkedList(root.right);
-                }
-
-                // DFS Divide & Conquer
-                public TreeNode DCFlattenBinaryTreeToLinkedList(TreeNode root) {
-                    if (root == null)
-                        return null;
-
-                    TreeNode left = this.DCFlattenBinaryTreeToLinkedList(root.left);
-                    TreeNode right = this.DCFlattenBinaryTreeToLinkedList(root.right);
-
-                    if (left != null) {
-                        left.right = root.right;
-                        root.right = root.left;
-                        root.left = null;
-                    }
-
-                    if (right != null)
-                        return right;
-                    if (left != null)
-                        return left;
-                    return root;
                 }
 
             }
 
             // Binary (Search) Trees
 
-            public static class BST extends Tree {
+            public static class BST extends Trees.Tree {
 
                 public BST(TreeNode root) {
                     super(root);
@@ -2635,9 +4686,21 @@ public class DataAlgoJava {
 
             // Tries
 
+            public static class Tries extends Trees.Tree {
+
+                public Tries(TreeNode root) {
+                    super(root);
+                }
+
+            }
+
             // Graphs
 
+            public static class Graphs {}
+
             // Bits
+
+            public static class Bits {}
 
         }
 
@@ -2732,3 +4795,383 @@ public class DataAlgoJava {
     }
 
 }
+
+
+
+/*
+
+* // TODO: Java
+
+Keywords - record, volatile, 
+
+New Types - 
+
+Strings - "" | Chars - ''
+
+arr.length & str.length() - arr .length prop & str .length() method
+
+var x = value / new Object(); - .jv, c#, js-ts, sw, go, dart, kt, scala, ..
+
+Type.class - class-name as String
+
+Type x = new Type[] { a, b, 1, 2 } - object-type array 'scope/closure'
+
+* new Interface_or_Class_Type[<T>]() { cb overrides with optional { internal unnamed-scope } } - can use in-built Type-methods in either scope
+
+int x = 15 / 10; - 1 (int floors 1.5 decimal quotient by-default - Math.floor not required)
+
+Boolean.valueOf(x == null) .jv - new Boolean(x == null) .jv deprecated - Boolean(!u) .js
+
+- Self-executing lambda - Supplier .get() Functional Interface
+int x = ((Supplier<Integer>) () -> { .. return int; }).get();
+
+- a method 'throw'ing new Exception' without handling (without try-catch / or in a un-'try'd catch block)
+should have 'throws Exception' in its signature
+
+class { public static var x;  static { perform 'runtime-like' ops in static env ? eg. x = 1; }  }
+
+'record' in place of 'class' - immutable classes, for data-integrity
+- for 'data-record' OOP-objects eg. BankAccount, Dto's, ..
+
+public record A(String x, int y) {
+
+[or static-only props | (non-)static meths ..]
+
+    private static String z;
+
+    public String z() { return z; } // * no this.z - static prop
+    public void z(String zz) { z = zz; } // * custom setter
+* .z prop not set on instantiation
+
+* canonical-constructor auto-gen'd with A's own definition above
+* auto-gen'd accessors - x(), y(), ..
+* auto-gen'd method - equals, hashCode, toString
+
+}
+
+- convert (array)list to .stream 1st, then .map each item, then .collect the results list back
+(List/ArrayList<T>) r = (List/ArrayList<T>) x.stream().map(x -> x * 2).collect(Collectors.toList()); - map() returns Stream; must be collected back into List
+
+.forEach also in (Array)List classes - doesn't require .stream - returns void (exec lambda in foreach loop)
+.stream().(count/forEach/map/reduce/findAny/findFirst/filter/sorted(cb?).toList/flatMap/collect/../combos)
+.map(String::toUpperCase/List::stream/..) - also passed in as cbs (or pass in custom lambdas)
+
+Collectors.(toList/..) - used within .collect(..), Collections.(singletonList/..) - generic for list-data-structures
+
+x.stream().findAny(x -> x.prop == value) - returns <T> obj
+
+new MultiValueMap<T, U>() { cb overrides } - .jv 'closure' instantiation / implementation of cb overrides ('lambda interface-implementation'), if interface (MultiValueMap)
+
+class A extends B [extends C - wrong] implements D, E { } - cannot extend multiple parents, but can extend 1 & implement multiple interfaces / abstract classes
+
+- in multi-threading, synchronize based on thread-locking on var
+synchronized (var) {
+    only 1 thread can exec this scope at a time;
+    since all instances of this thread depend on this.a (preventing race conditions - (not deadlocks))
+}
+synchronized void func() { sync'd function }
+
+* var.meth().<Type, Type, ..> meth(..) - generic builder-method call
+
+* - Variable used in lambda expression should be final or effectively final
+
+Sub-optimal solution 1 - Transform variable into final 1-element array - even though final var can be re-used inside lambda, its 1 element is not final, so can be updated
+
+2 (better) - Move var into anonymous Object - 
+var ref = new Object() { Type variable = value; }; .. ref.variable.prop/meth();
+
+3 (worse) - using final only - final var may require value on definition -> final var cannot be re-assigned a new value
+final Type x; (final var may require value on definition)
+[x = value; in lambda (Error - final var cannot be re-assigned a new value)]; 
+
+* 4 (best) - Atomic[Reference<Type>/Integer/Boolean/Long/../NO string/other regular types] - 
+Atomic[Type] x = new Atomic[Type](initialValue=value);
+AtomicReference<Type> x = new AtomicReference<>(value); // no initialValue named-arg
+
+in lambda - x.set(value); - 'new Atomic[..]' instantiation not required when setting new value
+x.get(); - value when required 
+
+* method reference calls - with class-method - void meth(Type x) { .. } - any functional-interface type for 'meth' as callback can be used (meth must match functional interface definition for method-reference / call-back)
+void someMeth( Consumer<Type> f ) - should be a Consumer for 'meth's definition
+someMeth(obj::meth) / someMeth( (Type x) -> obj.meth(x) ) // * pass in method-reference call / callback lambda
+
+
+
+
+
+*/
+
+
+
+
+/* // TODO: SpringBoot - @Annotations, Lifecycles
+
+TODO: @Annotations - Bean, Autowire, 
+
+* // TODO: IntelliJ-Idea
+
+
+
+* // TODO: IntelliJ - Config
+
+
+
+* // TODO: IntelliJ - Issues
+
+
+
+* // TODO: SpringBoot - Notes
+
+- scaffolding generator service
+    - spring initializr - start.spring.io & IntelliJ plugin
+
+
+
+* // TODO: SpringBoot - Config
+
+- with both Maven & Gradle
+
+
+
+* // TODO: SpringBoot - Issues
+
+
+
+* // TODO: SpringBoot - Main
+
+
+
+* Libraries - springframework, springboot, javax (java-8), jakarta (java-? - 17/22/latest - similar components as 'javax'), 'jdbc', 
+
+* 3rd-Party Libraries - lombok, 
+
+* Classes - HttpHeaders, ResponseEntity, Principal, 
+Properties, Session, Message, MimeBodyPart, Multipart, Transport, 
+DefaultKafkaProducerFactoryCustomizer, DefaultKafkaConsumerFactoryCustomizer, 
+..
+Deprecated - ?
+HttpSecurity, GrantedAuthority, 
+Greeting, HelloMessage, 
+ProducerFactory, 
+..
+
+
+* 'Language' Classes - Properties, Session, Message, 
+
+* 3rd-Party Classes - MultipartFile, 
+
+* Interfaces - HandlerInterceptor, 
+
+* Special Data-Types - 
+
+* Annotations / Directives - @Annotation - SpringBootApplication, RestController (api routes), Controller (web - static routes), RequestMapping((path/value)="/route", method=RequestMethod, (consumes,produces)="content-type"/MediaType,..), 
+(Get/Post/Put/Patch/Delete)Mapping("/"), RequestParam([value=]"param"/required/defaultValue/), PathVariable("var"), RequestBody, ResponseStatus(HttpStatus), 
+Value(""/"${message.property}"), 
+CrossOrigin, 
+Entity, Table, Repository, PersistenceContext, 
+Service, Component, Bean (classes/methods), Qualifier, Autowired (props/methods), Lazy, 
+Configuration, 
+PostConstruct, 
+ControllerAdvice, ExceptionHandler, MessagingGateway, 
+SpringBootTest, ActiveProfiles, RunWith, Profile, 
+EnableConfigServer, EnableAutoConfiguration, EnableConfigurationProperties, 
+EnableScheduling, Scheduled(cron/fixedRate/fixedDelay/initialDelay/..), 
+EnableEurekaServer, EnableEurekaClient, (both from spring.cloud.netflix lib), EnableZuulProxy, 
+HystrixCommand, HystrixProperty, 
+..
+Deprecated - ?
+EnableWebSecurity, EnableAuthorizationServer, EnableResourceServer, 
+EnableWebSocketMessageBroker, 
+MessageMapping, SendTo, 
+..
+
+
+* Functions - 
+
+* Methods - Thread.(sleep/..), thread.(run/start/isAlive/setDaemon/interrupt/..), ; ResponseEntity.(ok/..), MediaType.(parseMediaType), 
+
+* Enumerations - (HttpMethod/RequestMethod).(GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS/TRACE/..), HttpStatus.(OK/CREATED/ACCEPTED/NO_CONTENT/NOT_FOUND/REQUEST_TIMEOUT/BAD_GATEWAY/UNAUTHORIZED/..), 
+MediaType.(APPLICATION_JSON_VALUE/APPLICATION_FORM_URLENCODED_VALUE/MULTIPART_FORM_DATA_VALUE/APPLICATION_XHTML_XML_VALUE/..), 
+Message.RecipientType.(TO/..), 
+
+* Thymeleaf-Html Directives - th:xx="value[= #{message.property} | ${anyVar.prop}]" - 
+text="#{message.property}", if="${anyVar.prop}", action="@{/path}" (form), href (a), inline, 
+Inline-Markup - [[${#springVar.prop}]], 
+
+
+
+
+
+
+* Special Classes & Methods / Props - Class . meths(..) / props
+
+
+
+
+
+
+* IDE Features
+
+
+Scaffolding - 
+
+
+
+
+
+
+* Notes
+
+- in a @Component class, difference between @Autowired class props & @Lazy constructor/instantiation prop-values
+    - & when to not use @PostConstruct with class' methods
+        - only use PostConstruct with 'post-class-bootload' methods when they're called in static {scope}
+- @Autowired members must be defined in valid Spring bean (@Component|@Service|...)
+- 
+
+
+
+
+* enum / switch cases for generics-validations
+
+
+
+
+* ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* Errors
+
+java spring error - external SimpleController from @SpringBootApplication DemoApplication
+
+Caused by: java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'simpleController' method
+    - multiple duplicate request-routes in SimpleController @RestController
+        - even if duplicate routes may include differences in query-params (but not path-params, http-methods, etc - if routes are explicitly different)
+
+- Circular Dependencies:
+    - with Beans - 
+        - The most common solution for circular dependencies in Spring is to use the @Lazy annotation.
+        - This tells Spring to lazily initialize one or both beans, breaking the circular reference.
+
+- Configuration Properties - @ConfigurationProperties(prefix="spring.dbproductservice") : "Prefix must be in canonical form"
+    - @Qualifiers / @Bean names can take any form, but ConfigurationProperties' prefixes must be their canonical form versions
+        - TODO: confirm both Qualifiers / Bean names & ConfigurationProperties' prefixes must be exact matches (even though they can have different case-forms)
+    - Configuration property name 'spring.dbProductService' is not valid
+    - Invalid characters: 'P', 'S' | Bean: dbProductService
+    - Reason: 'Canonical names' should be kebab-case ('-' separated), lowercase alpha-numeric characters and must start with a letter
+        - Action: Modify 'spring.dbProductService' so that it conforms to the canonical names requirements.
+    - 
+    - eg. @Qualifier("userRepoImpl") & @ConfigurationProperties(prefix="spring.dbproductservice")
+    - 
+
+
+
+
+
+*/
+
+
+
+
+
+
+
+/*
+
+* // TODO: Android Studio
+
+
+
+* // TODO: A-Studio - Config
+
+
+
+* // TODO: A-Studio - Issues
+
+
+
+* // TODO: Android - Java - Notes
+
+- Assets resources
+    - https://romannurik.github.io/AndroidAssetStudio/index.html
+
+
+* // TODO: A-Java - Config
+
+
+
+* // TODO: A-Java - Issues
+
+
+
+* // TODO: A-Java - Main
+
+
+* Libraries - 
+
+* Classes - 
+
+* 3rd-Party Classes - 
+
+* Special Data-Types - 
+
+* Lifecycle Methods - 
+
+* Functions - 
+
+* Containers - 
+
+* Components - 
+
+* Shapes - 
+
+* Props - 
+
+* Animations - 
+
+* Gestures - 
+
+* Event Handlers - 
+
+* Enumerations - 
+
+
+
+
+
+
+* Specific Component-Prop-Enum Combos - 
+
+
+
+
+
+
+* Special Classes & Methods / Props - Class . meths(..) / props
+
+
+
+
+
+
+* IDE Features
+
+
+* Scaffolding - 
+
+
+
+
+
+
+* Notes
+
+
+
+
+
+* enum / switch cases for generics-validations
+
+
+
+
+*/
