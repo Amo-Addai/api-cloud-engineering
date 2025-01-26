@@ -14,7 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 
 
 /*
- * // TODO: Change Filename from 'Data-Algo - Java.java' to 'DataAlgoJava.java' (to avoid all errors)
+ * // TODO: Change Filename from 'Data-Algo - Java.java' to 'DataAlgoJava.java'
+ * if you decide to make entire class 'public'
+ */
+
+
+/*
+ * // TODO
  * Work with in-built DataStructure classes, from all java source libs
  */
 
@@ -31,7 +37,7 @@ Lombok,
 
 */
 
-public class DataAlgoJava {
+class DataAlgoJava {
 
     public static void main(String[] args) {
         Main.main(args);
@@ -595,7 +601,7 @@ public class DataAlgoJava {
                                     
                                     ! Arrays.from(primIntArr) -> Integer[] - wrong ('Arrays.from' in .js not .java)
                                     ! Arrays.asList(primIntArr) -> cannot convert into Integer[] ; only List<Integer> 
-                                    ! & that can also be passed as a constructor argument of ArrayList<>(new List<Integer>())
+                                    ! & that can also be passed as a constructor argument of ArrayList<>(Arrays.asList(...))
                                     * to convert int[] to Integer[], create a new Integer[] & manually assign values within a loop (or with Arrays.copyOf & System.arraycopy)
 
                                     ! or use the extra Apache Commons Lang's 'ArrayUtils' library's static methods too
@@ -745,11 +751,14 @@ public class DataAlgoJava {
                     }
 
                     // 3rd-Party (Tutorial) - LC #1
-                    public int[][][] twoSum3(int[] nums, int target) { // O(n) t ; O(2n ~ n) s
+                    public int[][][] twoSum3(int[] nums, int target) { // O(n) t ; O(3n ~ n - only 1 map actually needed; extra 2 arrays only hold results) s
+
                         int[][] ips = new int[nums.length][2];
                         int[][] nps = new int[nums.length][2];
                         Map<Integer, Integer> map = new HashMap<>();
-                        int c = 0, d;
+
+                        int c = 0; // count for 1st index of both matrices (ips & nps)
+                        int d;
 
                         for (int i = 0; i < nums.length; i++) {
                             d = target - nums[i];
@@ -789,7 +798,7 @@ public class DataAlgoJava {
                     // working with same input array
                     public boolean containsDuplicates2(int[] arr) { // O(n) t ; O(1) s
                         if (arr.length < 2) return false;
-                        ArrayList<Integer> a = new List<>(arr); // ! find out: convert arr to list/array-list
+                        ArrayList<Integer> a = Arrays.asList(arr); // ! find out: convert arr to list/array-list
                         boolean res = false;
                         a.stream().map((int n, int i) -> {
                             a.remove(i); // ! confirm .remove at index
@@ -893,7 +902,7 @@ public class DataAlgoJava {
                         int max, majority;
                         Arrays.asList(arr).stream().map(n -> {
                             if (map.containsKey(n)) {
-                            const int count = map.get(n) + 1;
+                                const int count = map.get(n) + 1;
                                 map.put(n, count);
                                 if (count > max) {
                                     max = count;
@@ -1103,7 +1112,7 @@ public class DataAlgoJava {
                     public int[] moveZeroes2(int[] arr) { // O(2n ~ n) t ; O(1) s
                         if (arr.length < 1) return null;
 
-                        List<Integer> a = new List<>(arr); // O(n) to instantiate from primitive to abstract // ! confirm: for sure
+                        List<Integer> a = Arrays.asList(arr); // O(n) to instantiate from primitive to abstract // ! confirm: for sure
                         Integer i = 0, c = 0, n;
 
                         while (i < arr.length) { // a.length(), but still using primitive arr.length a bit faster
@@ -1121,8 +1130,8 @@ public class DataAlgoJava {
 
                     // ! optimal - using an extra array
                     public int[] moveZeroes3(int[] arr) { // O(n) t ; O(n) s
-                        List<Integer> a = new List<>(arr);
-                        List<Integer> z = new List<>();
+                        List<Integer> a = Arrays.asList(arr);
+                        List<Integer> z = new ArrayList<>();
                         Integer n;
 
                         for (int i = 0; i < arr.length; i++) {
@@ -1308,12 +1317,14 @@ public class DataAlgoJava {
                     }
 
                     public int[] moveZeroes9(int[] arr) { // O(n) t ; O(1) s
+                        if (arr.length <= 1) return arr;
 
                         NumSwaps1 swap = (nums, i, j) -> {
                             int tmp = nums[i];
                             nums[i] = nums[j];
                             nums[j] = tmp;
-                        };
+                        }; // todo: confirm if swap works with nums by reference, if it's a primitive array (not abstract-type)
+                        // * "it shouldn't" so this could be wrong - check
 
                         int nonZeroLastIndex = 0, runner = 0;
 
@@ -1337,7 +1348,7 @@ public class DataAlgoJava {
 
                     // if different array-lengths, iterate through shorter array; append unique intersections
                     public int[] intersections2(int[] a1, int[] a2) { // O() t ; O() s
-                        List<Integer> ints = new List<>(); // * confirm: primitive int-array instead
+                        List<Integer> ints = new ArrayList<>(); // * confirm: primitive int-array instead
                         for (int n : a1.length > a2.length ? a2 : a1) { // O(n)
                             if ( // ! TODO: use a better method from 'Arrays' to check: array contains value
                                 // ! .binarySearch sometimes returns -1 when array not sorted (even if value exists)
@@ -1383,13 +1394,20 @@ public class DataAlgoJava {
                     }
 
                     // 3rd-Party (Tutorial) - LC #349
-                    public int[] intersections10(int[] a1, int[] a2) { // O() t ; O() s
+                    public int[] intersections10(int[] a1, int[] a2) {
+                        // O( n1 + n2 + m ~ 2n1 + n2 or 2n2 + n1 (since length of m should be length of shorter array; which should've been iterated through 1st)
+                        // ~ 3n ~ n (if n = length of shorter array, with all distinct elements - so hashmap length == shorter array length) = n ) t ;
+                        // O( m + i ~ m (i - intersections only hold results) ~ n (length of shorter array == length of m) = n ) s
+
                         if (a1.length == 0 || a2.length == 0) return null;
+                        Map<Integer, Integer> m = new HashMap<>();
 
                         // 1st pass: add items in a1 to hashmap
-                        Map<Integer, Integer> m = new HashMap<>();
+                        // ! best to add items from the shorter array (less time & space)
+                        // ! TODO: find shorter array between a1 & a2 for 1st pass
+
                         for (int n : a1)
-                            if (!map.containsKey(n))
+                            if (!m.containsKey(n))
                                 m.put(n, 1);
 
                         // 2nd pass: for each item in a1, mark ones that exist in hashmap as 0
@@ -1401,7 +1419,7 @@ public class DataAlgoJava {
                             }
 
                         // 3rd pass: loop through hashmap; if map[k, v]'s v = 0, then add to intersections array
-                        int[] intersections = new int[numInts];
+                        int[] intersections = new int[numInts]; // ! instantiating exact space for exact number of intersections
                         int i = 0;
                         for (Map.Entry entry : m.entrySet())
                             if ((int) entry.getValue() == 0) {
@@ -2052,6 +2070,7 @@ public class DataAlgoJava {
                             String str = new String(charArray);
                             String str1 = String.valueOf(charArray);
                             String str2 = new StringBuilder().append(charArray).toString();
+                            ! confirm - String str3 = charArray.toString();
 
                             * Convert char[] to Character[]
                             Character[] charObjectArray = new Character[charArray.length];
@@ -2236,13 +2255,15 @@ public class DataAlgoJava {
                     }
 
                     public String reverseWords(String s) {
-                        String[] words = s.split("\\s+");
+                        List<String> words = Arrays.asList(s.split("\\s+"));
                         Collections.reverse(words);
                         return String.join(" ", words); // .js s.split(' ').reverse().join(' ')
                     }
 
                     public String reverseWords1(String s) {
-                        String[] words = new StringBuilder(s).split(" ");
+                        List<String> words = Arrays.asList(
+                            new StringBuilder(s).split(" ")
+                        );
                         Collections.reverse(words);
                         return String.join(" ", words); // .js s.split(' ').reverse().join(' ')
                     }
@@ -2257,7 +2278,27 @@ public class DataAlgoJava {
                     }
 
                     // 3rd-Party (Tutorial) - LC #557
-                    public String reverseWords3(String s) { // ! O(nm ~ n) t ; O(1) s
+                    public String reverseWords3(String s) { // ! O(n(n/2) ~ n) t ; O(n / n~1 ? - argue between extra char-array being required for algo's usage or not) s
+
+                        // !! IMPORTANT !!
+
+                        // ! argument: extra char array 'c' required for character manipulation; so input string 's' can be deleted from memory, taking 'c' as the new input char-array
+                        // returning string (new String(c)) is just to hold the result back as a string for the function
+                        // so space-complexity is still constant as O(1) s
+
+                        // ! argument: LC still goes with O(n) s for char-array
+                        // explanation: "we cannot avoid converting to char-array, so it'd be O(n) on an optimal solution"
+                        // so confirm: if "space - 'complexity' " is about the "act" of using space, as compared to "actual space" being used in memory
+                        // and confirm: what 'complexity' means in Big-O in general again - and how it depicts the cause / effect of change in time / space
+
+                        // * also confirm: how possible it is to delete strings in memory manually, right after conversion
+                        // confirm: by "optimal solution" we mean keeping input string 's' for other "future use"
+
+                        // ! another argument: "conversion" of a data-structure to another data-structure for the sake of an algo
+                        // ! is not the same as "using extra space" with another data-structure, alongside the input data-structure being worked with
+                        // what is the effect of deleting the older data-structure, after conversion ?
+                        // do we keep same constant space in use ? or are there any other misconceptions in-between ?
+
                         if (s.length() <= 1) return s;
 
                         Reverse reverse = (c, front, end) -> {
@@ -2271,6 +2312,9 @@ public class DataAlgoJava {
 
                         int front = 0, end = 0;
                         char[] c = s.toCharArray();
+                        // * delete s; // todo: delete 's' from memory; then change all 's.length()' usages to 'c.length'
+                        // ! since "space-complexity might not be as important as time-complexity"
+                        // * compare the time-cost of deleting unnecessary space to leaving it to be handled in-time by Garbage Collector
 
                         while (end < s.length()) {
                             if (c[end] == ' ') {
@@ -2281,7 +2325,7 @@ public class DataAlgoJava {
                             end++;
                         }
 
-                        return new String(c);
+                        return new String(c); // or: c.toString();
                     }
 
                     // 3rd-Party (Tutorial) - LC #557
@@ -2384,7 +2428,7 @@ public class DataAlgoJava {
                     // 3rd-Party (Tutorial) - LC #387
                     public int firstUniqueCharacter3(String str) { // O(2n ~ n) t ; O(n) s
                         if (str.length() == 0) return -1;
-                        else if (str.length() == 1) return 0;
+                        else if (str.length() == 1) return 0; // return 1st 0 index
 
                         HashMap<Integer, Integer> map = new HashMap<>();
 
@@ -2401,7 +2445,7 @@ public class DataAlgoJava {
                         for (int i = 0; i < str.length(); i++)
                             if (
                                 map.containsKey((int) str.charAt(i))
-                                && map.get(str.charAt(i)) == 1
+                                && map.get((int) str.charAt(i)) == 1
                             ) return i;
 
                         return -1;
@@ -2443,6 +2487,7 @@ public class DataAlgoJava {
 
                     // 3rd-Party (Tutorial) - LC #242
                     public boolean isAnagram1(String s, String t) { // O(2n + m ~ 3n ~ n) t ; O(n) s
+                        if (s == null && t == null) return true;
                         if (s == null || t == null) return false;
                         if (s.length() != t.length()) return false;
                         if (s.isEmpty() && t.isEmpty()) return true;
