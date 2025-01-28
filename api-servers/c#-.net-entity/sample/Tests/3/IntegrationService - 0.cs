@@ -2,11 +2,11 @@ using System.Text;
 using System.Text.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Dtos.Projects;
+using Company.Slicer.API.Configuration;
+using Company.Slicer.API.Dtos.Projects;
 using Microsoft.Extensions.Options;
 
-namespace Cadly.Slicer.API.Services
+namespace Company.Slicer.API.Services
 {
     public interface IIntegrationService
     {

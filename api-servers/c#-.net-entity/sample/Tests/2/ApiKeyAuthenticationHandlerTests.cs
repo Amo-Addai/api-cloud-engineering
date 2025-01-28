@@ -1,14 +1,14 @@
 using Xunit;
 using System.Text.Encodings.Web;
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Authentication;
+using Company.Slicer.API.Configuration;
+using Company.Slicer.API.Authentication;
 using Moq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 
-namespace Cadly.Slicer.API.Tests.Authentication
+namespace Company.Slicer.API.Tests.Authentication
 {
     public class ApiKeyAuthenticationHandlerTests
     {

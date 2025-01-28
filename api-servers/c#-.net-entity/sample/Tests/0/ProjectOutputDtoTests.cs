@@ -1,8 +1,8 @@
 using Xunit;
-using Cadly.Slicer.API.Dtos.Projects;
-using Cadly.Slicer.API.Tests.Dtos.Common;
+using Company.Slicer.API.Dtos.Projects;
+using Company.Slicer.API.Tests.Dtos.Common;
 
-namespace Cadly.Slicer.API.Tests.Dtos.Projects
+namespace Company.Slicer.API.Tests.Dtos.Projects
 {
     public class ProjectOutputDtoTests
     {

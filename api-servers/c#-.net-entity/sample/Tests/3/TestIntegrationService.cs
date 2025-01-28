@@ -1,8 +1,8 @@
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Services;
+using Company.Slicer.API.Configuration;
+using Company.Slicer.API.Services;
 using Microsoft.Extensions.Options;
 
-namespace Cadly.Slicer.API.Tests.Services
+namespace Company.Slicer.API.Tests.Services
 {
     public class TestIntegrationService : IntegrationService
     {

@@ -4,16 +4,16 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Reflection;
-using Cadly.Slicer.API.Services;
-using Cadly.Slicer.API.Configuration;
-using Cadly.Slicer.API.Dtos.Projects;
-using Cadly.Slicer.API.Tests.Common;
-using Cadly.Slicer.API.Tests.Services.Common;
+using Company.Slicer.API.Services;
+using Company.Slicer.API.Configuration;
+using Company.Slicer.API.Dtos.Projects;
+using Company.Slicer.API.Tests.Common;
+using Company.Slicer.API.Tests.Services.Common;
 using Moq;
 using Moq.Protected;
 using Microsoft.Extensions.Options;
 
-namespace Cadly.Slicer.API.Tests.Services
+namespace Company.Slicer.API.Tests.Services
 {
 
     public class IIntegrationServiceTests

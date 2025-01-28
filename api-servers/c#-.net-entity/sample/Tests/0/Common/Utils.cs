@@ -1,7 +1,7 @@
 using System.Text.Json;
-using Cadly.Slicer.API.Tests.Common;
+using Company.Slicer.API.Tests.Common;
 
-namespace Cadly.Slicer.API.Tests.Dtos.Common;
+namespace Company.Slicer.API.Tests.Dtos.Common;
 
 public class Utils
 {
@@ -35,7 +35,7 @@ public class Utils
                 Assert.Equal(
 					dto,
 					expectedDto,
-					Cadly.Slicer.API.Tests.Common
+					Company.Slicer.API.Tests.Common
 					.Utils.JsonSerializerComparer<T>.Instance
 				);
             }
