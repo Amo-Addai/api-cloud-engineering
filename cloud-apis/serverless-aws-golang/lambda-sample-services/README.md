@@ -1,4 +1,4 @@
-# Golang Serverless - ChatBot API
+# Golang Serverless - ChatBot Microservice APIs
 
 ## Prerequisites
 1.  Golang v1.14
