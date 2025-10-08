@@ -14,4 +14,15 @@ export class AlarmMapper {
         );
         return alarmModel
     }
+
+    static toPersistence: (Alarm) => AlarmEntity = (
+        alarm: Alarm,
+        [entity]: any[] = []
+    ) => (
+        entity = new AlarmEntity(),
+        entity.id = alarm.id,
+        entity.name = alarm.name,
+        entity.severity = alarm.severity.value,
+        entity
+    )
 }
