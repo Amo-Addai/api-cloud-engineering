@@ -15,6 +15,4 @@ import { OrmAlarmRepository } from './repositories/alarm.repository';
     ],
     exports: [AlarmsRepository],
 })
-export class OrmAlarmPersistenceModule {
-
-}
+export class OrmAlarmPersistenceModule {}
