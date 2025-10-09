@@ -23,13 +23,13 @@ export class InMemoryAlarmRepository implements AlarmsRepository {
         return entities.map(item => AlarmMapper.toDomain(item));
     }
 
-    save_: (Alarm) => Alarm = (alarm: Alarm): Alarm => (
+    save_: (Alarm) => Promise<Alarm> = async (alarm: Alarm): Promise<Alarm> => (
         this.alarms.set(alarm.id, AlarmMapper.toPersistence(alarm)),
         AlarmMapper.toDomain(this.alarms.get(alarm.id))
     )
 
     save: (Alarm) => Promise<Alarm> = 
-        (
+        async (
             alarm: Alarm,
             [persistenceModel, newEntity]: any[] = []
         ): Promise<Alarm> => (
