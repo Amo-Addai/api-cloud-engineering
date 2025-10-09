@@ -16,9 +16,21 @@ export class AlarmsService {
   create(createAlarmDto: CreateAlarmDto) {
     return 'This action adds a new alarm';
   }
+  
+  createCommand(createAlarmCommand: CreateAlarmCommand) {
+    const alarm = this.alarmFactory.create(
+      createAlarmCommand.name,
+      createAlarmCommand.severity,
+    );
+    return this.alarmRepository.save(alarm);
+  }
 
   findAll() {
     return `This action returns all alarms`;
+  }
+
+  findAllCommand() {
+    return this.alarmRepository.findAll();
   }
 
   findOne(id: number) {
