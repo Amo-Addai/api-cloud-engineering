@@ -5,7 +5,7 @@ import { AlarmEntity } from './entities/alarm.entity';
 import { InMemoryAlarmRepository } from './repositories/alarm.repository';
 
 @Module({
-    imports: [TypeInMemoryModule.forFeature([AlarmEntity])],
+    imports: [],
     providers: [
         {
             provide: AlarmsRepository,
