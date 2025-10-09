@@ -23,7 +23,7 @@ export class InMemoryAlarmRepository implements AlarmsRepository {
         return entities.map(item => AlarmMapper.toDomain(item));
     }
 
-    save_: (Alarm) => Promise<Alarm> = (alarm: Alarm): Promise<Alarm> => (
+    save_: (Alarm) => Alarm = (alarm: Alarm): Alarm => (
         this.alarms.set(alarm.id, AlarmMapper.toPersistence(alarm)),
         AlarmMapper.toDomain(this.alarms.get(alarm.id))
     )
