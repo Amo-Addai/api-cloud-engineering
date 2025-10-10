@@ -1,1 +1,2 @@
-export class Alarm {}
+
+export class AlarmEntity {}
