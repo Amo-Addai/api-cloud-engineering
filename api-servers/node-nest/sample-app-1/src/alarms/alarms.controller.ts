@@ -12,6 +12,13 @@ export class AlarmsController {
     return this.alarmsService.create(createAlarmDto);
   }
 
+  @Post()
+  create_(@Body() createAlarmDto: CreateAlarmDto) {
+    return this.alarmsService.create(
+      new CreateAlarmCommand(createAlarmDto.name, createAlarmDto.severity, createAlarmDto.triggeredAt, createAlarmDto.items)
+    );
+  }
+
   @Get()
   findAll() {
     return this.alarmsService.findAll();

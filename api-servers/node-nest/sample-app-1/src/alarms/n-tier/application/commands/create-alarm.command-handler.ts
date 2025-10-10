@@ -18,7 +18,7 @@ export class CreateAlarmCommandHandler implements ICommandHandler<CreateAlarmCom
 
     async execute(command: CreateAlarmCommand) {
         this.logger.debug(`Processing "CreateAlarmCommand": ${JSON.stringify(command)}`);
-        const alarm = this.alarmFactory.create(command.name, command.severity);
+        const alarm = this.alarmFactory.create(command.name, command.severity, command.triggeredAt, command.items);
         return this.alarmRepository.save(alarm);
     }
 
