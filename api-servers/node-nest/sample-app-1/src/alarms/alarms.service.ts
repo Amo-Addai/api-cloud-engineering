@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlarmDto } from './dto/create-alarm.dto';
 import { UpdateAlarmDto } from './dto/update-alarm.dto';
-import { CreateAlarmCommand } from './n-tier/commands/create-alarm.command';
 import { AlarmFactory } from '../domain/factories/alarm.factory';
 import { AlarmRepository } from './ports/alarm.repository';
+import { CreateAlarmCommand } from './n-tier/application/commands/create-alarm.command';
+import { GetAlarmsQuery } from './queries/get-alarms.query';
 
 @Injectable()
 export class AlarmsService {
@@ -11,6 +12,8 @@ export class AlarmsService {
   constructor(
     private readonly alarmRepository: AlarmRepository,
     private readonly alarmFactory: AlarmFactory,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   create(createAlarmDto: CreateAlarmDto) {
@@ -25,12 +28,20 @@ export class AlarmsService {
     return this.alarmRepository.save(alarm);
   }
 
+  createCommand_(createAlarmCommand: CreateAlarmCommand) {
+    return this.commandBus.execute(createAlarmCommand);
+  }
+
   findAll() {
     return `This action returns all alarms`;
   }
 
   findAllCommand() {
     return this.alarmRepository.findAll();
+  }
+
+  findAllCommand_() {
+    return this.queryBus.execute(new GetAlarmsQuery())
   }
 
   findOne(id: number) {

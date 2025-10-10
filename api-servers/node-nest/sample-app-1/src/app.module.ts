@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AlarmsModule } from './alarms/alarms.module';
 import { CoreModule } from './core/core.module';
-import { AlarmsInfrastructureModule } from './alarms/n-tier/infrastructure/alarms-infrastructure.module';
 import { ApplicationBootstrapOptions } from './common/interfaces/application-bootstrap-options.interface';
+import { AlarmsModule } from './alarms/alarms.module';
+import { AlarmsInfrastructureModule } from './alarms/n-tier/infrastructure/alarms-infrastructure.module';
 
 @Module({
-  imports: [CoreModule], // removed: AlarmsModule, - CoreModule will interconnect all module dependencies
+  imports: [CoreModule, CqrsModule.forRoot()], // removed: AlarmsModule, - CoreModule will interconnect all module dependencies
   controllers: [AppController],
   providers: [AppService],
 })
