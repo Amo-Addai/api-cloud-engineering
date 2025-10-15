@@ -48,4 +48,23 @@ export class AlarmCreatedEventHandler implements IEventHandler<AlarmCreatedEvent
             items: event.alarm.items,
         });
     }
+
+    async handle__(event: SerializedEventPayload<AlarmCreatedEvent>) {
+        this.logger.log(`Alarm created event: ${JSON.stringify(event)}`);
+
+        /**
+         * in a real world application,
+         * we would have to ensure that this operation is atomic
+         * in the read model (eg. because the data operation may fail)
+         * @for more info: Transactional inbox / outbox pattern
+         */
+        await this.upsertMaterializedAlarmRepository.upsert({
+            id: event.alarm.id,
+            name: event.alarm.name,
+            severity: event.alarm.severity,
+            triggeredAt: new Date(event.alarm.triggeredAt),
+            isAcknowledged: event.alarm.isAcknowledged,
+            items: event.alarm.items,
+        });
+    }
 }
