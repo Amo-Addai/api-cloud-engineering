@@ -1,7 +1,7 @@
 import { AlarmSeverity } from './value-objects/alarm.severity';
 import { AlarmItem } from './alarm-item';
 
-export class Alarm {
+export class Alarm extends VersionedAggregateRoot {
 
     id: string;
     name: string;
@@ -15,6 +15,7 @@ export class Alarm {
         name: string,
         alarmSeverity: AlarmSeverity,
     ) {
+        super();
         this.id = id;
         this.name = name;
         this.severity = alarmSeverity;

@@ -14,6 +14,7 @@ export class CreateAlarmCommandHandler implements ICommandHandler<CreateAlarmCom
         private readonly alarmRepository: AlarmsRepository,
         private readonly alarmFactory: AlarmFactory,
         private readonly eventBus: EventBus,
+        private readonly eventPublisher: EventPublisher,
     ) {}
 
     async execute(command: CreateAlarmCommand) {
@@ -28,6 +29,14 @@ export class CreateAlarmCommandHandler implements ICommandHandler<CreateAlarmCom
         const newAlarm = await this.alarmRepository.save(alarm);
         this.eventBus.publish(new AlarmCreatedEvent(alarm));
         return newAlarm;
+    }
+
+    async execute__(command: CreateAlarmCommand) {
+        this.logger.debug(`Processing "CreateAlarmCommand": ${JSON.stringify(command)}`)
+        const alarm = this.alarmFactory.create(command.name, command.severity, command.triggeredAt, command.items);
+        this.eventPublisher.mergeObjectContext(alarm);
+        alarm.commit();
+        return alarm;
     }
 
 }
