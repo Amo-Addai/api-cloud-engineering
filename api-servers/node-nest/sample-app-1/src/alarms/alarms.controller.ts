@@ -38,4 +38,9 @@ export class AlarmsController {
   remove(@Param('id') id: string) {
     return this.alarmsService.remove(+id);
   }
+
+  @Patch(':id/acknowledge')
+  acknowledge(@Param('id') id: string) {
+    return this.alarmsService.acknowledge(id);
+  }
 }

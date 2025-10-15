@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { SerializableEvent } from '../../../domain/interfaces/serializable-event';
 import { Event } from '../schemas/event.schema';
+import { AlarmCreatedEvent } from '../../../../alarms/domain/events/alarm-created.event';
+import { EventClsRegistry } from '../event-cls.registry';
 
 @Injectable()
 export class EventDeserializer {
@@ -18,6 +20,10 @@ export class EventDeserializer {
             case AlarmCreatedEvent.name: return AlarmCreatedEvent;
 
         }
+    }
+
+    getEventClassByType_(type: string) {
+        return EventClsRegistry.get(type);
     }
 
     instantiateSerializedEvent<T extends Type>(

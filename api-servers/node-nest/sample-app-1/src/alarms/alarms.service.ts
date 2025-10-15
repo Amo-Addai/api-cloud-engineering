@@ -55,4 +55,8 @@ export class AlarmsService {
   remove(id: number) {
     return `This action removes a #${id} alarm`;
   }
+
+  acknowledge(id: string) {
+    return this.commandBus.execute(new AcknowledgeAlarmCommand(id));
+  }
 }
