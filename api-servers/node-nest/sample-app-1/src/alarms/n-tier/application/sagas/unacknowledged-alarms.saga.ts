@@ -35,6 +35,15 @@ export class UnknowledgedAlarmsSaga {
                     timer(15000).pipe(map(() => alarmCreatedEvent)),
                 ),
             ),
+            map(alarmCreatedEvent => {
+                this.logger.debug(
+                    ` Alarm "${alarmCreatedEvent.alarm.name}" not acknowledged in 15 seconds`
+                );
+                const facilityId = '12345';
+                return new NotifyFacilitySupervisorCommand(facilityId, [
+                    alarmCreatedEvent.alarm.id,
+                ]);
+            }),
         );
     };
 }

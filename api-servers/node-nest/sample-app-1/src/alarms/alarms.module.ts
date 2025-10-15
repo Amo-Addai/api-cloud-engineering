@@ -22,6 +22,7 @@ import { NotifyFacilitySupervisorCommandHandler } from './n-tier/application/com
     AlarmAcknowledgedEventHandler,
     CascadingAlarmsSaga,
     NotifyFacilitySupervisorCommandHandler,
+    UnacknowledgedAlarmsSaga,
   ],
 })
 export class AlarmsModule {
