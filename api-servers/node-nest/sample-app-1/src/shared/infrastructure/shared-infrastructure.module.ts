@@ -17,6 +17,8 @@ import { EventSerializer } from './event-store/serializers/event.serializer';
         EventSerializer,
         EventStorePublisher,
         MongoEventStore,
+        EventsBridge,
+        EventDeserializer,
     ],
 })
 export class SharedInfrastructureModoule {}
