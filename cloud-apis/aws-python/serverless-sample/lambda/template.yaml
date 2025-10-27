@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2025-09-09'
+Transform: AWS::Serverless-2025-10-31
+Description: >
+  firstlambda
+
+  Sample SAM Template for firstlambda
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resources
+    Properties:
+      CodeUri: hello_world/
+      Handler: datatypes.simple_types
+      Runtime: python3.8
